@@ -1,0 +1,120 @@
+{% extends "base.twig" %}
+
+{% block title %}Audifan.net - Quests - Submission Details{% endblock %}
+
+{% block pagetitle %}<a href="/quests/">Quests</a>: Submission Details{% endblock %}
+
+{% block head %}
+    <style>
+
+        .submissiontable {
+            border: 1px solid #FFF;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        .submissiontable tr td, .submissiontable tr th {
+            border: 1px solid #FFF;
+            padding: 3px;
+            text-align: center;
+        }
+
+        .submissiontable tr th {
+            font-size: 11pt;
+            font-weight: bold;
+        }
+
+        .submissiontable tr td {
+            font-size: 9pt;
+        }
+
+    </style>
+    
+    <!-- Lightbox -->
+    <style>
+        .lb-loader,.lightbox{text-align:center;line-height:0}body:after{content:url({{ GLOBAL.staticUrl }}/img/lightbox/close.png) url({{ GLOBAL.staticUrl }}/img/lightbox/loading.gif) url({{ GLOBAL.staticUrl }}/img/lightbox/prev.png) url({{ GLOBAL.staticUrl }}/img/lightbox/next.png);display:none}.lb-dataContainer:after,.lb-outerContainer:after{content:"";clear:both}body.lb-disable-scrolling{overflow:hidden}.lightboxOverlay{position:absolute;top:0;left:0;z-index:9999;background-color:#000;filter:alpha(Opacity=80);opacity:.8;display:none}.lightbox{position:absolute;left:0;width:100%;z-index:10000;font-weight:400}.lightbox .lb-image{display:block;height:auto;max-width:inherit;border-radius:3px}.lightbox a img{border:none}.lb-outerContainer{position:relative;background-color:#fff;width:250px;height:250px;margin:0 auto;border-radius:4px}.lb-loader,.lb-nav{position:absolute;left:0}.lb-outerContainer:after{display:table}.lb-container{padding:4px}.lb-loader{top:43%;height:25%;width:100%}.lb-cancel{display:block;width:32px;height:32px;margin:0 auto;background:url({{ GLOBAL.staticUrl }}/img/lightbox/loading.gif) no-repeat}.lb-nav{top:0;height:100%;width:100%;z-index:10}.lb-container>.nav{left:0}.lb-nav a{outline:0;background-image:url(data:image/gif;base64,R0lGODlhAQABAPAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==)}.lb-next,.lb-prev{height:100%;cursor:pointer;display:block}.lb-nav a.lb-prev{width:34%;left:0;float:left;background:url({{ GLOBAL.staticUrl }}/img/lightbox/prev.png) left 48% no-repeat;filter:alpha(Opacity=0);opacity:0;-webkit-transition:opacity .6s;-moz-transition:opacity .6s;-o-transition:opacity .6s;transition:opacity .6s}.lb-nav a.lb-prev:hover{filter:alpha(Opacity=100);opacity:1}.lb-nav a.lb-next{width:64%;right:0;float:right;background:url({{ GLOBAL.staticUrl }}/img/lightbox/next.png) right 48% no-repeat;filter:alpha(Opacity=0);opacity:0;-webkit-transition:opacity .6s;-moz-transition:opacity .6s;-o-transition:opacity .6s;transition:opacity .6s}.lb-nav a.lb-next:hover{filter:alpha(Opacity=100);opacity:1}.lb-dataContainer{margin:0 auto;padding-top:5px;width:100%;-moz-border-radius-bottomleft:4px;-webkit-border-bottom-left-radius:4px;border-bottom-left-radius:4px;-moz-border-radius-bottomright:4px;-webkit-border-bottom-right-radius:4px;border-bottom-right-radius:4px}.lb-dataContainer:after{display:table}.lb-data{padding:0 4px;color:#ccc}.lb-data .lb-details{width:85%;float:left;text-align:left;line-height:1.1em}.lb-data .lb-caption{font-size:13px;font-weight:700;line-height:1em}.lb-data .lb-number{display:block;clear:left;padding-bottom:1em;font-size:12px;color:#999}.lb-data .lb-close{display:block;float:right;width:30px;height:30px;background:url({{ GLOBAL.staticUrl }}/img/lightbox/close.png) top right no-repeat;text-align:right;outline:0;filter:alpha(Opacity=70);opacity:.7;-webkit-transition:opacity .2s;-moz-transition:opacity .2s;-o-transition:opacity .2s;transition:opacity .2s}.lb-data .lb-close:hover{cursor:pointer;filter:alpha(Opacity=100);opacity:1}
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="contentwrapperfull">
+        <div class="float">
+            {% if not GLOBAL.user.isLoggedIn() %}
+                <div class="_center">
+                    Please <a href="/account/?thru=/quests/submissions/">log in</a> to view your submission details.
+                </div>
+            {% elseif submissions|length > 0 %}
+                <table class="submissiontable">
+                    <tr>
+                        <th>View</th>
+                        <th style="width:100px;">Date &amp; Time</th>
+                        <th style="width:290px;">Quest</th>
+                        <th>IGN</th>
+                        <th>Status</th>
+                        <th>Status Message</th>
+                        <th>Delete</th>
+                    </tr>
+                    {% for s in submissions %}
+                        <tr>
+                            <td>
+                                {% if s.submit_screenshot == "" %}
+                                    N/A
+                                {% else %}
+                                    <a href="{{ s.imgUrl }}" data-lightbox="submission_{{ s.submit_id }}">View</a>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {{ s.submit_time|date("F j, Y") }}<br />
+                                at {{ s.submit_time|date("g:ia") }} EST
+                            </td>
+                            <td>
+                                <div><b>{{ diffs[(s.req_difficulty - 1)] }}</b></div>
+                                <div>{{ s.req_text|raw }}</div>
+                            </td>
+                            <td>
+                                {{ s.ign_ign }}
+                            </td>
+                            <td>
+                                {{ statuses[s.submit_grade_status] }}
+                            </td>
+                            <td>
+                                {% if s.submit_grade_message == "" %}
+                                    (None)
+                                {% else %}
+                                    {{ s.submit_grade_message }}
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if s.submit_grade_status == 0 %}
+                                    <a href="?delete={{ s.submit_id }}" onclick="return confirm('Are you sure you would like to delete this submission?');">Delete</a>
+                                {% else %}
+                                    Cannot<br />
+                                    Delete
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <div class="_center">
+                    You haven't submitted any screenshots recently.<br />
+                    Check the <a href="/quests/archive/">archive</a> for older submissions.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="contentwrapperhalf">
+        <div class="float">
+            <div class="sectionwrapper _center">
+                <div style="margin:3px 0px;"><span style="font-weight:bold;">Pending</span> means your screenshot has not yet been completely checked.</div>
+                <div style="margin:3px 0px;"><span style="font-weight:bold;">Complete</span> means your screenshot is valid and you will be given points.</div>
+                <div style="margin:3px 0px;"><span style="font-weight:bold;">Rejected</span> means there is an issue with your screenshot and you will not be given points.</div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block endofpage %}
+    <script src="{{ GLOBAL.staticUrl }}/js/lightbox.min.js"></script>
+{% endblock %}

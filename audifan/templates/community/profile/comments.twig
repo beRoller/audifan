@@ -1,0 +1,158 @@
+{% extends "base.twig" %}
+{% from "macros/usercard.twig" import userCard %}
+
+{% block title %}Audifan.net - {{ basicInfo.display_name }} - Comments{% endblock %}
+
+{% block head %}
+    <style>
+        .commentwriter {
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+        
+        .commentbody {
+            margin-top: 5px;
+            clear: both;
+        }
+        
+        .commentlinks {
+            text-align: center;
+            margin-top: 5px;
+            font-size: .9em;
+        }
+        
+        .commentlinks > span {
+            margin-right: 5px;
+            margin-left: 5px;
+            vertical-align: middle;
+        }
+        
+        .commentlinks > span img {
+            vertical-align: middle;
+            margin-right: 2px;
+        }
+        
+        .commenttime {
+            font-style: italic;
+        }
+        
+        .privatecomment {
+            text-align: center;
+            margin-bottom: 3px;
+            font-size: .95em;
+            color: #ffaaaa;
+        }
+        
+        img.commentpic {
+            float: left;
+            margin-right: 5px;
+            max-height: 50px;
+            max-width: 50px;
+        }
+        
+        .pagenav {
+            text-align: center;
+        }
+        
+        .pagenav > span {
+            margin-left: 25px;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+<div class="pagetitle"><a href="/community/profile/{{ basicInfo.id }}/">{{ basicInfo.display_name }}</a>'s Profile Comments</div>
+<div class="contentwrapperhalf">
+    <div class="float">
+        {% if GLOBAL.user.isLoggedIn() and (basicInfo.allow_comments or basicInfo.id == GLOBAL.user.getId()) %}
+            <div class="_right" style="margin-bottom:5px;">
+                <a href="/community/profile/{{ basicInfo.id }}/conversation/{{ GLOBAL.user.getId() }}/?compose=true" >Post a {% if basicInfo.id == GLOBAL.user.getId() %}Status Update{% else %}Comment{% endif %}</a> {% if not basicInfo.allow_comments %}(Others cannot post){% endif %}
+            </div>
+        {% elseif not basicInfo.allow_comments %}
+            <div class="_right" style="margin-bottom:5px;">
+                {{ basicInfo.display_name }} does not allow comments.
+            </div>
+        {% endif %}
+        {% for c in comments %}
+            <div class="sectionwrapper">
+                {% if c.private and GLOBAL.user.getId() != c.from_id and GLOBAL.user.getId() != c.to_id %}
+                    <div class="_center">(This comment is private)</div>
+                {% else %}
+                    {{ userCard({
+                        staticUrl: GLOBAL.staticUrl,
+                        id: c.from_id,
+                        nickname: c.display_name,
+                        inventory: c.itemstring|split(','),
+                        vip_rank: c.viprank,
+                        quest_points: c.qp,
+                        quest_rank: c.qrank,
+                        profile_pic_type: c.profile_pic_type,
+                        character: {
+                            ign: c.ign,
+                            level: c.level,
+                            fam: c.fam,
+                            fam_member_type: cmt.fam_member_type
+                        }
+                    }) }}
+                    <div class="commentbody">
+                        {% if c.private %}
+                            <div class="privatecomment">This comment is private.</div>
+                        {% endif %}
+                        {{ c.comment|bbcode }}
+                    </div>
+                    
+                    <div class="commentlinks">
+                        <span class="commenttime"><a title="{{ c.time|date('r') }}" href="/community/comment/{{ c.id }}/">{{ c.time|relativeTime }} ago</a></span>
+                        
+                        {% if c.to_id != c.from_id %}
+                            <span><a href="/community/profile/{{ c.from_id }}/conversation/{{ c.to_id }}/"><i class="fa fa-comments"></i> View Conversation</a></span>
+                        {% else %}
+                            <span><a href="/community/profile/{{ c.from_id }}/conversation/{{ c.to_id }}/"><i class="fa fa-comments"></i> View Status Updates</a></span>
+                        {% endif %}
+                        
+                        {% if GLOBAL.user.getId() == basicInfo.id and basicInfo.id == c.to_id and basicInfo.id != c.from_id %}
+                            <span><a href="/community/profile/{{ c.from_id }}/conversation/{{ c.to_id }}/?compose=true&private={{ c.private }}"><i class="fa fa-reply"></i> Reply</a></span>
+                        {% elseif c.from_id != GLOBAL.user.getId() and basicInfo.id != c.from_id %}
+                            <span><a href="/community/profile/{{ c.from_id }}/conversation/{{ GLOBAL.user.getId() }}/?compose=true"><i class="fa fa-comment"></i>  Post Comment to {{ c.display_name }}</a></span>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            </div>
+            {% else %}
+                <div class="_center">No comments have been added to {{ basicInfo.display_name }}'s profile yet!</div>
+        {% endfor %}
+        <div style="margin-top:10px; margin-bottom:10px;">
+            <div class="pagenav">
+                <span>
+                    {% if page != 1 %}
+                        <a href="?page=1">&lt;&lt First Page</a>
+                    {% else %}
+                        &lt;&lt First Page
+                    {% endif %}
+                </span>
+                <span>
+                    {% if page > 1 %}
+                        <a href="?page={{ page - 1 }}">&lt; Previous Page</a>
+                    {% else %}
+                        &lt; Previous Page
+                    {% endif %}
+                </span>
+                <span>
+                    {% if page < totalPages %}
+                        <a href="?page={{ page + 1 }}">Next Page &gt;</a>
+                    {% else %}
+                        Next Page &gt;
+                    {% endif %}
+                </span>
+                <span>
+                    {% if totalPages > 0 and page != totalPages %}
+                        <a href="?page={{ totalPages }}">Last Page &gt;&gt;</a>
+                    {% else %}
+                        Last Page &gt;&gt;
+                    {% endif %}
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends "base.twig" %}
+
+{% block title %}Audifan.net - Quest Archiver{% endblock %}
+
+{% block pagetitle %}<a href="/quests/">Quests</a>: <a href="/quests/grader/">Grader Hub</a>: Quest Archiver{% endblock %}
+
+{% block body %}
+    <div class="contentwrapperhalf">
+        <div class="float">
+            <form method="post" action="/quests/grader/archiver/">
+                Month: <input type="text" style="width:50px;" name="month" maxlength="2" autocomplete="off" /><br />
+                Year: <input type="text" style="width:75px;" name="year" maxlength="4" autocomplete="off" /><br />
+                <input type="submit" name="submit_archive" value="Archive Now!" /> It'll take a while to archive.  Be patient!
+            </form>
+        </div>
+    </div>
+{% endblock %}

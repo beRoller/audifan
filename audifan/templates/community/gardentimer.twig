@@ -1,0 +1,476 @@
+{% extends "base.twig" %}
+{% import "macros/forms.twig" as forms %}
+
+{% block title %}Audifan.net - Couple Garden Timers{% endblock %}
+{% block pagetitle %}Couple Garden Timers{% endblock %}
+
+{% block head %}
+    <script type="text/javascript" src="{{ GLOBAL.staticUrl }}/js/swfobject.js"></script>
+    <script type="text/javascript" src="{{ GLOBAL.staticUrl }}/js/audifan.gardentimer-v2.6.js"></script>
+    <script type="text/javascript">$(function(){GardenTimer.init("{% if notifOptions[0] == "1" %}alert{% elseif notifOptions[1] == "1" %}desktop{% else %}none{% endif %}",{% if notifOptions[2] == "1" %}true{% else %}false{% endif %},{{ notifVolume / 5.0 }});});</script>
+    <style>
+        #timers {
+                
+        }
+        
+        @keyframes timerloadspin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+        
+        #timerload {
+            -moz-animation: timerloadspin 1.5s linear 0s infinite;
+            -webkit-animation: timerloadspin 1.5s linear 0s infinite;
+            animation: timerloadspin 1.5s linear 0s infinite;
+        }
+            
+        #timermessage {
+            margin-top: 10px;
+            text-align: center;
+            font-size: 13pt;
+            font-weight: bold;
+            background-color: #AAA;
+            color: #000;
+            padding: 5px;
+            cursor: default;
+        }
+            
+        #timermessage img {
+            vertical-align: middle;
+        }
+            
+        #timermessage a {
+            color: #0000FF;
+        }
+            
+        #currenttime {
+            margin-top: 10px;
+            text-align: center;
+            font-size: 14pt;
+        }
+            
+        #currenttimelabel {
+            font-size: 8pt;
+            font-weight: bold;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-align: center;
+        }
+            
+        .timercontainer {
+            
+            padding: 3px;
+            margin: 20px 0px;
+        }
+            
+        .timername {
+            font-size: 16pt;
+        }
+            
+        .timername img {
+            margin-left: 5px;
+        }
+            
+        .timernameedit {
+            margin-bottom: 5px;
+        }
+            
+        .timernameeditinput {
+            width: 150px;
+            font-size: 16pt;
+        }
+            
+        .timernameeditsave, .timernameeditcancel {
+            font-size: 9pt;
+            margin-left: 7px;
+        }
+            
+        .timernameeditpencil {
+            cursor: pointer;
+        }
+            
+        table.timertable {
+            width: 100%;
+        }
+            
+        table.timertable tr td {
+            width: 33%;
+            padding: 3px;
+            vertical-align: top;
+        }
+            
+        div.timerlabel {
+            font-size: 14pt;
+            font-weight: bold;
+            background-position: left top;
+            background-repeat: no-repeat;
+        }
+            
+        div.waterlabel {
+            background-image: url("{{ GLOBAL.staticUrl }}/img/couplegarden/water.png");
+            padding-left: 76px;
+            min-height: 56px;
+        }
+            
+        div.dustlabel {
+            background-image: url("{{ GLOBAL.staticUrl }}/img/couplegarden/dust.png");
+            padding-left: 76px;
+            min-height: 57px;
+        }
+            
+        div.fertilizelabel {
+            background-image: url("{{ GLOBAL.staticUrl }}/img/couplegarden/fertilize.png");
+            padding-left: 76px;
+            min-height: 56px;
+        }
+            
+        div.rosemarylabel {
+            background-image: url("{{ GLOBAL.staticUrl }}/img/couplegarden/rosemary.png");
+            padding-left: 76px;
+            min-height: 64px;
+        }
+            
+        div.spearmintlabel {
+            background-image: url("{{ GLOBAL.staticUrl }}/img/couplegarden/spearmint.png");
+            padding-left: 76px;
+            min-height: 58px;
+        }
+            
+        div.peppermintlabel {
+            background-image: url("{{ GLOBAL.staticUrl }}/img/couplegarden/peppermint.png");
+            padding-left: 76px;
+            min-height: 58px;
+        }
+            
+        div.timerdisplay {
+            font-size: 9pt;
+        }
+            
+        div#timerlinks a {
+            margin: 0px 10px;
+        }
+            
+        div#timerlinks a img {
+            vertical-align: middle;
+            border: 0px;
+            margin-right: 5px;
+        }
+            
+        div#timerlinks a span {
+            vertical-align: middle;
+        }
+            
+        div#volumewrapper {
+            cursor: default;
+        }
+            
+        div#volumewrapper span {
+            cursor: pointer;
+        }
+            
+        div#volumewrapper span img {
+            padding: 2px;
+        }
+            
+        .chosenvol {
+            padding: 0px;
+            border: 2px solid #FF0000;
+        }
+    </style>
+    
+    <script type="text/javascript">
+    var infobarAlert = false;
+            
+    var checkNotificationAvailability = function() {
+        if (window.Notification) {
+            switch (Notification.permission) {
+                    case "granted": // Notifications allowed.
+                        var dn = new Notification("Desktop Notifications", {
+                            "body": "You must save your changes before Desktop Notifications are fully enabled.\nClick this bubble to save changes now, or do so on the garden timer page."
+                        });
+                        dn.onclick = function () {
+                            $("#submit_notifopts").click();
+                        };
+                        dn.show();
+                        break;
+
+                    case "denied": // Denied
+                        alert("You have denied Audifan.net from displaying Desktop Notifications.\n\nTo change this setting in Chrome, right click this page, click 'View page info,' and under Permissions change Notifications to 'Always allow on this site.'\n\nTo change this setting in Firefox, right click this page, click 'View page info,' click the Permissions tab, and under Show Notifications, click 'Allow.'");
+                        break;
+
+                    default:
+                        if (!infobarAlert) {
+                            alert("To enable Desktop Notifications, be sure to click Allow on the infobar that appears at the top of the page.");
+                            Notification.requestPermission(checkNotificationAvailability);
+                            infobarAlert = true;
+                        }
+                        else
+                            window.location.reload(); // Reload because they X'd out the permission request dialog.
+                }
+            }
+            else {
+                // Browser doesn't support it.
+                alert("Sorry. Your browser doesn't support Desktop Notifications.");
+                $("#timernotif_alert").attr("checked", "checked");
+            }
+        }
+
+        function showShareOptions(id) {
+            $("#timershareoptions_" + id).slideDown("fast");
+        }
+
+        function hideShareOptions(id) {
+            $("#timershareoptions_" + id).slideUp("fast");
+        }
+
+        $(function () {
+            $("#volumewrapper span img").click(function (e) {
+                var lv = $(e.target).data("level");
+                $("#volumewrapper span img").removeClass("chosenvol");
+                $("#vol" + lv).addClass("chosenvol");
+                GardenTimer.SOUNDVOLUME = lv / 5.0;
+                $("#volumelevel").val(lv);
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block body %}
+    <div class="contentwrapperfull">
+        {% if GLOBAL.user.isLoggedIn() %}
+        <div class="_right"><a href="/help/gardentimer/" style="cursor:help;">Need Help?</a></div>
+        
+        <div class="_center" style="margin-bottom:10px;">
+            For the most accurate times,<br />
+            click the respective "Start Timer" button <b>after</b> you're finished,<br />
+            and click the water, dust, and fertilize buttons <b>after</b> you plant new seeds.
+        </div>
+        
+        <div id="timermessage">Your timers are loading... <img id="timerload" src="{{ GLOBAL.staticUrl }}/img/timerload.png" alt="Loading..." /></div>
+    
+        <div class="currenttimecontainer">
+            <div id="currenttime">Loading...</div>
+            <div id="currenttimelabel">APPROXIMATE AUDITION TIME</div>
+        </div>
+        
+        <div id="timers">
+            <form method="post" action="/community/gardentimer/">
+                {% for i in 0..numTimers-1 %}
+                    <div class="timercontainer sectionwrapper" id="timer_{{ timers[i].timer_id }}">
+                        <!-- Timer Name -->
+                        <div class="timername" id="timername_{{ timers[i].timer_id }}">
+                            <span id="timernamedisplay_{{ timers[i].timer_id }}">{{ timers[i].timer_name|default("(Unnamed)") }}</span>
+                            <img class="timernameeditpencil" id="timernameeditpencil_{{ timers[i].timer_id }}" title="Rename" src="{{ GLOBAL.staticUrl }}/img/fff/pencil.png" />
+                        </div>
+                        
+                        <!-- Timer Edit -->
+                        <div class="timernameedit" id="timernameedit_{{ timers[i].timer_id }}" style="display:none;">
+                            {{ forms.textField("timername_"~timers[i].timer_id, timers[i].timer_name, "timernameeditinput_"~timers[i].timer_id, "timernameeditinput", 20) }}
+                            {{ forms.submit("submit_nameedit", "Save All", "", "timernameeditsave") }}
+                            {{ forms.button("Cancel", "timernameeditcancel_"~timers[i].timer_id, "timernameeditcancel") }}
+                        </div>
+                        
+                        <!-- Actual Timers -->
+                        <div>
+                            <table class="timertable">
+                                <tr>
+                                    <td>
+                                        <div class="timerlabel waterlabel">
+                                            Water
+                                            <div class="timerdisplay" id="timerdisplaywater_{{ timers[i].timer_id }}">0:00:00</div>
+                                            <div class="timerstart" id="timerstartwater_{{ timers[i].timer_id }}" style="display:none;">{{ forms.button("Start Water Timer", "waterstartbutton_"~timers[i].timer_id, "waterstartbutton") }}</div>
+                                            <div class="timersecretstart" id="timersecretstartwater_{{ timers[i].timer_id }}" style="display:none;">
+                                                <div style="font-size:9pt; font-weight:bold;">
+                                                    Have you planted seeds in<br />
+                                                    your Secret Garden recently?
+                                                </div>
+                                                {{ forms.button("Yes", "watersecretstartbuttonyes_"~timers[i].timer_id, "watersecretstartbuttonyes") }}
+                                                {{ forms.button("No", "watersecretstartbuttonno_"~timers[i].timer_id, "watersecretstartbuttonno") }}
+                                                {{ forms.button("Cancel", "watersecretstartbuttoncancel_"~timers[i].timer_id, "watersecretstartbuttoncancel") }}
+                                            </div>
+                                            <div class="timerstop" id="timerstopwater_{{ timers[i].timer_id }}" style="display:none;">
+                                                {{ forms.button("Cancel Water Timer", "waterstopbutton_"~timers[i].timer_id, "waterstopbutton") }}
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="timerlabel dustlabel">
+                                            Dust
+                                            <div class="timerdisplay" id="timerdisplaydust_{{ timers[i].timer_id }}">0:00:00</div>
+                                            <div class="timerstart" id="timerstartdust_{{ timers[i].timer_id }}" style="display:none;">{{ forms.button("Start Dust Timer", "duststartbutton_"~timers[i].timer_id, "duststartbutton") }}</div>
+                                            <div class="timersecretstart" id="timersecretstartdust_{{ timers[i].timer_id }}" style="display:none;">
+                                                <div style="font-size:9pt; font-weight:bold;">
+                                                    Have you planted seeds in<br />
+                                                    your Secret Garden recently?
+                                                </div>
+                                                {{ forms.button("Yes", "dustsecretstartbuttonyes_"~timers[i].timer_id, "dustsecretstartbuttonyes") }}
+                                                {{ forms.button("No", "dustsecretstartbuttonno_"~timers[i].timer_id, "dustsecretstartbuttonno") }}
+                                                {{ forms.button("Cancel", "dustsecretstartbuttoncancel_"~timers[i].timer_id, "dustsecretstartbuttoncancel") }}
+                                            </div>
+                                            <div class="timerstop" id="timerstopdust_{{ timers[i].timer_id }}" style="display:none;">
+                                                {{ forms.button("Cancel Dust Timer", "duststopbutton_"~timers[i].timer_id, "duststopbutton") }}
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="timerlabel fertilizelabel">
+                                            Fertilize
+                                            <div class="timerdisplay" id="timerdisplayfertilize_{{ timers[i].timer_id }}">0:00:00</div>
+                                            <div class="timerstart" id="timerstartfertilize_{{ timers[i].timer_id }}" style="display:none;">{{ forms.button("Start Fertilize Timer", "fertilizestartbutton_"~timers[i].timer_id, "fertilizestartbutton") }}</div>
+                                            <div class="timerstop" id="timerstopfertilize_{{ timers[i].timer_id }}" style="display:none;">
+                                                {{ forms.button("Cancel Fertilize Timer", "fertilizestopbutton_"~timers[i].timer_id, "fertilizestopbutton") }}
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="timerlabel rosemarylabel">
+                                            Rosemary
+                                            <div class="timerdisplay" id="timerdisplayrosemary_{{ timers[i].timer_id }}">0:00:00</div>
+                                            <div class="timerstart" id="timerstartrosemary_{{ timers[i].timer_id }}" style="display:none;">{{ forms.button("Start Rosemary Timer", "rosemarystartbutton_"~timers[i].timer_id, "rosemarystartbutton") }}</div>
+                                            <div class="timerstop" id="timerstoprosemary_{{ timers[i].timer_id }}" style="display:none;">
+                                                {{ forms.button("Cancel Rosemary Timer", "rosemarystopbutton_"~timers[i].timer_id, "rosemarystopbutton") }}
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="timerlabel spearmintlabel">
+                                            Spearmint
+                                            <div class="timerdisplay" id="timerdisplayspearmint_{{ timers[i].timer_id }}">0:00:00</div>
+                                            <div class="timerstart" id="timerstartspearmint_{{ timers[i].timer_id }}" style="display:none;">{{ forms.button("Start Spearmint Timer", "spearmintstartbutton_"~timers[i].timer_id, "spearmintstartbutton") }}</div>
+                                            <div class="timerstop" id="timerstopspearmint_{{ timers[i].timer_id }}" style="display:none;">
+                                                {{ forms.button("Cancel Spearmint Timer", "spearmintstopbutton_"~timers[i].timer_id, "spearmintstopbutton") }}
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="timerlabel peppermintlabel">
+                                            Peppermint
+                                            <div class="timerdisplay" id="timerdisplaypeppermint_{{ timers[i].timer_id }}">0:00:00</div>
+                                            <div class="timerstart" id="timerstartpeppermint_{{ timers[i].timer_id }}" style="display:none;">{{ forms.button("Start Peppermint Timer", "peppermintstartbutton_"~timers[i].timer_id, "peppermintstartbutton") }}</div>
+                                            <div class="timerstop" id="timerstoppeppermint_{{ timers[i].timer_id }}" style="display:none;">
+                                                {{ forms.button("Cancel Peppermint Timer", "peppermintstopbutton_"~timers[i].timer_id, "peppermintstopbutton") }}
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                                            
+                        <!-- Timer Options -->
+                        <div id="timerlinks">
+                            {% if timers[i].account_id1 != 0 and timers[i].account_id1 != GLOBAL.user.getId() %}
+                                <span style="margin:0px 10px;">Shared with {{ timers[i].display_name1 }}. <a href="?do=sharecancel&timer={{ timers[i].timer_id }}">Stop Sharing</a></span>
+                            {% elseif timers[i].account_id2 != 0 and timers[i].account_id2 != GLOBAL.user.getId() %}
+                                <span style="margin:0px 10px;">Shared with {{ timers[i].display_name2 }}. <a href="?do=sharecancel&timer={{ timers[i].timer_id }}">Stop Sharing</a></span>
+                            {% elseif timers[i].authorized != 0 %}    
+                                <span style="margin:0px 10px;">Share request sent. <a href="?do=sharecancel&timer={{ timers[i].timer_id }}">Cancel Request</a></span>
+                            {% else %}
+                                <a href="javascript:;" onclick="showShareOptions({{ timers[i].timer_id }});"><span>Share this Timer</span></a>
+                            {% endif %}
+                            
+                            {% if numTimers > 1 %}
+                                <a href="?do=removetimer&timer={{ timers[i].timer_id }}" onclick="return confirm('Are you sure you want to remove this timer?');"><img src="{{ GLOBAL.staticUrl }}/img/fff/delete.png" /><span>Delete this Timer</span></a>
+                            {% endif %}
+                            
+                            {% if (i + 1) < numTimers %}
+                                <a href="?do=movetimer&direction=down&timer={{ timers[i].timer_id }}"><img src="{{ GLOBAL.staticUrl }}/img/fff/arrow_down.png" /><span>Move this Timer Down</span></a>
+                            {% endif %}
+                            
+                            {% if i > 0 %}
+                                <a href="?do=movetimer&direction=up&timer={{ timers[i].timer_id }}"><img src="{{ GLOBAL.staticUrl }}/img/fff/arrow_up.png" /><span>Move this Timer Up</span></a>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Timer Sharing -->
+                        <div class="timershareoptions" id="timershareoptions_{{ timers[i].timer_id }}" style="display:none;">
+                            With whom do you want to share this timer? Please enter their display name: 
+                            {{ forms.textField("share_displayname_"~timers[i].timer_id) }}
+                            {{ forms.submit("submit_shareenable_"~timers[i].timer_id, "Save") }}
+                            <input type="button" class="prettyinputbutton" value="Cancel" onclick="hideShareOptions({{ timers[i].timer_id }});" />
+                        </div>
+                    </div>
+                {% endfor %}
+                
+                {% if numTimers < maxTimers %}
+                    <div style="margin-top:10px; vertical-align:middle;">
+                        <div><a href="?do=addtimer"><img src="{{ GLOBAL.staticUrl }}/img/fff/add.png" style="vertical-align:middle; border:0px; margin-right:5px;" /><span style="vertical-align:middle;">Add Another Timer</span></a></div>
+                    </div>
+                {% endif %}
+                {% if shareRequests|length > 0 %}
+                    <div style="margin-top:10px;">
+                        <div class="sectionheading" style="text-align:left;">My Share Requests</div>
+                        <div style="margin-left:10px;">
+                            {% for s in shareRequests %}
+                                <div>
+                                    {% if s.account_id1 != "0" %}{{ s.display_name1 }}{% else %}{{ s.display_name2 }}{% endif %} wants to share a timer with you. 
+                                    <a style="margin:0px 10px;" href="?do=shareaccept&timer={{ s.timer_id }}">Accept</a> 
+                                    <a href="?do=sharedecline&timer={{ s.timer_id }}">Decline</a>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endif %}
+                
+                <div style="margin-top:10px;">
+                    <form method="post" action="/community/gardentimer/">
+                        <div class="sectionheading" style="text-align:left;">Notification Options</div>
+                        <div><b>Notification Type</b></div>
+                        <div style="margin-left:10px;">
+                            <div><input id="timernotif_alert"{% if notifOptions[0] == "1" %} checked{% endif %} type="radio" name="timernotif" value="alert" /> In-Browser Alert Boxes</div>
+                            <div><input{% if notifOptions[1] == "1" %} checked{% endif %} type="radio" name="timernotif" value="desktop" onclick="checkNotificationAvailability();" /> Desktop Notifications (Chrome and Firefox only)</div>
+                            <div><input{% if (notifOptions[0] == "0" and notifOptions[1] == "0") %} checked{% endif %} type="radio" name="timernotif" value="none" /> None</div>
+                        </div>
+                        <div><b>Notification Sound</b></div>
+                        <div style="margin-left:10px; margin-bottom:10px;">
+                            <div><input{% if (notifOptions[2] == "1") %} checked{% endif %} type="checkbox" name="timersound"  /> Play a sound when a notification pops up.</div>
+                            <div style="margin-top:5px;">
+                                <div>Volume:</div>
+                                <div id="volumewrapper">
+                                    <span title="Change volume to 20%"><img src="{{ GLOBAL.staticUrl }}/img/vol1.png" id="vol1" data-level="1" class="{% if (notifVolume == 1) %}chosenvol{% endif %}" /></span>
+                                    <span title="Change volume to 40%"><img src="{{ GLOBAL.staticUrl }}/img/vol2.png" id="vol2" data-level="2" class="{% if (notifVolume == 2) %}chosenvol{% endif %}" /></span>
+                                    <span title="Change volume to 60%"><img src="{{ GLOBAL.staticUrl }}/img/vol3.png" id="vol3" data-level="3" class="{% if (notifVolume == 3) %}chosenvol{% endif %}" /></span>
+                                    <span title="Change volume to 80%"><img src="{{ GLOBAL.staticUrl }}/img/vol4.png" id="vol4" data-level="4" class="{% if (notifVolume == 4) %}chosenvol{% endif %}" /></span>
+                                    <span title="Change volume to 100%"><img src="{{ GLOBAL.staticUrl }}/img/vol5.png" id="vol5" data-level="5" class="{% if (notifVolume == 5) %}chosenvol{% endif %}" /></span>
+                                </div>
+                                <input type="hidden" id="volumelevel" name="volumelevel" value="{{ notifVolume }}" />
+                            </div>
+                            <div style="margin-top:5px;">
+                                <input id="submit_notifopts" type="submit" name="submit_notifopts" value="Save" class="prettyinputbutton" />
+                                <input type="button" style="margin-left:10px;" class="prettyinputbutton" value="Show Test Notification" onclick="GardenTimer.notify(null, 'water', 'Testing Notifications', 'This is a test notification.');" />
+                                Save changes before testing your notification settings.
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                
+                
+                
+            </form>
+        </div>
+        {% else %}
+            <div class="_center">Please <a href="/account/?thru=/community/gardentimer/">log in</a> to use the garden timer.</div>
+        {% endif %}
+    </div>
+        
+        <div style="position:absolute;left:-1000px;visibility:hidden;">
+            <!--<div id="gardentimersoundcontainer"></div>-->
+            <audio id="gardentimersound-water">
+                <source src="{{ GLOBAL.staticUrl }}/audio/water.wav" type="audio/wav">
+            </audio>
+            <audio id="gardentimersound-dust">
+                <source src="{{ GLOBAL.staticUrl }}/audio/dust.wav" type="audio/wav">
+            </audio>
+            <audio id="gardentimersound-fertilize">
+                <source src="{{ GLOBAL.staticUrl }}/audio/fertilize.wav" type="audio/wav">
+            </audio>
+            <audio id="gardentimersound-secret">
+                <source src="{{ GLOBAL.staticUrl }}/audio/secret.wav" type="audio/wav">
+            </audio>
+        </div>
+{% endblock %}

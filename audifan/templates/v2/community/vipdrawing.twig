@@ -1,0 +1,208 @@
+{% extends "base.twig" %}
+{% import "macros/forms.twig" as forms %}
+
+{% block title %}Audifan.net - VIP Drawing{% endblock %}
+
+{% block pagetitle %}VIP Drawing{% endblock %}
+
+{% block head %}
+    <style>
+        tr.mychance td {
+            background-color: #005500;
+        }
+
+        .pastwinnerwrapper {
+            margin: 5px 0px;
+        }
+
+        .pastwinnerwrapper .pastwinnername {
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .pastwinnerwrapper .pastwinnermonth {
+            font-size: 14px;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="text-center">
+                <h2>{{ nextDrawingTime|relativeTime }}</h2>
+                Until the Next Drawing
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 col-sm-6">
+            {{ sectionStart("Enter Here!") }}
+                {% if GLOBAL.user.isLoggedIn() %}
+                    {% if not eligibleToEnter %}
+                        <div class="text-center">
+                            You are not eligible to enter because you have not yet earned an entry this month.
+                        </div>
+                    {% else %}
+                        <div class="text-center">You have earned <b>{{ timesEntered }}</b> entr{% if timesEntered == 1 %}y{% else %}ies{% endif %} this month.</div>
+                        {% if enteredIgn == "" %}
+                            <div class="text-center">
+                                You are eligible to enter! Please enter your Audition IGN below.
+                            </div>
+                            <div style="margin-top:10px;">
+                                <form method="post" action="/community/vipdrawing/" class="form-horizontal" role="form">
+                                    <div class="form-group">
+                                        <label for="ign" class="control-label col-sm-3">IGN:</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control" name="ign" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group text-center"><input type="submit" value="Enter Drawing" name="submit_ign" class="btn"></div>
+                                </form>
+                            </div>
+                        {% else %}
+                            <div class="text-center">
+                                You are entered in the drawing as <b>{{ enteredIgn }}</b>.
+                                <div style="margin-top:10px;">
+                                    <form method="post" action="/community/vipdrawing/" class="form-horizontal" role="form">
+                                        <div class="form-group text-center">
+                                            <input type="submit" value="Remove Name From Drawing" name="submit_remove" class="btn" />
+                                        </div>
+                                    </form>
+                                </div>
+                                <div style="font-size:12px;">
+                                    You will retain your entries if you remove your name from the drawing.
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endif %}
+                {% else %}
+                    <div class="text-center">
+                        Please <a href="/account/?thru=/community/vipdrawing/">log in</a> to check your eligibility to enter the drawing.
+                    </div>
+                {% endif %}
+            {{ sectionEnd() }}
+            
+            {{ sectionStart("Current Chances of Winning") }}
+                {% if maxEntries > 0 %}
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Number of Entries</th>
+                                <th>Chance of Winning</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {% for i in 1..maxEntries %}
+                                <tr class="{% if enteredIgn != "" and i == timesEntered %}mychance{% endif %}">
+                                    <td>{{ i }}</td>
+                                    <td>{{ ((i / totalEntries) * 100)|round(2) }}%</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+
+                    {% if enteredIgn != "" and timesEntered > 0 %}
+                        <div class="text-center">
+                            Your current chance of winning is highlighted in <span style="background-color:#005500; padding:3px;">green</span>.
+                        </div>
+                    {% endif %}
+                {% else %}
+                    <div class="text-center">
+                        Nobody has earned any entries yet.
+                    </div>
+                {% endif %}
+
+            {{ sectionEnd() }}
+
+            {{ sectionStart("How to Enter the Drawing") }}
+                <ol class="steps">
+                    <li>Earn an entry.
+                        <ul>
+                            <li>The first way to earn an entry is to earn VIP status.</li>
+                            <li>If you log in every day in a week (Monday to Sunday), you will earn VIP status.</li>
+                            <li>Each time you get VIP status in a month, you will be entered that many times for the drawing at the end of that month.</li>
+                            <li>Another way to earn entries is from the <a href="/community/happybox/">Audifan Happy Box</a>.  You must already have an entry from getting VIP status before you can win an entry from the Happy Box.</li>
+                        </ul>
+                    </li>
+                        
+                    <li>Enter your in-game name on this page
+                        <ul>
+                            <li>You can only win if you enter your Audition in-game name on this page.</li>
+                        </ul>
+                    </li>
+                    
+                    <li>The winner is chosen!
+                        <ul>
+                            <li>On the Friday after the last Sunday of the month, a winner will be randomly chosen!</li>
+                            <li>The winner will receive a prize of their choice, as listed below.</li>
+                            <li>You must claim your prize from the Prize Vouchers section of the <a href="/account/stuff/">My Stuff page</a> within 2 weeks of winning or your prize voucher will disappear.</li>
+                            <li>The prize will be sent to your Gift Box in the Audition Fashion Mall (the sender will be either Audifan or tr848).</li>
+                        </ul>
+                    </li>
+                </ol>
+                    
+                <div class="text-center" style="margin-top:10px;"><b>Additional Information</b></div>
+                <ul>
+                    <li>Once you choose your prize, you will not be able to change it.</li>
+                    <li>The prize will be sent as soon as possible after you choose it.  It will be sent to the IGN that you entered the drawing with.</li>
+                    <li>The prize will expire from your Audition Gift Box 90 days after we send it.</li>
+                </ul>
+                
+            {{ sectionEnd() }}
+            
+            {{ sectionStart("Prize Pool") }}
+                <ul>
+                    <li>Any cash Face item (30 days) that has a 7 day price of 900 Cash or less</li>
+                    <li>Any cash Shoes item (30 days) that has a 7 day price of 900 Cash or less</li>
+                    <li>Any cash Accessory item (7 days) that has a price of 1,800 cash or less</li>
+                    <li>Three (3) x2 EXP Cards (20 rounds each)</li>
+                    <li>Three (3) BEATS 2x Cards (20 rounds each)</li>
+                    <li>One (1) 3X EXP Card (20 rounds)</li>
+                    <li>One (1) 3X BEATS Card (20 rounds)</li>
+                    <li>Two (2) 2X COUPLE POINT Items (10 rounds each)</li>
+                    <li>Event Room Pass (7 days)</li>
+                    <li>Premium Diary (30 days)</li>
+                    <li>Crystal Star Style Finish (7 days)</li>
+                    <li>Fantasia Finish (7 days)</li>
+                    <li>Twinkling Finish (7 days)</li>
+                    <li>Premium Messenger (30 days)</li>
+                    <li>Premium Messenger Plus (30 days)</li>
+                    <li>Happy Audition 2016 Room Background (30 days)</li>
+                    <li>Cool Summer Room Background (30 days)</li>
+                    <li>Music holic Room Background (30 days)</li>
+                </ul>
+            {{ sectionEnd() }}
+        </div>
+        
+        <div class="col-md-6 col-sm-6">
+            {{ sectionStart("Past Winners") }}
+                <div class="text-center">
+                    <div class="pastwinnerwrapper">
+                        <div class="pastwinnername">??</div>
+                        <div class="pastwinnermonth">
+                            {% if winners[0].winner_month < 12 %}
+                                {{ months[ winners[0].winner_month + 1 ] }} {{ winners[0].winner_year }}
+                            {% else %}
+                                {{ months[0] }} {{ winners[0].winner_year + 1 }}
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    {% for w in winners %}
+                        <div class="pastwinnerwrapper">
+                            <div class="pastwinnername">
+                                <a href="/community/profile/{{ w.winner_account_id }}/" target="_blank">{{ w.display_name }}</a>
+                            </div>
+                            <div class="pastwinnermonth">
+                                {{ months[w.winner_month] }} {{ w.winner_year }}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {{ sectionEnd() }}
+        </div>
+    </div>
+{% endblock %}

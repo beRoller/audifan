@@ -1,0 +1,66 @@
+{% extends "base.twig" %}
+{% import "macros/forms.twig" as forms %}
+
+{% block title %}Audifan.net - Tickets - View Ticket{% endblock %}
+
+{% block pagetitle %}<a href="/tickets/">Tickets</a>: View Ticket{% endblock %}
+
+{% block body %}
+    <div class="contentwrapperhalf">
+        <div class="float">
+            <div class="sectionwrapper">
+                <div class="sectionheading">Original Ticket</div>
+                <div><b>Title:</b> {{ ticketInfo.ticket_title }}</div>
+                <div><b>Time:</b> {{ ticketInfo.ticket_time|date("r") }}</div>
+                <div style="margin-top:10px;">
+                    <div><b>Details:</b></div>
+                    {{ ticketInfo.ticket_body|nl2br }}
+                </div>
+            </div>
+            <div class="sectionwrapper">
+                <div class="sectionheading">Comments</div>
+                {% if comments|length > 0 %}
+                    {% for c in comments %}
+                        <div style="margin-bottom:10px; background-color:#{{ GLOBAL.theme.colors.darkerhighlight }}; padding:5px;">
+                            <div style="font-size:1.3em; vertical-align:middle;">
+                                <span class="_vmiddle">{% if c.account_id == 0 %}Creator{% elseif c.account_id != -1 %}{{ c.display_name }}{% endif %}</span>
+                                {% if c.account_type == 3 %}<img src="{{ GLOBAL.staticUrl }}/img/badges/admin.png" style="vertical-align:middle; margin-left:5px;" />{% endif %}
+                            </div>
+                            <div>
+                                {{ c.comment_body|nl2br }}
+                                <div style="margin-top:5px;">{{ c.comment_time|relativeTime }} ago</div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="_center">No comments have been added.</div>
+                {% endif %}
+            </div>
+            {% if ticketInfo.ticket_open %}
+                <div class="sectionwrapper">
+                    {% if ticketInfo.ticket_open %}
+                        <div class="sectionheading">Add a Comment</div>
+                        {{ forms.start("/tickets/view/"~ticketInfo.ticket_id~"-"~ticketInfo.ticket_hash~"/") }}
+                        <div style="text-align:center;">
+                            <textarea class="prettyinputtext" name="comment" style="width:95%; height:150px; resize:vertical;">{{ newcomment }}</textarea>
+                        </div>
+                        <div class="_center" style="margin-top:5px;">
+                            {{ forms.submit("submit_comment", "Submit Comment") }}
+                        </div>
+                        {{ forms.end() }}
+                    {% else %}
+                        <div class="_center">This ticket is closed.</div>
+                    {% endif %}
+                </div>
+            {% endif %}
+            {% if GLOBAL.user.isAdmin() %}
+                <div class="sectionwrapper">
+                    <div class="sectionheading">Admin Options</div>
+                    <div class="_center">
+                        <a href="?do=close">Close Ticket</a>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

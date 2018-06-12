@@ -1,0 +1,66 @@
+{% extends "base.twig" %}
+
+{% block title %}Audifan.net - Site Events{% endblock %}
+
+{% block pagetitle %}Site Events{% endblock %}
+
+{% block head %}
+    <style>
+    
+.guidelink {
+    text-align: center;
+    font-size: 1.75em;
+    margin-bottom: 10px;
+}
+
+.guidelink a {
+    text-decoration: none;
+    display: block;
+    font-weight: bold;
+}
+
+.guidelink a:hover {
+    color: #FFFFFF;
+}
+
+.guidedesc {
+    font-size: 9pt;
+}
+
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="contentwrapperhalf">
+        <div class="float">
+            <div class="guidelink">
+                <div style="font-weight:bold;">VIP Status</div>
+                <div class="guidedesc">Log in every day in a week (Monday through Sunday) to earn a VIP badge and have your name featured on the front page of Audifan.</div>
+            </div>
+            <div class="guidelink">
+                <a href="/community/vipdrawing/">VIP Drawing</a>
+                <div class="guidedesc">Enter to win an Audition prize each month!</div>
+            </div>
+            <div class="guidelink">
+                <a href="/community/vipranking/">VIP Ranking</a>
+                <div class="guidedesc">See who has earned the most VIPs.</div>
+            </div>
+            <div class="guidelink">
+                <a href="/quests/">Quests</a>
+                <div class="guidedesc">Complete weekly quests to earn quest points, to earn badges, and to improve your skills.</div>
+            </div>
+            <div class="guidelink">
+                <a href="/quests/ranking/">Quest Rankings</a>
+                <div class="guidedesc">See who has the most quest points in a variety of categories.</div>
+            </div>
+            <div class="guidelink">
+                <a href="/community/happybox/">Audifan Happy Box</a>
+                <div class="guidedesc">Spin to win coins, badges, additional VIP Drawing entries, and more.</div>
+            </div>
+            <div class="guidelink">
+                <a href="/store/">Coin Store</a>
+                <div class="guidedesc">Purchase badges, megaphone tickets, and more.</div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

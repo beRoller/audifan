@@ -1,0 +1,89 @@
+{% extends "base.twig" %}
+
+{% block pagetitle %}Community{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-6 col-sm-6">
+            {{ sectionStart('Megaphones')|raw }}
+            
+            {{ sectionEnd()|raw }}
+            
+            {% if GLOBAL.user.isLoggedIn() %}
+                {{ sectionStart('My Megaphones')|raw }}
+                <div>
+                    You have <b>{{ megatickets }}</b> megaphone ticket{{ megatickets|pluralize }}.<br />
+                    You can get these from the <a href="/community/happybox/">Happy Box</a> or the <a href="/store/">Coin Store</a>.
+                </div>
+
+                <div class="panel">
+                    <div class="panel-heading">Post a New Megaphone</div>
+                    <div class="panel-body">
+                        <form method="post" action="/community/">
+                            <div class="form-group">
+                                <label for="text">Text:</label>
+                                <input type="text" class="form-control" id="text" name="text" />
+                            </div>
+                            <div class="form-group">
+                                <label for="color">Color</label>
+                                <select class="form-control" id="color" name="color">
+                                    <option value="ffffff">White</option>
+                                    <option value="ff0000">Red</option>
+                                    <option value="00ff00">Green</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <input type="submit" name="submit" class="form-control" value="Post" />
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                {{ sectionEnd()|raw }}
+            {% endif %}
+        </div>
+        <div class="col-md-6 col-sm-6">
+            {{ sectionStart('Member Search')|raw }}
+            <form method="get" action="/community/search/">
+                <div class="form-group">
+                    <label for="query">Search For:</label>
+                    <input type="text" class="form-control" id="query" name="query" />
+                </div>
+                <div class="form-group">
+                    <label for="in">Search In:</label>
+                    <select class="form-control" id="in" name="in">
+                        <option value="all">All</option>
+                        <option value="nicknames">Nicknames</option>
+                        <option value="igns">Character IGNs</option>
+                        <option value="fams">FAM Names</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <input type="submit" class="form-control" value="Search" />
+                </div>
+                <div class="text-center">
+                    or browse the <a href="/community/memberlist/">member list</a>.
+                </div>
+            </form>
+            {{ sectionEnd()|raw }}
+            
+            {{ sectionStart('Newest Member')|raw }}
+            <div class="text-center">
+                <a href="/community/profile/{{ newestMember.id }}/">
+                    <div>
+                        {% if newestMember.profile_pic_type == "" %}
+                            <img src="{{ GLOBAL.staticUrl }}/img/profilepictures/default.png" />
+                        {% else %}
+                            <img src="{{ GLOBAL.staticUrl }}/img/profilepictures/{{ newestMember.id }}.{{ newestMember.profile_pic_type }}" />
+                        {% endif %}
+                    </div>
+                    <div>{{ newestMember.display_name }}</div>
+                </a>
+            </div>
+            {{ sectionEnd()|raw }}
+            
+            {{ sectionStart('Random Member')|raw }}
+            Content rabble rabble rabble
+            {{ sectionEnd()|raw }}
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,21 @@
+{% macro characterIcons(data) %}
+    <div class="ciconcontainer" data-id="{{ data.id }}" data-tournaments="{{ {gender:data.gender,expert:data.tourn_expert,bu:data.tourn_beatup,br:data.tourn_beatrush,guitar:data.tourn_guitar,team:data.tourn_team,couple:data.tourn_couple,ballroom:data.tourn_ballroom}|json_encode }}">
+        <div class="cicon-text" id="tournament-text">&nbsp;</div>
+        <div class="" id="tournament-icon"></div>
+        {% if data.diary %}
+            <div class="cicon cicon-diary"></div>
+        {% endif %}
+        {% if data.team_title > 0 %}
+            <div class="cicon cicon-team-{{ data.team_title }}"></div>
+        {% endif %}
+        {% if data.ring > 0 %}
+            <div class="cicon cicon-ring-{{ data.ring }}"></div>
+        {% endif %}
+        {% if data.story_medal > 0 %}
+            <div class="cicon cicon-e1-{{ data.story_medal }}"></div>
+        {% endif %}
+        {% if data.story_medal2 > 0 %}
+            <div class="cicon cicon-e2-{{ data.story_medal2 }}"></div>
+        {% endif %}
+    </div>
+{% endmacro %}

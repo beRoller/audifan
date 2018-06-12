@@ -1,0 +1,74 @@
+{% extends "base.twig" %}
+
+{% block title %}Audifan.net - Community - VIP Ranking{% endblock %}
+
+{% block head %}
+<style type="text/css">
+    .vip {
+        border: 2px solid #ffffff;
+        border-collapse: collapse;
+        width: 100%;
+    }
+    
+    .vip tr td, .vip tr th {
+        border: 1px solid #ffffff;
+        text-align: center;
+        padding: 3px;
+        font-size: 1.25em;
+    }
+    
+    .pagelink {
+        margin: 0px 7px;
+    }
+    
+    .vipthisweek {
+        background-color: #aaaa00;
+    }
+    
+    .vipthisweek a {
+        color: #dddddd;
+    }
+    
+    .myrank {
+        background-color: #954e9d;
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="pagetitle">VIP Ranking</div>
+
+<div class="contentwrapperhalf">
+    <div class="float">
+        <table class="vip">
+            <tr>
+                <th>Rank</th>
+                <th>Name</th>
+                <th>Total VIPs Earned</th>
+            </tr>
+            {% for v in vips %}
+            <tr>
+                <td class="{% if v.account_id == GLOBAL.user.getId() %}myrank{% elseif v.is_vip %}vipthisweek{% endif %}">{{ v.rank }}</td>
+                <td class="{% if v.account_id == GLOBAL.user.getId() %}myrank{% elseif v.is_vip %}vipthisweek{% endif %}"><a href="/community/profile/{{ v.account_id }}/">{{ v.display_name }}</a></td>
+                <td class="{% if v.account_id == GLOBAL.user.getId() %}myrank{% elseif v.is_vip %}vipthisweek{% endif %}">{{ v.vip_count|number_format }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        
+        <div class="_center" style="margin-top:10px;">
+            <span class="pagelink">&lt;&lt; {% if page == 1 %}First Page{% else %}<a href="/community/vipranking/">First Page</a>{% endif %}</span>
+            <span class="pagelink">&lt; {% if page == 1 %}Previous Page{% else %}<a href="/community/vipranking/?page={{ page - 1 }}">Previous Page</a>{% endif %}</span>
+            <span class="pagelink" style="margin-left:50px;">{% if page == totalPages %}Next Page{% else %}<a href="/community/vipranking/?page={{ page + 1 }}">Next Page</a>{% endif %} &gt;</span>
+            <span class="pagelink">{% if page == totalPages %}Last Page{% else %}<a href="/community/vipranking/?page={{ totalPages }}">Last Page</a>{% endif %} &gt;&gt;</span>
+        </div>
+        {% if myRankPage %}
+        <div class="_center" style="margin-top:5px;">
+            <span class="myrank" style="padding:3px;"><a href="?page={{ myRankPage }}">Go to My Rank</a></span>
+        </div>
+        {% endif %}
+        <div class="_center" style="margin-top:15px;">
+            A <span style="background-color:#aaaa00; padding:3px;">yellow background</span> means the person is a VIP this week.
+        </div>
+    </div>
+</div>
+{% endblock %}

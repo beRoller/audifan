@@ -1,0 +1,49 @@
+{% extends "base.twig" %}
+{% import "macros/forms.twig" as forms %}
+
+{% block title %}Audifan.net - Message Boards - Post a New Topic{% endblock %}
+
+{% block pagetitle %}Post a New Topic{% endblock %}
+
+{% block head %}
+    <style>
+        #title {
+            width: 250px;
+        }
+        
+        #body {
+            width: 95%;
+            height: 200px;
+            resize: vertical;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="contentwrapperhalf">
+        <div class="float">
+            <div style="margin-bottom:10px;">
+                <a href="/community/boards/">Message Boards</a> &gt; <a href="/community/boards/{{ boardInfo.board_id }}-{{ boardInfo.board_name|urlizeText }}/">{{ boardInfo.board_name }}</a> &gt; Post a New Topic
+            </div>
+            
+            {% if GLOBAL.user.isLoggedIn() %}
+                <div>
+                    {{ forms.start("/community/boards/newtopic/"~boardInfo.board_id~"/") }}
+                    <div>Topic Title: {{ forms.textField("title", posttitle, "title", "", 256) }}</div>
+                    <div style="margin-top:10px;">
+                        <div class="_center">{{ forms.textArea("body", postbody, "body") }}</div>
+                    </div>
+                    <div class="_center" style="margin-top:10px;">
+                        <input type="button" class="prettyinputbutton" value="Preview" id="previewbutton" />
+                        <input type="submit" class="prettyinputbutton" style="font-weight:bold; margin-left:10px;" name="submit_post" value="Post" />
+                    </div>
+                    {{ forms.end() }}
+                </div>
+            {% else %}
+                <div class="_center">
+                    Please <a href="/account/?thru={{ GLOBAL.requestUri }}">log in</a> to post a topic.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

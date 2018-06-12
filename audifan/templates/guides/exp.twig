@@ -1,0 +1,618 @@
+{% extends "base.twig" %}
+
+{% block title %}Audifan.net - Guides - EXP Table &amp; Calculator{% endblock %}
+
+{% block head %}
+<style>
+    .section {
+        float: left;
+        width: 278px;
+        margin-right: 2px;
+        margin-left: 5px;
+        padding: 5px;
+        border-radius: 5px;
+    }
+
+    .section > div {
+        margin: 3px 0px;
+    }
+
+    .expbonushelp {
+        position: absolute;
+        left: inherit;
+        top: inherit;
+        margin-top: 2px;
+        padding: 5px;
+        opacity: .9;
+        background-color: #421c52;
+        border-radius: 5px;
+        text-align: center;
+        display: none;
+        width: 300px;
+    }
+
+    .expbonushelptitle {
+        font-weight: bold;
+        font-size: 9pt;
+        margin-bottom: 3px;
+    }
+
+    .expbonushelpbody {
+        font-size: 8pt;
+    }
+
+    .expbonushelpclose {
+        margin-top: 3px;
+        font-size: 9pt;
+    }
+</style>
+
+<script type="text/javascript">
+    function calculate(what) {
+        var multiplier1 = 1,
+                minMultiplier1 = 1,
+                maxMultiplier1 = 1,
+                multiplier2 = 1,
+                minMultiplier2 = 1,
+                maxMultiplier2 = 1,
+                addition = 0,
+                minAddition = 0,
+                maxAddition = 0;
+
+        try {
+            multiplier1 *= parseFloat($("#calc_card").val()); // EXP Card
+            multiplier1 *= parseFloat($("#calc_event").val()); // Event Item
+            multiplier1 *= $("#calc_team").is(":checked") ? 1.3 : 1; // Team EXP
+            multiplier1 *= parseFloat($("#calc_guitar").val()); // Guitar Controllers
+            multiplier1 *= parseFloat($("#calc_bgm").val()); // BGM Master
+            multiplier1 *= $("#calc_hpm").is(":checked") ? 2 : 1; // Home Premium Mark
+            //maxMultiplier2 *= $("#calc_bvg").is(":checked") ? 1.5 : 1; // Boys vs Girls
+            addition += parseFloat($("#calc_dj").val()); // DJ Booth
+
+            // Pet
+            var pet = new String($("#calc_pet").val());
+            var dashIndex = pet.indexOf("-");
+            if (dashIndex === -1)
+                addition += parseFloat(pet);
+            else {
+                minAddition += parseFloat(pet.substring(0, dashIndex));
+                maxAddition += parseFloat(pet.substr(dashIndex + 1));
+            }
+
+            multiplier1 *= $("#calc_medal").is(":checked") ? 2 : 1; // Tournament Medal
+            multiplier1 *= $("#calc_server").is(":checked") ? 1.5 : 1; // Event Server
+
+            var regex = /[^0-9\.]/g;
+            var minStr, maxStr;
+            if (what === "pergame") {
+                minStr = $("#calc_minbase").val().replace(regex, "");
+                maxStr = $("#calc_maxbase").val().replace(regex, "");
+
+                $("#calc_minbase").val(minStr);
+                $("#calc_maxbase").val(maxStr);
+
+                if (minStr === "" && maxStr === "") {
+                    alert("Please indicate either minimum base EXP or maximum base EXP.\nPlease enter numbers only.");
+                    return;
+                }
+
+                var min, max;
+                if (minStr === "") {
+                    max = parseFloat(maxStr);
+                    min = max;
+                } else if (maxStr === "") {
+                    min = parseFloat(minStr);
+                    max = min;
+                } else {
+                    min = parseFloat(minStr);
+                    max = parseFloat(maxStr);
+                }
+
+                $("#calc_minpergame").val(Math.floor(((min * multiplier1 * minMultiplier1) + addition + minAddition) * multiplier2 * minMultiplier2));
+                $("#calc_maxpergame").val(Math.ceil(((max * multiplier1 * maxMultiplier1) + addition + maxAddition) * multiplier2 * maxMultiplier2));
+            } else if (what === "base") {
+                minStr = $("#calc_minpergame").val().replace(regex, "");
+                maxStr = $("#calc_maxpergame").val().replace(regex, "");
+
+                $("#calc_minpergame").val(minStr);
+                $("#calc_maxpergame").val(maxStr);
+
+                if (minStr === "" && maxStr === "") {
+                    alert("Please indicate either minimum EXP per Game or maximum EXP per Game.\nPlease enter numbers only.");
+                    return;
+                }
+
+                var min, max;
+                if (minStr === "")
+                    min = max = parseFloat(maxStr);
+                else if (maxStr === "")
+                    min = max = parseFloat(minStr);
+                else {
+                    min = parseFloat(minStr);
+                    max = parseFloat(maxStr);
+                }
+
+                $("#calc_minbase").val(Math.floor(((min / maxMultiplier2 / multiplier2) - maxAddition - addition) / (multiplier1 * maxMultiplier1)));
+                $("#calc_maxbase").val(Math.ceil(((max / minMultiplier2 / multiplier2) - minAddition - addition) / (multiplier1 * minMultiplier1)));
+            }
+        } catch (e) {
+        }
+    }
+
+    function resetAll() {
+        $("#calc_card, #calc_event, #calc_guitar, #calc_bgm").val(1);
+        $("#calc_dj, #calc_pet").val(0);
+        $("#calc_team, #calc_bvg, #calc_medal, #calc_server, #calc_hpm").attr("checked", false);
+        $("#calc_minbase, #calc_maxbase, #calc_minpergame, #calc_maxpergame, #calc_currentexp, #calc_goalexp, #calc_goallevel, #calc_char, #mode").val("");
+        $("#calc_neededexp, #calc_neededgames").html("");
+    }
+
+    function modeChange() {
+        var expVals = [288, 397, 454];
+
+        var mode = $("#mode").val();
+        if (mode !== "")
+            $("#calc_minbase, #calc_maxbase").val(expVals[mode]);
+    }
+
+    function calculateNeededGames() {
+        var regex = /[^0-9]/g;
+        var currStr = $("#calc_currentexp").val().replace(regex, "");
+        var goalStr = $("#calc_goalexp").val().replace(regex, "");
+        var curr, goal;
+
+        if (currStr !== "" && goalStr !== "") {
+            curr = parseFloat(currStr);
+            goal = parseFloat(goalStr);
+
+            if (curr >= goal) {
+                alert("Your goal EXP must be higher than your current EXP.")
+                return;
+            }
+
+            $("#calc_neededexp").html(goal - curr);
+        } else {
+            alert("Please enter both your current EXP and your goal EXP.\nBe sure to enter numbers only.");
+            return;
+        }
+
+        var minStr = $("#calc_minpergame").val().replace(regex, "");
+        var maxStr = $("#calc_maxpergame").val().replace(regex, "");
+
+        if (minStr !== "" || maxStr !== "") {
+            var min, max;
+            if (minStr === "")
+                min = max = parseFloat(maxStr);
+            else if (maxStr === "")
+                min = max = parseFloat(minStr);
+            else {
+                min = parseFloat(minStr);
+                max = parseFloat(maxStr);
+            }
+
+            var diff = goal - curr;
+            var minGames = Math.ceil(diff / max);
+            var maxGames = Math.ceil(diff / min);
+
+            if (minGames === maxGames)
+                $("#calc_neededgames").html(minGames);
+            else
+                $("#calc_neededgames").html(minGames + " to " + maxGames);
+        } else
+            $("#calc_neededgames").html('<a href="javascript:;" onclick="noPerGame();">?</a>');
+    }
+
+    function changeCurrentEXP() {
+        if ($("#calc_char").val() !== "")
+            $("#calc_currentexp").val($("#calc_char").val());
+    }
+
+    function changeGoalEXP() {
+        // Changed goal level.
+        if ($("#calc_goallevel").val() !== "")
+            $("#calc_goalexp").val($("#calc_goallevel").val());
+    }
+
+    function showExpBonusHelp(what) {
+        hideAllExpBonusHelp();
+        $("#expbonushelp_" + what).show();
+    }
+
+    function hideAllExpBonusHelp() {
+        $(".expbonushelp").hide();
+    }
+
+    function noPerGame() {
+        alert("Please enter or calculate either a minimum or a maximum EXP per game.\nIf you enter it directly, be sure to enter numbers only.");
+    }
+</script>
+{% endblock %}
+
+{% block body %}
+<div class="contentwrapperhalf">
+    <div class="float" style="width:600px;">
+        <div class="pagetitle">EXP Table &amp; Calculator</div>
+        <div class="sectionwrapper">
+            <div class="sectionheading">Calculator</div>
+            <div style="margin:auto; padding-top:10px;">
+                <div class="content" style="margin-top:10px; border-radius:10px;">
+                    <div style="text-align:right; font-size:9pt;"><a href="/help/expcalculator/" target="_blank">Need Help?</a></div>
+                    <div style="font-size:9pt;">
+                        <div style="margin:5px; padding:5px; border-radius:5px; text-align:center;">
+                            <div style="font-size:12pt; margin-bottom:5px;">Base EXP</div>
+                            <div><input type="button" value="Calculate Base EXP" id="calc_btnbase" onclick="calculate('base');" /></div>
+                            <div>
+                                Mode / Players:
+                                <select id="mode" onchange="modeChange();" style="margin-left:5px; width:100px;">
+                                    <option value=""></option>
+                                    <optgroup label="Normal B Boy Battle 8">
+                                        <option value="0">1 vs 1 (288 Base)</option>
+                                    </optgroup>
+                                    <optgroup label="S. B Boy Battle - 8 Keys">
+                                        <option value="1">2 vs 2 (397 Base)</option>
+                                        <option value="2">3 vs 3 (454 Base)</option>
+                                    </optgroup>
+                                </select>
+                            </div>
+                            <div>Minumum:<input type="text" id="calc_minbase" style="margin-left:5px; width:100px;" /></div>
+                            <div>Maximum:<input type="text" id="calc_maxbase" style="margin-left:5px; width:100px;" /></div>
+                        </div>
+                        <div>
+                            <div class="section">
+                                <div style="font-size:12pt; text-align:center; margin:0px 0px 5px 0px;">Universal Bonuses</div>
+                                <div>
+                                    EXP Card (<a style="text-decoration:none;" href="javascript:;" onclick="showExpBonusHelp('card');">?</a>):
+                                    <select id="calc_card">
+                                        <option value="1">(None)</option>
+                                        <option value="2">x2 EXP Card</option>
+                                        <option value="3">x3 EXP Card</option>
+                                    </select>
+                                    <div class="expbonushelp" id="expbonushelp_card">
+                                        <div class="expbonushelptitle">EXP Cards</div>
+                                        <div class="expbonushelpbody">
+                                            20 rounds of x2 or x3 EXP Cards can be purchased in the Items tab of the Fashion Mall.<br />
+                                            x2 cards cost 600 cash and x3 cards cost 1,500 cash.<br />
+                                            5 rounds of a x2 EXP Card are also given at the end of a successful Wedding or Love Party to all observers.<br />
+                                            1 round of a x2 EXP Card can also be given as a prize in Coin Collect mode.
+                                        </div>
+                                        <div class="expbonushelpclose"><a href="javascript:;" onclick="hideAllExpBonusHelp();">Close</a></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    DJ Booth (<a style="text-decoration:none;" href="javascript:;" onclick="showExpBonusHelp('dj');">?</a>):
+                                    <select id="calc_dj">
+                                        <option value="0">(None)</option>
+                                        <option value="10">&lt; 6 Players</option>
+                                        <option value="20">6 Players</option>
+                                    </select>
+                                    <div class="expbonushelp" id="expbonushelp_dj">
+                                        <div class="expbonushelptitle">DJ Booth</div>
+                                        <div class="expbonushelpbody">
+                                            DJ Booths can be purchased in the Interior section of the Fashion Mall.<br />
+                                            They give 10 bonus EXP to everyone in the room if there are less than 6 players and 20 bonus EXP for a full room.
+                                        </div>
+                                        <div class="expbonushelpclose"><a href="javascript:;" onclick="hideAllExpBonusHelp();">Close</a></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    Pet (<a style="text-decoration:none;" href="javascript:;" onclick="showExpBonusHelp('pet');">?</a>):
+                                    <select id="calc_pet">
+                                        <option value="0">(None)</option>
+                                        <option value="17-23">+17 - 23 EXP</option>
+                                        <option value="20">+20 EXP</option>
+                                        <option value="25">+25 EXP</option>
+                                        <option value="30">+30 EXP</option>
+                                    </select>
+                                    <div class="expbonushelp" id="expbonushelp_pet">
+                                        <div class="expbonushelptitle">Pets</div>
+                                        <div class="expbonushelpbody">
+                                            Pets can be purchased from the Fashion Mall or the Couple Shop.<br />
+                                            The EXP bonus they give is written on its description when purchasing.
+                                        </div>
+                                        <div class="expbonushelpclose"><a href="javascript:;" onclick="hideAllExpBonusHelp();">Close</a></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    Home Premium Mark (<a style="text-decoration:none;" href="javascript:;" onclick="showExpBonusHelp('hpm');">?</a>): <input type="checkbox" id="calc_hpm" />
+                                    <div class="expbonushelp" id="expbonushelp_hpm">
+                                        <div class="expbonushelptitle">Home Premium Mark</div>
+                                        <div class="expbonushelpbody">
+                                            The Home Premium Mark can be purchased from Items section of the Fashion Mall.<br />
+                                            Gives x2 EXP in all games for 30 days.
+                                        </div>
+                                        <div class="expbonushelpclose"><a href="javascript:;" onclick="hideAllExpBonusHelp();">Close</a></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    Team EXP (<a style="text-decoration:none;" href="javascript:;" onclick="showExpBonusHelp('team');">?</a>): <input type="checkbox" id="calc_team" />
+                                    <div class="expbonushelp" id="expbonushelp_team">
+                                        <div class="expbonushelptitle">Team EXP</div>
+                                        <div class="expbonushelpbody">
+                                            Team EXP is earned by winning 50 Title Matches with a Crazy 9 or Beat Up team title or 100 Title Matches with a Choreography or Crazy team title.<br />
+                                            It gives 30% more EXP to all team members in every game.
+                                        </div>
+                                        <div class="expbonushelpclose"><a href="javascript:;" onclick="hideAllExpBonusHelp();">Close</a></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    Expert/Guitar Tournament Medal (<a style="text-decoration:none;" href="javascript:;" onclick="showExpBonusHelp('medal');">?</a>): <input type="checkbox" id="calc_medal" />
+                                    <div class="expbonushelp" id="expbonushelp_medal">
+                                        <div class="expbonushelptitle">Tournament Medal</div>
+                                        <div class="expbonushelpbody">
+                                            Tournament medals are earned by winning Expert or Guitar Tournament.<br />
+                                            Only the Expert and Guitar medals give x2 EXP in every game.
+                                        </div>
+                                        <div class="expbonushelpclose"><a href="javascript:;" onclick="hideAllExpBonusHelp();">Close</a></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    Event Server (<a style="text-decoration:none;" href="javascript:;" onclick="showExpBonusHelp('server');">?</a>): <input type="checkbox" id="calc_server" />
+                                    <div class="expbonushelp" id="expbonushelp_server">
+                                        <div class="expbonushelptitle">Event Server</div>
+                                        <div class="expbonushelpbody">
+                                            The Event Server is enabled periodically in addition to the Free Server.<br />All games played in the Event Server give 50% more EXP.
+                                        </div>
+                                        <div class="expbonushelpclose"><a href="javascript:;" onclick="hideAllExpBonusHelp();">Close</a></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="section">
+                                <div style="font-size:12pt; text-align:center; margin:0px 0px 5px 0px;">Mode-Specific Bonuses</div>
+                                <div>
+                                    Event Item (<a style="text-decoration:none;" href="javascript:;" onclick="showExpBonusHelp('event');">?</a>):
+                                    <select id="calc_event">
+                                        <option value="1">(None)</option>
+                                        <option value="1.15">15% EXP Bonus</option>
+                                        <option value="1.25">25% EXP Bonus</option>
+                                        <option value="1.3">30% EXP Bonus</option>
+                                        <option value="1.5">50% EXP Bonus</option>
+                                    </select>
+                                    <div class="expbonushelp" id="expbonushelp_event">
+                                        <div class="expbonushelptitle">Event Item</div>
+                                        <div class="expbonushelpbody">
+                                            The Event Item can be purchased in the Item section of the Fashion Mall for 2,000 cash.<br />
+                                            Players with the event item can set requirements for the current game, and those who succeed will receive the event prize.<br />
+                                            The event item only works in Normal modes, Beat Up, One Two Party, S. B-Boy Battle, Ballroom Dance, and Club Dance.
+                                        </div>
+                                        <div class="expbonushelpclose"><a href="javascript:;" onclick="hideAllExpBonusHelp();">Close</a></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    Guitar Controllers (<a style="text-decoration:none;" href="javascript:;" onclick="showExpBonusHelp('guitar');">?</a>):
+                                    <select id="calc_guitar">
+                                        <option value="1">(None)</option>
+                                        <option value="1.2">1</option>
+                                        <option value="1.4">2</option>
+                                        <option value="1.6">3</option>
+                                        <option value="1.8">4</option>
+                                        <option value="2">5</option>
+                                    </select>
+                                    <div class="expbonushelp" id="expbonushelp_guitar">
+                                        <div class="expbonushelptitle">Guitar Controllers</div>
+                                        <div class="expbonushelpbody">
+                                            In Guitar Mode only, if you are using a guitar controller, all other members of the room will receive 20% more EXP.<br />
+                                            This effect stacks up to 5 times if the five other players in the room other than yourself have a guitar controller.
+                                        </div>
+                                        <div class="expbonushelpclose"><a href="javascript:;" onclick="hideAllExpBonusHelp();">Close</a></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    BGM Master (<a style="text-decoration:none;" href="javascript:;" onclick="showExpBonusHelp('bgm');">?</a>):
+                                    <select id="calc_bgm">
+                                        <option value="1">(No Bonus)</option>
+                                        <option value="1.1">10 Songs Mastered</option>
+                                        <option value="1.2">40 Songs Mastered</option>
+                                        <option value="1.3">60 Songs Mastered</option>
+                                        <option value="1.4">80 Songs Mastered</option>
+                                        <!--<option value="1.5">100 Songs Mastered</option>-->
+                                    </select>
+                                    <div class="expbonushelp" id="expbonushelp_bgm">
+                                        <div class="expbonushelptitle">BGM Master</div>
+                                        <div class="expbonushelpbody">
+                                            By mastering a number of BGM Master songs, you will receive between 10% and 40% more EXP when playing the songs that you've mastered.<br />
+                                            The bonus is only given once per song per day.
+                                        </div>
+                                        <div class="expbonushelpclose"><a href="javascript:;" onclick="hideAllExpBonusHelp();">Close</a></div>
+                                    </div>
+                                </div>
+                                <!--
+                                <div>
+                                    Boys vs Girls (<a style="text-decoration:none;" href="javascript:;" onclick="showExpBonusHelp('bvg');">?</a>): <input type="checkbox" id="calc_bvg" />
+                                    <div class="expbonushelp" id="expbonushelp_bvg">
+                                        <div class="expbonushelptitle">Boys vs Girls</div>
+                                        <div class="expbonushelpbody">
+                                            Boys vs Girls is enabled in some Normal team modes when one team is all boys and the other is all girls.<br />
+                                            At the end of the game, a wheel spins and a random prize is selected.  Among those prizes are x1.2 EXP and x1.5 EXP.<br />
+                                            This is added to the calculated value as a minimum of no bonus EXP and a maximum of x1.5 EXP.
+                                        </div>
+                                        <div class="expbonushelpclose"><a href="javascript:;" onclick="hideAllExpBonusHelp();">Close</a></div>
+                                    </div>
+                                </div>
+                                -->
+                            </div>
+                            <div style="clear:both;"></div>
+                        </div>
+                        <div style="margin:5px; padding:5px; border-radius:5px; text-align:center;">
+                            <div style="font-size:12pt; margin-bottom:5px;">EXP per Game</div>
+                            <div><input type="button" value="Calculate EXP per Game" id="calc_btnpergame" onclick="calculate('pergame');" /></div>
+                            <div>Minimum:<input type="text" id="calc_minpergame" style="margin-left:5px;" /></div>
+                            <div>Maximum:<input type="text" id="calc_maxpergame" style="margin-left:4px;" /></div>
+
+                            <div style="font-size:12pt; margin-top:10px; margin-bottom:3px;">Needed Games</div>
+                            <div>Current EXP:<input type="text" id="calc_currentexp" style="margin-left:5px;" /><br />
+                                or select one of your characters: <select id="calc_char" onchange="changeCurrentEXP();"><option value=""></option><option value="0">Kevin848</option><option value="18316735">tr848</option></select>                        </div>
+
+                            <div>Goal EXP:<input type="text" id="calc_goalexp" style="margin-left:4px;" /><br />
+                                or select goal level: <select id="calc_goallevel" onchange="changeGoalEXP();">
+                                    <option value=""></option>
+                                    <option value="220">2</option><option value="1260">3</option><option value="3480">4</option><option value="7140">5</option><option value="12500">6</option><option value="19695">7</option><option value="29000">8</option><option value="40500">9</option><option value="54500">10</option><option value="71000">11</option><option value="90000">12</option><option value="112000">13</option><option value="137000">14</option><option value="165000">15</option><option value="196000">16</option><option value="230500">17</option><option value="268500">18</option><option value="310000">19</option><option value="354500">20</option><option value="403500">21</option><option value="456000">22</option><option value="512000">23</option><option value="572500">24</option><option value="637000">25</option><option value="705500">26</option><option value="778000">27</option><option value="855500">28</option><option value="937000">29</option><option value="1023000">30</option><option value="1113500">31</option><option value="1208500">32</option><option value="1308500">33</option><option value="1413500">34</option><option value="1523000">35</option><option value="1638000">36</option><option value="1757500">37</option><option value="1882500">38</option><option value="2012000">39</option><option value="2147500">40</option><option value="2288000">41</option><option value="2434000">42</option><option value="2585000">43</option><option value="2742000">44</option><option value="2904500">45</option><option value="3072500">46</option><option value="3246500">47</option><option value="3426000">48</option><option value="3611000">49</option><option value="3802500">50</option><option value="4000000">51</option><option value="4300000">52</option><option value="4650000">53</option><option value="5000000">54</option><option value="5400000">55</option><option value="5850000">56</option><option value="6350000">57</option><option value="6900000">58</option><option value="7300000">59</option><option value="7850000">60</option><option value="8400000">61</option><option value="9000000">62</option><option value="9600000">63</option><option value="10250000">64</option><option value="10900000">65</option><option value="11600000">66</option><option value="12350000">67</option><option value="13150000">68</option><option value="14000000">69</option><option value="14900000">70</option><option value="15850000">71</option><option value="16850000">72</option><option value="17850000">73</option><option value="18850000">74</option><option value="19850000">75</option><option value="21850000">76</option><option value="23850000">77</option><option value="25850000">78</option><option value="27850000">79</option><option value="29850000">80</option><option value="32850000">81</option><option value="35850000">82</option><option value="38850000">83</option><option value="41850000">84</option><option value="44850000">85</option><option value="48850000">86</option><option value="52850000">87</option><option value="56850000">88</option><option value="60850000">89</option><option value="64850000">90</option><option value="69850000">91</option><option value="74850000">92</option><option value="79850000">93</option><option value="84850000">94</option><option value="89850000">95</option><option value="95850000">96</option><option value="101850000">97</option><option value="107850000">98</option>                                <option value="113850000">MAX</option>
+                                </select></div>
+                            <div><input type="button" value="Calculate Needed EXP/Games" onclick="calculateNeededGames();" /></div>
+                            <div style="font-size:11pt; margin-top:5px;">Needed EXP: <span id="calc_neededexp"></span></div>
+                            <div style="font-size:11pt;">Needed Games: <span id="calc_neededgames"></span></div>
+                        </div>
+                        <div style="text-align:center;">
+                            <input type="button" onclick="resetAll();" value="Reset Calculator" />
+                            <div style="margin-top:5px;">
+                                If you win against someone who has a higher level than you,<br />
+                                your actual EXP can be up to double the calculated value.<br />
+                                Therefore, it is recommended that if you are not the highest level in the<br />
+                                room, you should calculate your Base EXP first.<br />
+                                Click the "Need Help?" link at the top and see Way #2 for more information.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="sectionwrapper">
+            <div class="sectionheading">EXP Table</div>
+            <div style="float:left; width:295px;">
+                <div style="background-image:url('{{ GLOBAL.staticUrl }}/img/leveltitles/1.png'); background-position:left center; background-repeat:no-repeat; padding-left:75px; margin:7px 0px;">
+                    <div>Lv. 1<span style="margin-left:20px;">0</span></div>
+                    <div>Lv. 2<span style="margin-left:20px;">220</span></div>
+                    <div>Lv. 3<span style="margin-left:20px;">1,260</span></div>
+                    <div>Lv. 4<span style="margin-left:20px;">3,480</span></div>
+                    <div>Lv. 5<span style="margin-left:20px;">7,140</span></div>
+                </div>
+                <div style="background-image:url('{{ GLOBAL.staticUrl }}/img/leveltitles/2.png'); background-position:left center; background-repeat:no-repeat; padding-left:75px; margin:7px 0px;">
+                    <div>Lv. 6<span style="margin-left:20px;">12,500</span></div>
+                    <div>Lv. 7<span style="margin-left:20px;">19,695</span></div>
+                    <div>Lv. 8<span style="margin-left:20px;">29,000</span></div>
+                    <div>Lv. 9<span style="margin-left:20px;">40,500</span></div>
+                    <div>Lv. 10<span style="margin-left:20px;">54,500</span></div>
+                </div>
+                <div style="background-image:url('{{ GLOBAL.staticUrl }}/img/leveltitles/3.png'); background-position:left center; background-repeat:no-repeat; padding-left:75px; margin:7px 0px;">
+                    <div>Lv. 11<span style="margin-left:20px;">71,000</span></div>
+                    <div>Lv. 12<span style="margin-left:20px;">90,000</span></div>
+                    <div>Lv. 13<span style="margin-left:20px;">112,000</span></div>
+                    <div>Lv. 14<span style="margin-left:20px;">137,000</span></div>
+                    <div>Lv. 15<span style="margin-left:20px;">165,000</span></div>
+                </div>
+                <div style="background-image:url('{{ GLOBAL.staticUrl }}/img/leveltitles/4.png'); background-position:left center; background-repeat:no-repeat; padding-left:75px; margin:7px 0px;">
+                    <div>Lv. 16<span style="margin-left:20px;">196,000</span></div>
+                    <div>Lv. 17<span style="margin-left:20px;">230,500</span></div>
+                    <div>Lv. 18<span style="margin-left:20px;">268,500</span></div>
+                    <div>Lv. 19<span style="margin-left:20px;">310,000</span></div>
+                    <div>Lv. 20<span style="margin-left:20px;">354,500</span></div>
+                </div>
+                <div style="background-image:url('{{ GLOBAL.staticUrl }}/img/leveltitles/5.png'); background-position:left center; background-repeat:no-repeat; padding-left:75px; margin:7px 0px;">
+                    <div>Lv. 21<span style="margin-left:20px;">403,500</span></div>
+                    <div>Lv. 22<span style="margin-left:20px;">456,000</span></div>
+                    <div>Lv. 23<span style="margin-left:20px;">512,000</span></div>
+                    <div>Lv. 24<span style="margin-left:20px;">572,500</span></div>
+                    <div>Lv. 25<span style="margin-left:20px;">637,000</span></div>
+                </div>
+                <div style="background-image:url('{{ GLOBAL.staticUrl }}/img/leveltitles/6.png'); background-position:left center; background-repeat:no-repeat; padding-left:75px; margin:7px 0px;">
+                    <div>Lv. 26<span style="margin-left:20px;">705,500</span></div>
+                    <div>Lv. 27<span style="margin-left:20px;">778,000</span></div>
+                    <div>Lv. 28<span style="margin-left:20px;">855,500</span></div>
+                    <div>Lv. 29<span style="margin-left:20px;">937,000</span></div>
+                    <div>Lv. 30<span style="margin-left:20px;">1,023,000</span></div>
+                </div>
+                <div style="background-image:url('{{ GLOBAL.staticUrl }}/img/leveltitles/7.png'); background-position:left center; background-repeat:no-repeat; padding-left:75px; margin:7px 0px;">
+                    <div>Lv. 31<span style="margin-left:20px;">1,113,500</span></div>
+                    <div>Lv. 32<span style="margin-left:20px;">1,208,500</span></div>
+                    <div>Lv. 33<span style="margin-left:20px;">1,308,500</span></div>
+                    <div>Lv. 34<span style="margin-left:20px;">1,413,500</span></div>
+                    <div>Lv. 35<span style="margin-left:20px;">1,523,000</span></div>
+                </div>
+                <div style="background-image:url('{{ GLOBAL.staticUrl }}/img/leveltitles/8.png'); background-position:left center; background-repeat:no-repeat; padding-left:75px; margin:7px 0px;">
+                    <div>Lv. 36<span style="margin-left:20px;">1,638,000</span></div>
+                    <div>Lv. 37<span style="margin-left:20px;">1,757,500</span></div>
+                    <div>Lv. 38<span style="margin-left:20px;">1,882,500</span></div>
+                    <div>Lv. 39<span style="margin-left:20px;">2,012,000</span></div>
+                    <div>Lv. 40<span style="margin-left:20px;">2,147,500</span></div>
+                </div>
+                <div style="background-image:url('{{ GLOBAL.staticUrl }}/img/leveltitles/9.png'); background-position:left center; background-repeat:no-repeat; padding-left:75px; margin:7px 0px;">
+                    <div>Lv. 41<span style="margin-left:20px;">2,288,000</span></div>
+                    <div>Lv. 42<span style="margin-left:20px;">2,434,000</span></div>
+                    <div>Lv. 43<span style="margin-left:20px;">2,585,000</span></div>
+                    <div>Lv. 44<span style="margin-left:20px;">2,742,000</span></div>
+                    <div>Lv. 45<span style="margin-left:20px;">2,904,500</span></div>
+                </div>
+                <div style="background-image:url('{{ GLOBAL.staticUrl }}/img/leveltitles/10.png'); background-position:left center; background-repeat:no-repeat; padding-left:75px; margin:7px 0px;">
+                    <div>Lv. 46<span style="margin-left:20px;">3,072,500</span></div>
+                    <div>Lv. 47<span style="margin-left:20px;">3,246,500</span></div>
+                    <div>Lv. 48<span style="margin-left:20px;">3,426,000</span></div>
+                    <div>Lv. 49<span style="margin-left:20px;">3,611,000</span></div>
+                    <div>Lv. 50<span style="margin-left:20px;">3,802,500</span></div>
+                </div>
+            </div>
+            <div style="float:left; width:295px;">
+                <div style="background-image:url('{{ GLOBAL.staticUrl }}/img/leveltitles/11.png'); background-position:left center; background-repeat:no-repeat; padding-left:75px; margin:7px 0px;">
+                    <div>Lv. 51<span style="margin-left:20px;">4,000,000</span></div>
+                    <div>Lv. 52<span style="margin-left:20px;">4,300,000</span></div>
+                    <div>Lv. 53<span style="margin-left:20px;">4,650,000</span></div>
+                    <div>Lv. 54<span style="margin-left:20px;">5,000,000</span></div>
+                    <div>Lv. 55<span style="margin-left:20px;">5,400,000</span></div>
+                </div>
+                <div style="background-image:url('{{ GLOBAL.staticUrl }}/img/leveltitles/12.png'); background-position:left center; background-repeat:no-repeat; padding-left:75px; margin:7px 0px;">
+                    <div>Lv. 56<span style="margin-left:20px;">5,850,000</span></div>
+                    <div>Lv. 57<span style="margin-left:20px;">6,350,000</span></div>
+                    <div>Lv. 58<span style="margin-left:20px;">6,900,000</span></div>
+                    <div>Lv. 59<span style="margin-left:20px;">7,300,000</span></div>
+                    <div>Lv. 60<span style="margin-left:20px;">7,850,000</span></div>
+                </div>
+                <div style="background-image:url('{{ GLOBAL.staticUrl }}/img/leveltitles/13.png'); background-position:left center; background-repeat:no-repeat; padding-left:75px; margin:7px 0px;">
+                    <div>Lv. 61<span style="margin-left:20px;">8,400,000</span></div>
+                    <div>Lv. 62<span style="margin-left:20px;">9,000,000</span></div>
+                    <div>Lv. 63<span style="margin-left:20px;">9,600,000</span></div>
+                    <div>Lv. 64<span style="margin-left:20px;">10,250,000</span></div>
+                    <div>Lv. 65<span style="margin-left:20px;">10,900,000</span></div>
+                </div>
+                <div style="background-image:url('{{ GLOBAL.staticUrl }}/img/leveltitles/14.png'); background-position:left center; background-repeat:no-repeat; padding-left:75px; margin:7px 0px;">
+                    <div>Lv. 66<span style="margin-left:20px;">11,600,000</span></div>
+                    <div>Lv. 67<span style="margin-left:20px;">12,350,000</span></div>
+                    <div>Lv. 68<span style="margin-left:20px;">13,150,000</span></div>
+                    <div>Lv. 69<span style="margin-left:20px;">14,000,000</span></div>
+                    <div>Lv. 70<span style="margin-left:20px;">14,900,000</span></div>
+                </div>
+                <div style="background-image:url('{{ GLOBAL.staticUrl }}/img/leveltitles/15.png'); background-position:left center; background-repeat:no-repeat; padding-left:75px; margin:7px 0px;">
+                    <div>Lv. 71<span style="margin-left:20px;">15,850,000</span></div>
+                    <div>Lv. 72<span style="margin-left:20px;">16,850,000</span></div>
+                    <div>Lv. 73<span style="margin-left:20px;">17,850,000</span></div>
+                    <div>Lv. 74<span style="margin-left:20px;">18,850,000</span></div>
+                    <div>Lv. 75<span style="margin-left:20px;">19,850,000</span></div>
+                </div>
+                <div style="background-image:url('{{ GLOBAL.staticUrl }}/img/leveltitles/16.png'); background-position:left center; background-repeat:no-repeat; padding-left:75px; margin:7px 0px;">
+                    <div>Lv. 76<span style="margin-left:20px;">21,850,000</span></div>
+                    <div>Lv. 77<span style="margin-left:20px;">23,850,000</span></div>
+                    <div>Lv. 78<span style="margin-left:20px;">25,850,000</span></div>
+                    <div>Lv. 79<span style="margin-left:20px;">27,850,000</span></div>
+                    <div>Lv. 80<span style="margin-left:20px;">29,850,000</span></div>
+                </div>
+                <div style="background-image:url('{{ GLOBAL.staticUrl }}/img/leveltitles/17.png'); background-position:left center; background-repeat:no-repeat; padding-left:75px; margin:7px 0px;">
+                    <div>Lv. 81<span style="margin-left:20px;">32,850,000</span></div>
+                    <div>Lv. 82<span style="margin-left:20px;">35,850,000</span></div>
+                    <div>Lv. 83<span style="margin-left:20px;">38,850,000</span></div>
+                    <div>Lv. 84<span style="margin-left:20px;">41,850,000</span></div>
+                    <div>Lv. 85<span style="margin-left:20px;">44,850,000</span></div>
+                </div>
+                <div style="background-image:url('{{ GLOBAL.staticUrl }}/img/leveltitles/18.png'); background-position:left center; background-repeat:no-repeat; padding-left:75px; margin:7px 0px;">
+                    <div>Lv. 86<span style="margin-left:20px;">48,850,000</span></div>
+                    <div>Lv. 87<span style="margin-left:20px;">52,850,000</span></div>
+                    <div>Lv. 88<span style="margin-left:20px;">56,850,000</span></div>
+                    <div>Lv. 89<span style="margin-left:20px;">60,850,000</span></div>
+                    <div>Lv. 90<span style="margin-left:20px;">64,850,000</span></div>
+                </div>
+                <div style="background-image:url('{{ GLOBAL.staticUrl }}/img/leveltitles/19.png'); background-position:left center; background-repeat:no-repeat; padding-left:75px; margin:7px 0px;">
+                    <div>Lv. 91<span style="margin-left:20px;">69,850,000</span></div>
+                    <div>Lv. 92<span style="margin-left:20px;">74,850,000</span></div>
+                    <div>Lv. 93<span style="margin-left:20px;">79,850,000</span></div>
+                    <div>Lv. 94<span style="margin-left:20px;">84,850,000</span></div>
+                    <div>Lv. 95<span style="margin-left:20px;">89,850,000</span></div>
+                </div>
+                <div style="background-image:url('{{ GLOBAL.staticUrl }}/img/leveltitles/20.png'); background-position:left center; background-repeat:no-repeat; padding-left:75px; margin:7px 0px;">
+                    <div>Lv. 96<span style="margin-left:20px;">95,850,000</span></div>
+                    <div>Lv. 97<span style="margin-left:20px;">101,850,000</span></div>
+                    <div>Lv. 98<span style="margin-left:20px;">107,850,000</span></div>
+                    <div><img src="{{ GLOBAL.staticUrl }}/img/leveltitles/max.png" alt="MAX" /><span style="margin-left:20px;">113,850,000</span></div>
+                </div>
+            </div>
+            <div style="clear:both;"></div>
+        </div>
+    </div>
+    <div style="clear:both;"></div>
+</div>
+{% endblock %}

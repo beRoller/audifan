@@ -1,0 +1,295 @@
+{% extends "base.twig" %}
+
+{% block title %}Audifan.net - Song List - {{ listName }} Song List{% endblock %}
+
+{% block head %}
+<style type="text/css">
+    .listlink {
+        margin: 0px 5px;
+    }
+    
+    /*.songlist {
+        width: 100%;
+        border: 2px solid #ffffff;
+        border-collapse: collapse;
+    }
+    
+    .songlist tr th, .songlist tr td {
+        text-align: center;
+        font-size: .9em;
+        border: 1px solid #ffffff;
+        padding: 3px;
+        vertical-align: middle;
+    }*/
+    
+    /*.songlist tr th {
+        font-weight: bold;
+    }*/
+    
+    .songlist tr td img {
+        vertical-align: middle;
+    }
+    
+    .songlist tr.new td {
+        background-color: #005500;
+    }
+    
+    th.header {
+	background-image: url("{{ GLOBAL.staticUrl}}/img/unsorted.gif");
+	background-repeat: no-repeat;
+	background-position: center right;
+	background-color: #333;
+	
+	padding-left: 20px;
+	margin-left: -1px;
+	
+	cursor: pointer;
+	font-weight: bold;
+    }
+
+    th.headerSortUp {
+        background-image: url("{{ GLOBAL.staticUrl}}/img/descending.gif");
+	background-color: #444;
+    }
+
+    th.headerSortDown {
+	background-image: url("{{ GLOBAL.staticUrl}}/img/ascending.gif");
+	background-color: #444;
+    }
+</style>
+{% endblock %}
+
+{% block pagetitle %}{{ listName }} Song List{% endblock %}
+
+{% block body %}
+<div>
+    <div class="text-center">
+        <span class="listlink">
+            {% if list == "normal" %}
+            Normal
+            {% else %}
+            <a href="/music/list/">Normal</a>
+            {% endif %}
+        </span>
+        <span class="listlink">
+            {% if list == "ballroom" %}
+            Ballroom
+            {% else %}
+            <a href="/music/list/ballroom/">Ballroom</a>
+            {% endif %}
+        </span>
+        <span class="listlink">
+            {% if list == "beatup" %}
+            Beat Up
+            {% else %}
+            <a href="/music/list/beatup/">Beat Up</a>
+            {% endif %}
+        </span>
+        <span class="listlink">
+            {% if list == "blockbeat" %}
+            Block Beat
+            {% else %}
+            <a href="/music/list/blockbeat/">Block Beat</a>
+            {% endif %}
+        </span>
+        <span class="listlink">
+            {% if list == "guitar" %}
+            Guitar Mode
+            {% else %}
+            <a href="/music/list/guitar/">Guitar Mode</a>
+            {% endif %}
+        </span>
+        <span class="listlink">
+            {% if list == "night" %}
+            Night Dance
+            {% else %}
+            <a href="/music/list/night/">Night Dance</a>
+            {% endif %}
+        </span>
+        <span class="listlink">
+            {% if list == "onetwo" %}
+            One Two Party
+            {% else %}
+            <a href="/music/list/onetwo/">One Two Party</a>
+            {% endif %}
+        </span>
+        <span class="listlink">
+            {% if list == "rhythmholic" %}
+            Rhythm Holic
+            {% else %}
+            <a href="/music/list/rhythmholic/">Rhythm Holic</a>
+            {% endif %}
+        </span>
+        <span class="listlink">
+            {% if list == "spacepangpang" %}
+            Space Pang Pang
+            {% else %}
+            <a href="/music/list/spacepangpang/">Space Pang Pang</a>
+            {% endif %}
+        </span>
+        <span class="listlink">
+            {% if list == "bgmmaster" %}
+            BGM Master
+            {% else %}
+            <a href="/music/list/bgmmaster/">BGM Master</a>
+            {% endif %}
+        </span>
+        <span class="listlink">
+            {% if list == "removed" %}
+            Removed Songs
+            {% else %}
+            <a href="/music/list/removed/">Removed Songs</a>
+            {% endif %}
+        </span>
+    </div>
+    <div style="margin-top:15px;">
+        <div style="margin-bottom:5px;">
+            <b>Key:</b> <span style="background-color:#005500; padding:3px; font-weight:bold;">New Song</span>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover songlist">
+                <thead>
+                    <tr>
+                        <th>Artist</th>
+                        <th>Title</th>
+                        <th>BPM</th>
+
+                        {% if list in ["beatup","blockbeat","onetwo"] %}
+                            <th>Level</th>
+                        {% elseif list == "guitar" %}
+                            <th>Difficulties</th>
+                        {% elseif list == "rhythmholic" %}
+                            <th>Total Notes</th>
+                        {% endif %}
+
+                        {% if list not in ["ballroom","guitar"] %}
+                            <th>Length</th>
+                        {% endif %}
+
+                        {% if list == "rhythmholic" %}
+                            <th>Notes per Second</th>
+                        {% endif %}
+
+                        {% if GLOBAL.user.isLoggedIn() %}
+                            <th>Favorite</th>
+                        {% endif %}
+                    </tr>
+                </thead>
+
+                {% spaceless %}
+                {% for s in songs %}
+                <tr class="{% if s.newmode %}new{% endif %}" data-song-id="{{ s.id }}">
+                    <td>{{ s.artist }}</td>
+                    <td>
+                        {{ s.title }}
+                        {% if s.master %}
+                        <img src="{{ GLOBAL.staticUrl }}/img/m.png" alt="M" title="BGM Master Song" style="margin-left:5px;" />
+                        {% endif %}
+                    </td>
+                    <td>{{ s.bpm }}</td>
+
+                    {% if list == "beatup" %}
+                        <td>{{ s.beatup }}</td>
+                    {% elseif list == "blockbeat" %}
+                        <td>{{ s.blockbeat }}</td>
+                    {% elseif list == "guitar" %}
+                        <td>
+                        {% if "E" in s.guitar %}
+                        <img src="{{ GLOBAL.staticUrl }}/img/guitar_easy.png" alt="E" title="Easy" />
+                        {% endif %}
+
+                        {% if "N" in s.guitar %}
+                        <img src="{{ GLOBAL.staticUrl }}/img/guitar_normal.png" alt="N" title="Normal" />
+                        {% endif %}
+
+                        {% if "H" in s.guitar %}
+                        <img src="{{ GLOBAL.staticUrl }}/img/guitar_hard.png" alt="H" title="Hard" />
+                        {% endif %}
+
+                        {% if "C" in s.guitar %}
+                        <img src="{{ GLOBAL.staticUrl }}/img/guitar_crazy.png" alt="C" title="Crazy" />
+                        {% endif %}
+                        </td>
+                    {% elseif list == "onetwo" %}
+                    <td>{{ s.onetwo }}</td>
+                    {% elseif list == "rhythmholic" %}
+                        <td>
+                            {{ s.rhythmholic }}
+                        </td>
+                    {% endif %}
+
+                    {% if list not in ["ballroom","guitar"] %}
+                    <td>{{ (s.length/60)|round(0,'floor') }}:{{ "%02d"|format(s.length%60) }}</td>
+                    {% endif %}
+
+                    {% if list == "rhythmholic" %}
+                        <td>
+                            {% if s.length > 0 %}
+                                {{ "%.5f"|format(s.rhythmholic / s.length) }}
+                            {% else %}
+                                {{ "%.5f"|format(0) }}
+                            {% endif %}
+                        </td>
+                    {% endif %}
+
+                    {% if GLOBAL.user.isLoggedIn() %}
+                    <td>
+                        <span class="favorite">
+                            {% if s.id in favoriteSongs %}
+                                <a href="#">Remove</a>
+                            {% else %}
+                                <a href="#">Add</a>
+                            {% endif %}
+                        </span>
+                    </td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+                {% endspaceless %}
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block endofpage %}
+    <script type="text/javascript" src="{{ GLOBAL.staticUrl }}/js/jquery.tablesorter.js"></script>
+    <script type="text/javascript">
+
+    function favoriteSong(id, removing) {
+        _.ajax({
+            "favorite": id
+        }, function() {
+            $("#favorite_" + id).html(removing ? "Removing..." : "Adding...");
+        }, function() {
+            $("#favorite_" + id).html(removing ? '<a href="javascript:;" onclick="favoriteSong(' + id + ',false);">Add</a>' : '<a href="javascript:;" onclick="favoriteSong(' + id + ',true);">Remove</a>');
+        });
+    }
+
+    (function() {
+        var headers = {
+            "3": {
+                "sorter": true
+            },
+            "4": {
+                "sorter": true
+            },
+            "5": {
+                "sorter": true
+            },
+            "6": {
+                "sorter": true
+            }
+        };
+        {% if list in ["ballroom","guitar"] %}headers["3"]["sorter"] = false;{% endif %}
+        {% if list in ["normal","guitar","night","spacepangpang","bgmmaster","removed"] %}headers["4"]["sorter"] = false;{% endif %}
+        {% if list in ["beatup","blockbeat","onetwo"] %}headers["5"]["sorter"] = false;{% endif %}
+        {% if list == "rhythmholic" %}headers["6"]["sorter"] = false;{% endif %}
+        $(".songlist").tablesorter({
+            sortList: [[0, 0]],
+            headers: headers
+        });
+    })();
+    
+    </script>
+{% endblock %}

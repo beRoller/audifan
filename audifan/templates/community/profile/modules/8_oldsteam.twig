@@ -1,0 +1,23 @@
+<!-- Steam Stats -->
+<div class="sectionheading">Steam Stats</div>
+<div id="steaminfoloading" class="_center" style="height:81px;">
+    {% if editMode %}
+    (Steam profile will appear here. It does not load in Edit Mode.)
+    {% else %}
+    <img src="{{ GLOBAL.staticUrl }}/img/loading.gif" style="margin-right:5px; vertical-align:middle;" alt="Loading" />
+    <span style="vertical-align:middle;">Loading Steam Profile...</span>
+    {% endif %}
+</div>
+<div id="steaminfocontainer" class="_center" style="display:none;">
+    <div>
+        <img id="steaminfopic" src="" alt="Steam Picture" style="margin-right:5px; vertical-align: middle; border:0px;" />
+        <span id="steaminfoname" style="vertical-align:middle;"><a href="" id="steaminfolink" target="_blank"></a></span>
+    </div>
+    <div style="margin-top:3px;">
+        <!--<span id="steaminfoweekplaytime"></span>-->
+        <span id="steaminfototalplaytime"></span>
+    </div>
+    <div class="_center" style="margin-top:3px; color:#00FF00; display:none;" id="steaminfoplaying">
+        Playing Audition Right Now!
+    </div>
+</div>

@@ -1,0 +1,52 @@
+{% extends "base.twig" %}
+
+{% block title %}Audifan.net - Help - How to Use the EXP Calculator{% endblock %}
+
+{% block pagetitle %}<a href="/help/">Help</a>: How to Use the EXP Calculator{% endblock %}
+
+{% block head %}
+
+{% endblock %}
+
+{% block body %}
+    <div class="contentwrapperhalf">
+        <div class="float">
+            There are two ways to use the EXP Calculator.<br />
+            <ul>
+                <li>Way #1: Calculating EXP Per Game
+                    <ol>
+                        <li>First, enter your Base EXP.  This is the EXP you get when you have no bonuses whatsoever.
+                            <ul>
+                                <li>You can choose a mode and number of players from the list and the most common Base EXP is automatically inserted.</li>
+                                <li>You can also enter it directly.  If you want to calculate the exact Base EXP for the mode and number of players that you are currently playing, see Way #2.</li>
+                                <li>If you enter it directly, either a minimum OR maximum is required.</li>
+                            </ul>
+                        </li>
+                        <li>Next, choose the bonuses that you have.
+                            <ul>
+                                <li>If you're not sure what a bonus is, click on the question mark next to the name for more information.</li>
+                            </ul>
+                        </li>
+                        <li>Finally, click "Calculate EXP per Game" at the bottom.  Your minimum and maximum EXP per game will be displayed.</li>
+                        <li>After your EXP per game has been calculated, you can determine how many games you'll need to reach a certain amount of EXP.
+                            <ul>
+                                <li>First, enter your current EXP.  You can also select one of your characters for which you have entered EXP.</li>
+                                <li>Then, enter your goal EXP.  You can also select a goal level and the EXP required for that level will be inserted automatically.</li>
+                                <li>Finally, click "Calculate Needed Games" and the number of games needed is displayed.</li>
+                            </ul>
+                        </li>
+                    </ol>
+                </li>
+                <li>Way #2: Calculating Base EXP
+                    <ol>
+                        <li>First, play a game with the mode that you will be playing to get EXP.  Enter the EXP that you received toward the bottom of the calculator where it says "EXP per Game".  You can enter it in either the minimum or maximum space.</li>
+                        <li>Next, choose the bonuses that were in effect during the game.<ul>
+                                <li>If you're not sure what a bonus is, click on the question mark next to the name for more information.</li>
+                            </ul></li>
+                        <li>Finally, click "Calculate Base EXP" at the top.  This will take the EXP you received in the game, remove all of the bonus EXP you received, and display your Base EXP.</li>
+                    </ol>
+                </li>
+            </ul>
+        </div>
+    </div>
+{% endblock %}

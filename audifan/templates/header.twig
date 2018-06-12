@@ -1,0 +1,98 @@
+<div id="headerwrapper">
+    <div id="logo">
+        <a href="/"><img src="{{ GLOBAL.staticUrl }}/img/logo_new.png" alt="audifan.net" /></a>
+    </div>
+    <div id="megaphonewrapper">
+        <div id="megaphonedisplay">
+            <div id="megaphonelabel"><a href="/community/">Megaphone</a></div>
+            <div id="megaphonelist">
+                {% for m in GLOBAL.megaphones %}
+                <div class="megaphone" id="megaphone_{{ loop.index0 }}" data-id="{{ loop.index0 }}" style="display:none;">
+                    {% if m.is_vip %}<img src="{{ GLOBAL.staticUrl }}/img/badges/vip.gif" style="margin-right:5px; vertical-align:middle;" />{% endif %}<b><a href="/community/profile/{{ m.mega_account }}/"{% if m.is_vip %} style="color:#ffff00;"{% endif %}>{{ m.display_name }}</a>:</b>
+                    <span style="color:#{{ m.mega_color }}; margin-left:7px;">{{ m.mega_text|megaphone }}</span>
+                </div>
+                {% else %}
+                    There are currently no megaphones. {% if GLOBAL.user.isLoggedIn() %}<a href="/community/">Add one here</a>!{% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% if GLOBAL.scrollerMessage %}
+        <div id="noticemessage">{{ GLOBAL.scrollerMessage|raw }}</div>
+    {% endif %}
+    <div id="menuwrapper">
+        <div id="menutoggle"><img src="{{ GLOBAL.staticUrl }}/img/menutogglebutton-{{ GLOBAL.theme.name }}.png" alt="Toggle Menu" /></div>
+        <div id="menuitemwrapper">
+            <div class="menuitem"><a href="/siteevents/">Site Events</a></div>
+            <div class="menuitem"><a href="/community/">Community</a></div>
+            <div class="menuitem"><a href="/guides/">Guides &amp; Tools</a></div>
+            <div class="menuitem"><a href="/patch/">Patches</a></div>
+            <div class="menuitem"><a href="/music/list/">Music</a></div>
+
+            <div id="submenuwrapper" style="display:none;">
+                <div class="submenusection">
+                    <a class="submenuitem" href="/store/">Coin Store</a>
+                    <a class="submenuitem" href="/community/vipdrawing/">VIP Drawing</a>
+                    <a class="submenuitem" href="/community/vipranking/">VIP Ranking</a>
+                    <a class="submenuitem" href="/quests/">Quests</a>
+                    <a class="submenuitem" href="/quests/ranking/">Quest Rankings</a>
+                    <a class="submenuitem" href="/quests/archive/">Quest Archive</a>
+                    <a class="submenuitem" href="/community/happybox/" id="happyboxlink">Audifan Happy Box</a>
+                </div>
+                <div class="submenusection">
+                    <!--<a class="submenuitem" href="/community/boards/">Message Boards (New!)</a>-->
+                    <a class="submenuitem" href="https://www.facebook.com/audifan/" target="_blank">Audifan on Facebook</a>
+                    <a class="submenuitem" href="http://forums.redbana.com/" target="_blank">Official Audition Forum</a>
+                    <a class="submenuitem" href="https://www.facebook.com/RedbanaAudition/" target="_blank">Official Audition Facebook</a>
+                    <a class="submenuitem" href="http://store.steampowered.com/app/349720/" target="_blank">Audition on Steam</a>
+                    <a class="submenuitem" href="/community/search/">Member Search</a>
+                    <a class="submenuitem" href="/community/memberlist/">Member List by Nickname</a>
+                    <a class="submenuitem" href="/community/memberlist/?cat=ign">Member List by IGN</a>
+                    <a class="submenuitem" href="/news/">News &amp Updates</a>
+                    <a class="submenuitem" href="/community/">Megaphone</a>
+                </div>
+                <div class="submenusection">
+                    <a class="submenuitem" href="/community/siggenerator/">Signature Generator</a>
+                    <a class="submenuitem" href="/community/gardentimer/">Couple Garden Timers</a>
+                    <a class="submenuitem" href="/guides/exp/">EXP Table &amp; Calculator</a>
+                    <a class="submenuitem" href="/guides/licenses/">License Guide</a>
+                    <a class="submenuitem" href="/guides/story/e1/">Story Guide - Episode 1</a>
+                    <a class="submenuitem" href="/guides/story/e2/">Story Guide - Episode 2</a>
+                    <a class="submenuitem" href="/guides/story/e3/">Story Guide - Episode 3</a>
+                    <a class="submenuitem" href="/guides/story/secret/">Story Guide - Secret Episode</a>
+                    <a class="submenuitem" href="/guides/couple/">Couple Guide</a>
+                    <a class="submenuitem" href="/guides/coupleshop/">Couple Shop Guide</a>
+                    <a class="submenuitem" href="/guides/couplegarden/">Couple Garden Guide</a>
+                    <a class="submenuitem" href="/guides/tournamenttime/">Tournament Time Guide</a>
+                    <a class="submenuitem" href="/guides/timebox/">Time Box Guide</a>
+                </div>
+                <div class="submenusection">
+                    <a class="submenuitem" href="/patch/manualpatches/">Manual Patches</a>
+                    <a class="submenuitem" href="/patch/20170719/">Latest Patch</a>
+                    <a class="submenuitem" href="/patch/">Patch Archive</a>
+                    <div class="submenusubsection">
+                        <div><b>All Patches By Year</b></div>
+                        <div><a href="/patch/all/2007/">2007</a>, <a href="/patch/all/2008/">2008</a>, <a href="/patch/all/2009/">2009</a>, <a href="/patch/all/2010/">2010</a>,</div>
+                        <div><a href="/patch/all/2011/">2011</a>, <a href="/patch/all/2012/">2012</a>, <a href="/patch/all/2013/">2013</a>, <a href="/patch/all/2014/">2014</a>,</div>
+                        <div><a href="/patch/all/2015/">2015</a>, <a href="/patch/all/2016/">2016</a>, <a href="/patch/all/2017/">2017</a></div>
+                    </div>
+                </div>
+                <div class="submenusection">
+                    <a class="submenuitem" href="/music/list/">Normal Songs</a>
+                    <a class="submenuitem" href="/music/list/ballroom/">Ballroom Songs</a>
+                    <a class="submenuitem" href="/music/list/beatup/">Beat Up Songs</a>
+                    <a class="submenuitem" href="/music/list/blockbeat/">Block Beat Songs</a>
+                    <a class="submenuitem" href="/music/list/guitar/">Guitar Mode Songs</a>
+                    <a class="submenuitem" href="/music/list/night/">Night Dance Songs</a>
+                    <a class="submenuitem" href="/music/list/onetwo/">One Two Party Songs</a>
+                    <a class="submenuitem" href="/music/list/rhythmholic/">Rhythm Holic Songs</a>
+                    <a class="submenuitem" href="/music/list/spacepangpang/">Space Pang Pang Songs</a>
+                    <a class="submenuitem" href="/music/list/bgmmaster/">BGM Master Songs</a>
+                    <a class="submenuitem" href="/music/list/removed/">Removed Songs</a>
+                    <a class="submenuitem" href="/music/nexonlist/">Nexon Songs</a>
+                </div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>

@@ -1,0 +1,20 @@
+{% extends "base.twig" %}
+
+{% block body %}
+    <div class="contentwrapperhalf">
+        <table>
+            <tr>
+                <th>Account</th>
+                <th>Total Coins</th>
+                <th>Coin Balance</th>
+            </tr>
+        {% for a in accounts %}
+            <tr>
+                <td><a href="/community/profile/{{ a.id }}/" target="_blank">{{ a.display_name }}</a></td>
+                <td>{{ a.coin_total|number_format }}</td>
+                <td>{{ a.coin_balance|number_format }}</td>
+            </tr>
+        {% endfor %}
+        </table>
+    </div>
+{% endblock %}

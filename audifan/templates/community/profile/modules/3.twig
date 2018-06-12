@@ -1,0 +1,46 @@
+{% from "macros/usercard.twig" import userCard %}
+
+<!-- Latest Comments -->
+<div class="sectionheading">Latest Comments</div>
+{% if moduleData[3].comments|length == 0 %}
+    <div class="_center">No comments added yet!</div>
+{% else %}
+<div style="max-height:300px; overflow-y:scroll">
+    {% for cmt in moduleData[3].comments %}
+    <div class="commentcontainer">
+        {{ userCard({
+            staticUrl: GLOBAL.staticUrl,
+            id: cmt.from_id,
+            nickname: cmt.from_display_name,
+            inventory: cmt.itemstring|split(','),
+            vip_rank: cmt.viprank,
+            quest_points: cmt.qp,
+            quest_rank: cmt.qrank,
+            profile_pic_type: cmt.profile_pic_type,
+            character: {
+                ign: cmt.ign,
+                level: cmt.level,
+                fam: cmt.fam,
+                fam_member_type: cmt.fam_member_type
+            }
+        }) }}
+        <div class="commentbody">{{ cmt.comment|bbcode }}</div>
+        <div class="commenttime"><a title="{{ cmt.time|date('r') }}" href="/community/comment/{{ cmt.id }}/">{{ cmt.time|relativeTime }} ago</a></div>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+<div class="_center" style="margin-top:3px;">
+    {% if GLOBAL.user.isLoggedIn() %}
+        <a href="/community/profile/{{ basicInfo.id }}/conversation/{{ GLOBAL.user.getId() }}/?compose=true" style="margin-right:10px;">Post a {% if GLOBAL.user.getId() != basicInfo.id %}Comment{% else %}Status Update{% endif %}</a>
+    {% endif %}
+    <a href="/community/profile/{{ basicInfo.id }}/comments/">View All Comments</a>
+</div>
+{% if editMode %}
+    <div class="_center" style="margin-top:5px;">
+        <form method="post" action="/community/profile/{{ basicInfo.id }}/?edit">
+            <input type="checkbox" class="_vmiddle" name="allow"{% if basicInfo.allow_comments %} checked{% endif %} /> <span class="_vmiddle">Allow Comments</span>
+            <input type="submit" class="_vmiddle prettyinputbutton" name="submit_allowcomments" value="Save" style="margin-left:5px;" />
+        </form>
+    </div>
+{% endif %}

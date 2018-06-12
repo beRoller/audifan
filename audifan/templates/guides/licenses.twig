@@ -1,0 +1,59 @@
+{% extends "base.twig" %}
+
+{% block title %}Audifan.net - Guides - License Guide{% endblock %}
+
+{% block head %}
+<style type="text/css">
+    .licensewrapper {
+        margin-bottom: 10px;
+    }
+    
+    .level {
+        font-size: 1.8em;
+    }
+    
+    .level * {
+        vertical-align: middle;
+    }
+    
+    .detailswrapper {
+        margin-left: 25px;
+        font-size: 1.1em;
+    }
+    
+    .song {
+        margin-bottom: 5px;
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="contentwrapperhalf">
+    <div class="float">
+        <div class="pagetitle">License Guide</div>
+        {% for l in licenses %}
+        <div class="licensewrapper">
+            <div class="level">
+                <span style="margin-right:10px;">
+                    {% if l.level < 99 %}
+                        Lv. {{ l.level }}
+                    {% else %}
+                        <img src="{{ GLOBAL.staticUrl }}/img/leveltitles/max.png" alt="MAX" />
+                    {% endif %}
+                </span>
+                <img src="{{ GLOBAL.staticUrl }}/img/leveltitles/{{ l.leveltitle }}.png" alt="Level Title" />
+            </div>
+            <div class="detailswrapper">
+                <div><b>{{ l.mode }}</b></div>
+                <div class="song"><i>{{ l.artist }} - {{ l.title }} ({{ l.bpm }} bpm)</i></div>
+                <div><b>Perfects Needed:</b> {{ l.perfects }}</div>
+                <div><b>xPerfect Needed:</b> {{ l.xperfect }}</div>
+                <div><b>Score Needed:</b> {{ l.score|number_format }}</div>
+                <div><b>Rewards:</b> {{ l.reward }}</div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <div style="clear:both;"></div>
+</div>
+{% endblock %}

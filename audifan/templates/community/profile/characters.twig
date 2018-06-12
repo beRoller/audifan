@@ -1,0 +1,354 @@
+{% extends "base.twig" %}
+
+{% import "macros/forms.twig" as forms %}
+{% from "macros/charactericons.twig" import characterIcons %}
+
+{% block title %}Audifan.net - {{ name }} - Characters{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" type="text/css" href="{{ GLOBAL.staticUrl }}/css/profile-{{ GLOBAL.theme.name }}-v20151216.css" media="screen" />
+<style type="text/css">
+    .chartable {
+        border: 0px;
+        border-spacing: 0px;
+        border-collapse: collapse;
+        width: 100%;
+    }
+    
+    .chartable tr td {
+        padding-bottom: 15px;
+    }
+    
+    .chartable tr td.label {
+        font-weight: bold;
+        width: 150px;
+        vertical-align: top;
+        padding-top: 5px;
+    }
+    
+    .tourntext {
+        width: 75px;
+    }
+</style>
+
+<script type="text/javascript" src="{{ GLOBAL.staticUrl }}/js/swfobject.js"></script>
+<script type="text/javascript">
+{% for c in chars %}
+    $(function () {
+        swfobject.embedSWF('{{ GLOBAL.staticUrl }}/swf/profilecharactericons-v1.7.swf', 'charactericons_{{ c.id }}', '250', '32', '8', null, null, {
+            wmode: 'opaque',
+            allowScriptAccess: 'never',
+            bgcolor: '#{{ GLOBAL.theme.colors.darker }}',
+            menu: 'false',
+            flashvars: 'useparams=1&bgcolor={{ GLOBAL.theme.colors.darker }}&gender={{ c.gender }}&teamtitle={{ c.team_title }}&storymedal1={{ c.story_medal }}&storymedal2={{ c.story_medal2 }}&ring={{ c.ring }}&tournexpert={{ c.tourn_expert }}&tournbeatup={{ c.tourn_beatup }}&tournbeatrush={{ c.tourn_beatrush }}&tournguitar={{ c.tourn_guitar }}&tournteam={{ c.tourn_team }}&tourncouple={{ c.tourn_couple }}&tournballroom={{ c.tourn_ballroom }}&diary={{ c.diary }}&guitarctrlr={{ c.guitar_ctrlr }}'
+        }, {style: 'margin:0px;'});
+    });
+{% endfor %}
+</script>
+{% endblock %}
+
+{% block pagetitle %}<a href="/community/profile/{{ id }}/">{{ name }}</a>'s Characters{% endblock %}
+
+{% block body %}
+<div class="contentwrapperhalf">
+    <div class="float">
+        {% if editMode %}
+            <div class="_center" style="margin-bottom:10px;">You are editing your characters.  <a href="?">Exit Edit Mode</a></div>
+            
+        {{ forms.start("/community/profile/" ~ id ~ "/characters/?edit") }}
+        {% for c in chars %}
+        <div class="sectionwrapper">
+            <div class="sectionheading">
+                {% if c.id == -1 %}
+                    (Add a New Character)
+                {% else %}
+                    {{ c.ign }} {% if c.id == mainCharacter %}[Main]{% endif %}
+                {% endif %}
+            </div>
+                <table class="chartable">
+                    <tr>
+                        <td class="label">IGN:</td>
+                        <td>{{ forms.textField("ign_" ~ c.id, c.ign) }}</td>
+                    </tr>
+                    <tr>
+                        <td class="label">Gender:</td>
+                        <td>
+                            {{ forms.selectFull("gender_" ~ c.id, {"m":"Male","f":"Female"}, c.gender) }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="label">Level:</td>
+                        <td>
+                            {{ forms.selectStart("level_"~c.id) }}
+                            {{ forms.selectOption(0, "(Hidden)", (c.level == 0)) }}
+                            {{ forms.selectOptions(1..98, c.level, true) }}
+                            {{ forms.selectOption(99, "MAX", (c.level == 99)) }}
+                            {{ forms.selectEnd() }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="label">Story Medals:</td>
+                        <td>
+                            <div>
+                                <div style="float:left; width:90px;">
+                                    <div style="font-weight:bold; text-align:center;">Episode 1</div>
+                                    <div style="margin-top:5px;">
+                                        <div>
+                                            {{ forms.radioButton("storymedal1_"~c.id, 0, (c.story_medal1 == 0), "storymedal1_"~c.id~"_0", "_vmiddle") }}
+                                            <label for="storymedal1_{{ c.id }}_0">(None)</label>
+                                        </div>
+                                        <div>
+                                            {{ forms.radioButton("storymedal1_"~c.id, 1, (c.story_medal == 1), "storymedal1_"~c.id~"_1", "_vmiddle") }}
+                                            <label for="storymedal1_{{ c.id }}_1"><img src="{{ GLOBAL.staticUrl }}/img/storymedals/1_1.png" alt="E1" class="_vmiddle" /></label>
+                                        </div>
+                                        <div>
+                                            {{ forms.radioButton("storymedal1_"~c.id, 2, (c.story_medal == 2), "storymedal1_"~c.id~"_2", "_vmiddle") }}
+                                            <label for="storymedal1_{{ c.id }}_2"><img src="{{ GLOBAL.staticUrl }}/img/storymedals/1_2.png" alt="E1" class="_vmiddle" /></label>
+                                        </div>
+                                        <div>
+                                            {{ forms.radioButton("storymedal1_"~c.id, 3, (c.story_medal == 3), "storymedal1_"~c.id~"_3", "_vmiddle") }}
+                                            <label for="storymedal1_{{ c.id }}_3"><img src="{{ GLOBAL.staticUrl }}/img/storymedals/1_3.png" alt="E1" class="_vmiddle" /></label>
+                                        </div>
+                                        <div>
+                                            {{ forms.radioButton("storymedal1_"~c.id, 4, (c.story_medal == 4), "storymedal1_"~c.id~"_4", "_vmiddle") }}
+                                            <label for="storymedal1_{{ c.id }}_4"><img src="{{ GLOBAL.staticUrl }}/img/storymedals/1_4.png" alt="E1" class="_vmiddle" /></label>
+                                        </div>
+                                        <div>
+                                            {{ forms.radioButton("storymedal1_"~c.id, 5, (c.story_medal == 5), "storymedal1_"~c.id~"_5", "_vmiddle") }}
+                                            <label for="storymedal1_{{ c.id }}_5"><img src="{{ GLOBAL.staticUrl }}/img/storymedals/1_5.png" alt="E1" class="_vmiddle" /></label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="float:left; width:90px; text-align:center;">
+                                    <div style="font-weight:bold; text-align:center;">Episode 2</div>
+                                    <div style="margin-top:5px;">
+                                        <div>
+                                            {{ forms.radioButton("storymedal2_"~c.id, 0, (c.story_medal2 == 0), "storymedal2_"~c.id~"_0", "_vmiddle") }}
+                                            <label for="storymedal2_{{ c.id }}_0">(None)</label>
+                                        </div>
+                                        <div>
+                                            {{ forms.radioButton("storymedal2_"~c.id, 1, (c.story_medal2 == 1), "storymedal2_"~c.id~"_1", "_vmiddle") }}
+                                            <label for="storymedal2_{{ c.id }}_1"><img src="{{ GLOBAL.staticUrl }}/img/storymedals/2_1.png" alt="E2" class="_vmiddle" /></label>
+                                        </div>
+                                        <div>
+                                            {{ forms.radioButton("storymedal2_"~c.id, 2, (c.story_medal2 == 2), "storymedal2_"~c.id~"_2", "_vmiddle") }}
+                                            <label for="storymedal2_{{ c.id }}_2"><img src="{{ GLOBAL.staticUrl }}/img/storymedals/2_2.png" alt="E2" class="_vmiddle" /></label>
+                                        </div>
+                                        <div>
+                                            {{ forms.radioButton("storymedal2_"~c.id, 3, (c.story_medal2 == 3), "storymedal2_"~c.id~"_3", "_vmiddle") }}
+                                            <label for="storymedal2_{{ c.id }}_3"><img src="{{ GLOBAL.staticUrl }}/img/storymedals/2_3.png" alt="E2" class="_vmiddle" /></label>
+                                        </div>
+                                        <div>
+                                            {{ forms.radioButton("storymedal2_"~c.id, 4, (c.story_medal2 == 4), "storymedal2_"~c.id~"_4", "_vmiddle") }}
+                                            <label for="storymedal2_{{ c.id }}_4"><img src="{{ GLOBAL.staticUrl }}/img/storymedals/2_4.png" alt="E2" class="_vmiddle" /></label>
+                                        </div>
+                                        <div>
+                                            {{ forms.radioButton("storymedal2_"~c.id, 5, (c.story_medal2 == 5), "storymedal2_"~c.id~"_5", "_vmiddle") }}
+                                            <label for="storymedal2_{{ c.id }}_5"><img src="{{ GLOBAL.staticUrl }}/img/storymedals/2_5.png" alt="E2" class="_vmiddle" /></label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--
+                                <div style="float:left; width:90px; text-align:center;">
+                                    <div style="font-weight:bold; text-align:center;">Episode 3</div>
+                                    <div style="margin-top:5px;">
+                                        
+                                    </div>
+                                </div>
+                                -->
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="label">FAM Name:</td>
+                        <td>
+                            {{ forms.textField("fam_"~c.id, c.fam) }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="label">FAM Member Type:</td>
+                        <td>
+                            <div style="vertical-align: middle;">
+                                {{ forms.radioButton("famtype_"~c.id, 1, (c.fam_member_type == 1), "famtype_"~c.id~"_1", "_vmiddle") }}
+                                <label for="famtype_{{ c.id }}_1" style="vertical-align:middle; color:#aaffaa;">Member</label>
+                            </div>
+                            <div style="vertical-align: middle;">
+                                {{ forms.radioButton("famtype_"~c.id, 2, (c.fam_member_type == 2), "famtype_"~c.id~"_2", "_vmiddle") }}
+                                <label for="famtype_{{ c.id }}_2" style="vertical-align:middle; color:#aaaaff;">Co</label>
+                            </div>
+                            <div style="vertical-align: middle;">
+                                {{ forms.radioButton("famtype_"~c.id, 3, (c.fam_member_type == 3), "famtype_"~c.id~"_3", "_vmiddle") }}
+                                <label for="famtype_{{ c.id }}_3" style="vertical-align:middle; color:#ffaaaa;">Master</label>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="label">Couple IGN:</td>
+                        <td>{{ forms.textField("couple_"~c.id, c.couple) }}</td>
+                    </tr>
+                    <tr>
+                        <td class="label">Couple Level:</td>
+                        <td>
+                            <select name="couplelevel_{{ c.id }}" class="prettyinputselect">
+                                {{ forms.selectOption(0, "(Unmarried / Hidden)", c.couple_level==0) }}
+                                {{ forms.selectOptions(1..60, c.couple_level, true) }}
+                                {{ forms.selectOption(61, "MAX", c.couple_level==61) }}
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="label">Ring:</td>
+                        <td>
+                            {{ forms.selectStart("ring_"~c.id) }}
+                            {{ forms.selectOption(0, "(No Ring)") }}
+                    <optgroup label="Default Rings">
+                        {% for i in 1..12 %}
+                            {{ forms.selectOption(i, "Cpl Lv. "~((5*i)-4)~" - "~(5*i)~" Ring", c.ring == i) }}
+                        {% endfor %}
+                        {{ forms.selectOption(13, "MAX Level Ring", c.ring == 13) }}
+                    </optgroup>
+                    <optgroup label="Selected Couple Shop Rings">
+                        {{ forms.selectOptions(
+                            {"34":"All Beauty","16":"Black Cat Nero Ring","20":"Bluegreen Elephant","38":"Cream Pudding","25":"Cute Green Frogy Ring","26":"Cutie Panda","21":"Eternal Love Silver Ring","17":"Everlasting Love Silver Ring","36":"Flower Diamond","39":"Forever Heart","14":"Halloween Party Skull Ring","22":"Love Together Maple Leaf","23":"Lucky 4 Leaf Clover Ring","24":"Moon & Star Gold Ring","31":"My Destiny Lilac Ring","32":"My Jewel Heart Ring","27":"One Love Jewel Ring","28":"Pink Bunny","37":"Pink Rose Happiness","29":"Prettier Than Flower Ring","35":"Promise Love","18":"Pure Blue Heart Ring","30":"Shiny Cute","15":"Silver Wings Silver Love","40":"Soft-Sheep Head","19":"Sweet Lovers Donut Ring","33":"Unicorn & Stars Sky"}
+                            ,c.ring) }}
+                    </optgroup>
+                            {{ forms.selectEnd() }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="label">Teammate IGNs:</td>
+                        <td>
+                            <div>{{ forms.textField("team1_"~c.id, c.team1) }}</div>
+                            <div class="_center" style="width:172px; margin-top:5px; margin-bottom:5px;">and</div>
+                            <div>{{ forms.textField("team2_"~c.id, c.team2) }}</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="label">Team Title:</td>
+                        <td>
+                            {{ forms.selectFull("teamtitle_"~c.id, {"0":"(None)","1":"Choreography","2":"Crazy","3":"Crazy 9","4":"Beat Up"}, c.team_title) }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="label">Tournament Wins:</td>
+                        <td>
+                            {% for i, name in {"expert":"Expert","beatup":"Beat Up","beatrush":"Beat Rush","guitar":"Guitar","team":"Team","couple":"Couple","ballroom":"Ballroom"} %}
+                            <div style="margin-top:5px;">
+                                <div style="float:left; width:90px;">
+                                    {{ name }}:
+                                </div>
+                                <div style="float:left; width:90px;">
+                                    {{ forms.textField("tourn"~i~"_"~c.id, c["tourn_"~i], "", "tourntext", 3) }}
+                                </div>
+                                <div style="clear:both;"></div>
+                            </div>
+                            {% endfor %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="label">% Missions Completed:</td>
+                        <td>
+                            {% for i, name in {"n":"Normal","b":"Beat Up","o":"One Two Party","r":"Beat Rush","h":"Hidden"} %}
+                                <div style="margin-top:5px;">
+                                    <div style="float:left; width:90px;">
+                                        {{ name }}:
+                                    </div>
+                                    <div style="float:left; width:150px;">
+                                        {{ forms.textField("mission"~i~"_"~c.id, c["mission_"~i], "", "tourntext", 3) }} %
+                                    </div>
+                                    <div style="clear:both;"></div>
+                                </div>
+                            {% endfor %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="label">Miscellaneous Icons:</td>
+                        <td>
+                            <div>{{ forms.checkbox("diary_"~c.id, c.diary == 1, "diary_"~c.id) }} <label for="diary_{{ c.id }}" style="vertical-align:middle;">Diary Anniversary</label></div>
+                            <div>{{ forms.checkbox("guitarctrlr_"~c.id, c.guitar_ctrlr == 1, "guitarctrlr_"~c.id) }} <label for="guitarctrlr_{{ c.id }}" style="vertical-align:middle;">Guitar Controller</label></div>
+                        </td>
+                    </tr>
+                </table>
+                <div class="_center" style="margin:7px;">
+                    {% if c.id == -1 %}
+                        {{ forms.submit("submit_"~c.id, "Add New Character") }}
+                    {% else %}
+                        {% if c.ign != "" %}
+                            {{ forms.submit("submit_"~c.id, "Save Changes to " ~ c.ign) }}
+                        {% else %}
+                            {{ forms.submit("submit_"~c.id, "Save Changes to This Character") }}
+                        {% endif %}
+                    {% endif %}
+                </div>
+        </div>
+        {% endfor %}
+        <div class="_center" style="margin:7px;">
+            {{ forms.submit("submit_all", "Save Changes to All Characters") }}
+            <input type="button" class="prettyinputbutton" value="Cancel All Changes" onclick="(function(){window.location='?';})();" style="margin-left: 10px;" />
+        </div>
+        <div class="_center">
+            Saving changes to all characters will ignore the "Add a New Character" section.<br />
+            You must click the "Add New Character" button under the new character's information to save it.
+        </div>
+        {{ forms.end() }}
+        
+        <div style="margin-top:25px;">
+            {{ forms.start("/community/profile/" ~ id ~ "/characters/?edit") }}
+            
+            <b>Set Main Character:</b> 
+            {{ forms.selectStart("charid") }}
+            {{ forms.selectOption("", "") }}
+            {% for c in chars %}
+                {% if c.id != -1 %}
+                {{ forms.selectOption(c.id, c.ign, c.id == mainCharacter) }}
+                {% endif %}
+            {% endfor %}
+            {{ forms.selectEnd() }}
+            
+            <span style="margin-left:5px;">{{ forms.submit("submit_main", "Set Main Character") }}</span>
+            {{ forms.end() }}
+        </div>
+        
+        <div style="margin-top:15px;">
+            {{ forms.start("/community/profile/" ~ id ~ "/characters/?edit") }}
+
+            <b>Delete a Character:</b> 
+            {{ forms.selectStart("charid") }}
+            {{ forms.selectOption("0", "") }}
+            {% for c in chars %}
+                {% if c.id != -1 %}
+                {{ forms.selectOption(c.id, c.ign) }}
+                {% endif %}
+            {% endfor %}
+            {{ forms.selectEnd() }}
+            
+            <span style="margin-left:5px;">{{ forms.submit("submit_delete", "Delete Character") }}</span>
+            {{ forms.end() }}
+        </div>
+        {% else %}
+            {% if canEdit %}
+                <div class="_right" style="margin-bottom:15px;"><a href="?edit">Edit Characters</a> {% if GLOBAL.user.isAdmin() %}(ADMIN){% endif %}</div>
+            {% endif %}
+            <div class="_center">
+                {% for c in chars %}
+                    <div class="sectionwrapper">
+                    <div class="characterwrapper">
+                        <div>{{ characterIcons(c) }}</div>
+                        <div class="characterlevel">
+                            <span>{% if c.level == 0 %}Lv. ??{% elseif c.level == 99 %}<img src="{{ GLOBAL.staticUrl }}/img/leveltitles/max.png" />{% else %}Lv. {{ c.level }}{% endif %}</span>
+                            <img src="{{ GLOBAL.staticUrl }}/img/leveltitles/{% if c.level == 0 %}hidden{% else %}{{ ((c.level-1) // 5) + 1 }}{% endif %}.png" alt="Level Title" />
+                        </div>
+                        {% if c.fam != "" %}
+                            <div class="characterfam{% if c.fam_member_type == 3 %} characterfammaster{% elseif c.fam_member_type == 2 %} characterfamco{% endif %}">
+                                <a title="Click to search for other characters in this FAM." href="/community/search/?query={{ c.fam|url_encode }}&in=fams">&lt;{{ c.fam }}&gt;</a>
+                            </div>
+                        {% endif %}
+                        <div class="characterign">{{ c.ign }}</div>
+                    </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

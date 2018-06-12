@@ -1,0 +1,122 @@
+{% extends "base.twig" %}
+{% import "macros/forms.twig" as forms %}
+
+{% block title %}Audifan.net - Quests - Submit a Screenshot{% endblock %}
+
+{% block pagetitle %}<a href="/quests/">Quests</a> &gt; Submit a Screenshot{% endblock %}
+
+{% block body %}
+	<div class="row">
+		<div class="col-md-6 col-sm-6">
+			{{ sectionStart("Screenshot Requirements")|raw }}
+				<div class="text-center" style="margin-bottom:3px;">
+					<b>Please read these carefully.</b>
+				</div>
+				<ol>
+                    <li>You must submit a screenshot of the final scoreboard at the end of the game.  Quests must be completed in Redbana Audition.</li>
+                    <li>You must use the /time command to display the time in chat in the screenshot.  The screenshot must be taken within the current submission period.</li>
+                    <li>The screenshot you submit must be a screenshot taken by pressing the Print Screen (PrtScn) button and saved to your Audition "screenshot" folder.  It may not be taken with any other program such as Fraps or saved by pasting into Photoshop, Paint, etc.</li>
+                    <li>The screenshot cannot be edited in any way.  It must be the same exact file that was saved to your screenshot folder.  You will be permanently banned from Audifan if you try to cheat.</li>
+                </ol>
+			{{ sectionEnd() }}
+		</div>
+
+		<div class="col-md-6 col-sm-6">
+			{{ sectionStart("Submit")|raw }}
+				{% if pageState == "submissionsclosed" %}
+					<div class="text-center">
+						<div>Screenshot submissions are currently closed.</div>
+						<div>Please check back at midnight.</div>
+					</div>
+				{% elseif pageState == "notloggedin" %}
+					<div class="text-center">
+						Please <a href="/account/?thru=/quests/submit/">log in</a> to submit a screenshot.
+					</div>
+				{% elseif pageState == "noign" %}
+					<form method="post" action="/quests/submit/" class="form-horizontal">
+						<div class="text-center">
+							<div style="font-weight:bold;">
+								Please enter your Audition in-game name for this week's quests.
+							</div>
+							<div>
+								You can only submit screenshots with one in-game name each week.
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="newign" class="control-label col-sm-6">
+								Enter a New IGN:
+							</label>
+							<div class="col-sm-6">
+								<input type="text" class="form-control" name="newign" maxlength="30" id="newign" />
+							</div>
+						</div>
+						<div class="text-center" style="margin-bottom:10px;"><b>OR</b></div>
+						<div class="form-group">
+							<label for="prevign" class="control-label col-sm-6">
+								Select a Previously Used IGN:
+							</label>
+							<div class="col-sm-6">
+								<select name="prevign" id="prevign" class="form-control">
+									{{ forms.selectOption("", "") }}
+									{{ forms.selectOptions(questIgns) }}
+								</select>
+							</div>
+						</div>
+						<div class="text-center">
+							<input type="submit" class="btn" value="Submit IGN" name="submit_ign" />
+						</div>
+					</form>
+				{% else %}
+					{% if submittedDifficulties|length == 6 %}
+						<div class="text-center">
+							You have submitted screenshots for all quests!
+						</div>
+					{% else %}
+						<div class="text-center">
+							<div>Your IGN for this week's quests is <span style="margin:0px 5px;"><b>{{ questCurrentIgn }}</b></span>.</div>
+							<div>Your IGN on the screenshot must match.</div>
+						</div>
+
+						{% if numSubmissions == 0 %}
+							<form method="post" action="/quests/submit/">
+								<div class="text-center" style="margin:5px 0px;">
+									<input type="submit" name="submit_change_ign" class="btn" value="Change IGN" />
+								</div>
+							</form>
+						{% endif %}
+
+						<form action="/quests/submit/" method="post" enctype="multipart/form-data">
+							<div style="margin-top:10px;">
+								<div>1. For which quest do you want to submit a screenshot?</div>
+								<div>
+									{% for i in 1..6 %}
+										{% if questRequirements[i] and i not in submittedDifficulties %}
+											<div class="radio">
+												<label>
+													<input type="radio" name="req" value="{{ questRequirements[i].req_id }}" />
+													<div><b>{{ diffLabels[i - 1] }}</b></div>
+													<div>{{ questRequirements[i].req_text|raw }}</div>
+												</label>
+											</div>
+										{% endif %}
+									{% endfor %}
+								</div>
+							</div>
+
+							<div style="margin-top:10px;">
+								<div>2. Select screenshot file.</div>
+								<div><input type="file" name="screenshot" /></div>
+							</div>
+
+							<div class="text-center" style="margin-top:10px;">
+								<input type="submit" name="" value="Submit Screenshot" class="btn" />
+							</div>
+						</form>
+
+					{% endif %}
+				{% endif %}
+			{{ sectionEnd() }}
+		</div>
+	</div>
+{% endblock %}
+

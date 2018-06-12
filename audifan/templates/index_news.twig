@@ -1,0 +1,19 @@
+<div class="sectionwrapper">
+    <div class="sectionheading">News &amp; Updates</div>
+    <table id="newstable">
+        {% for story in news %}
+            <tr>
+                <td class="newsdate">{{ story.time|date("n/j/Y") }}</td>
+                <td class="newscategory">[{{ story.type }}]</td>
+                <td>
+                    {% if story.link %}
+                        <a href="{{ story.link }}">{{ story.title }}</a>
+                    {% else %}
+                        <a href="/news/view/{{ story.id }}/">{{ story.title }}</a>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+    <div class="_center" style="margin-top:5px;"><a href="/news/">View All News &amp; Updates</a></div>
+</div>

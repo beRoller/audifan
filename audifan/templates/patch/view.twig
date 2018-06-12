@@ -1,0 +1,19 @@
+{% extends "base.twig" %}
+
+{% block title %}Audifan.net - Patch Archive - {{ month }} {{ num[6:] }}, {{ num[:4] }}{% endblock %}
+
+{% block head %}
+
+{% endblock %}
+
+{% block body %}
+<div class="contentwrapperhalf">
+    <div class="float">
+        <div class="pagetitle">{{ month }} {{ num[6:] }}, {{ num[:4] }} Patch</div>
+        <div class="_center"><a href="/patch/">&lt; Back to Patch Archive</a></div>
+        <div>
+            {% include "/patch/patchinfo/" ~ num ~ ".twig" %}
+        </div>
+    </div>
+</div>
+{% endblock %}

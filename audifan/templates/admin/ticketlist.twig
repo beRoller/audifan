@@ -1,0 +1,38 @@
+{% extends "base.twig" %}
+
+{% block title %}{% endblock %}
+
+{% block head %}
+    <style>
+        table.tbl tr td, table.tbl tr th {
+            text-align: center;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="contentwrapperfull">
+        <div class="float">
+            <table class="tbl" style="width:100%;">
+                <tr>
+                    <th>Open?</th>
+                    <th>Link</th>
+                    <th>Title</th>
+                    <th>Body Preview</th>
+                    <th>Submitter</th>
+                    <th>Submit Time</th>
+                </tr>
+                {% for t in tickets %}
+                    <tr>
+                        <td>{{ t.ticket_open }}</td>
+                        <td><a href="/tickets/view/{{ t.ticket_id }}-{{ t.ticket_hash }}/" target="_blank">Link</a></td>
+                        <td>{{ t.ticket_title }}</td>
+                        <td>{{ t.ticket_body|slice(0, 100) }}</td>
+                        <td><a href="/community/profile/{{ t.ticket_account }}/" target="_blank">{{ t.ticket_account }}.</a><br />{{ t.ticket_email }}</td>
+                        <td>{{ t.ticket_time|date("r") }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+{% endblock %}

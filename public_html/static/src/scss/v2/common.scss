@@ -1,0 +1,56 @@
+/**
+    Common page elements.
+*/
+
+.maincontent {
+    background-color: $content-background-color;
+    box-shadow: 0px 0px 2px 2px $content-background-color;
+    padding-bottom: 15px;
+    
+    .pagetitle {
+        text-align: center;
+        
+        h1 {
+            margin-top: 0px;
+        }
+    }
+    
+    
+    .sectioncontainer {
+        margin-top: 5px;
+        
+        .sectionheading {
+            
+        }
+        
+        .sectiontext {
+            padding-left: 25px;
+            padding-right: 25px;
+        }
+    }
+}
+
+#jump-to-top {
+    cursor: pointer;
+    
+    @media (max-width: $bootstrap-md-max) {
+        position: fixed;
+        bottom: 0px;
+        padding: 5px;
+        left: 0px;
+        width: 100%;
+        text-align: center;
+        font-size: 18px;
+        background-color: $content-background-color;
+        box-shadow: -1px -1px 2px $page-background-color;
+        height: 28px;
+        line-height: 18px;
+    }
+    
+    @media (min-width: $bootstrap-lg-min) {
+        position: fixed;
+        bottom: 5px;
+        right: 15px;
+        font-size: 36px;
+    }
+}

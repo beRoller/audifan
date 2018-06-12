@@ -1,0 +1,98 @@
+{% extends "base.twig" %}
+{% from "macros/badges.twig" import badges %}
+
+{% block title %}Audifan.net - Message Boards - {{ topicInfo.topic_name }}{% endblock %}
+
+{% block pagetitle %}{{ topicInfo.topic_name }}{% endblock %}
+
+{% block head %}
+    <style>
+        .postname {
+            font-size: 1.5em;
+        }
+        
+        .postbody {
+            padding: 10px;
+        }
+        
+        .posttime {
+            text-align: center;
+            font-size: 8pt;
+            margin-top: 5px;
+        }
+        
+        .postlinks {
+            text-align: center;
+            font-size: 8pt;
+            margin-top: 5px;
+        }
+        
+        .postlinks > span {
+            margin-right: 7px;
+        }
+        
+        .postlinks > span:last-child {
+            margin-right: 0px;
+        }
+        
+        .posttop {
+            padding-bottom: 5px;
+            margin-bottom: 5px;
+            border-bottom: 1px solid #421c52;
+        }
+        
+        .postprofilepic {
+            width: 200px;
+            text-align: center;
+            float: left;
+        }
+        
+        .posttoptext {
+            float: left;
+            width: 750px;
+            padding: 10px;
+            padding-top: 0px;
+        }
+        
+        .postcontainer {
+            margin-bottom: 15px;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="contentwrapperfull">
+        <div class="float">
+            <div style="margin-bottom:10px;">
+                <a href="/community/boards/">Message Boards</a> &gt; <a href="/community/boards/{{ boardInfo.board_id }}-{{ boardInfo.board_name|urlizeText }}/">{{ boardInfo.board_name }}</a> &gt; {{ topicInfo.topic_name }}
+            </div>
+            <div class="_right" style="margin-bottom:10px;">
+                <a href="/community/boards/newpost/{{ topicInfo.topic_id }}/">Post a New Reply</a>
+            </div>
+            {% for p in posts %}
+                <div class="sectionwrapper postcontainer">
+                    <div class="posttop">
+                        <div class="postprofilepic"><img src="{{ GLOBAL.staticUrl }}/img/profilepictures/1.png" /></div>
+                        <div class="posttoptext">
+                            <div class="postname"><a href="/community/profile/{{ p.post_account }}/">{{ p.display_name }}</a></div>
+                            <div>{{ badges(GLOBAL.staticUrl, [1, 30, 2, 14, 9, 16, 17], 1, 1, 1) }}</div>
+                            <div style="margin-top:5px;">Total Posts: 1</div>
+                        </div>
+                        <div style="clear:both;"></div>
+                    </div>
+                    <div class="postbody">
+                        {{ p.post_body|bbcode }}
+                    </div>
+                    <div class="postlinks">
+                        {% if GLOBAL.user.getId() == p.post_id or GLOBAL.user.isAdmin() %}
+                            <span><a href="/community/boards/post/{{ p.post_id }}/">Edit/Delete</a></span>
+                        {% endif %}
+                        <span><a href="/community/boards/newpost/{{ topicInfo.topic_id }}/?quote={{ p.post_id }}">Quote</a></span>
+                        <span>Post Comment to {{ p.display_name }}'s Profile</span>
+                    </div>
+                    <div class="posttime"><a href="/community/boards/post/{{ p.post_id }}/">{{ p.post_time|relativeTime }} ago</a></div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

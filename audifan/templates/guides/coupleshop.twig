@@ -1,0 +1,322 @@
+{% extends "base.twig" %}
+
+{% block title %}Audifan.net - Guides - Couple Shop Guide{% endblock %}
+
+{% block pagetitle %}Couple Shop Guide{% endblock %}
+
+{% block head %}
+    <style>
+        .infotable {
+            border: 1px solid #FFF;
+            border-collapse: collapse;
+            margin: auto;
+        }
+
+        .infotable thead tr th {
+            font-size: 10pt;
+            font-weight: bold;
+            text-align: center;
+            vertical-align: middle;
+            border: 1px solid #FFF;
+            cursor: default;
+        }
+
+        .infotable thead tr th.header {
+            padding: 3px 3px 3px 20px;
+            margin-left: -1px;
+            cursor: pointer;
+            background-image: url("{{ GLOBAL.staticUrl }}/img/unsorted.gif");
+            background-repeat: no-repeat;
+            background-position: center right;
+            background-color: #{{ GLOBAL.theme.colors.darkerhighlight }};
+        }
+
+        .infotable thead tr th.headerSortUp {
+            background-image: url("{{ GLOBAL.staticUrl }}/img/ascending.gif");
+            background-color: #{{ GLOBAL.theme.colors.middle }};
+        }
+
+        .infotable thead tr th.headerSortDown {
+            background-image: url("{{ GLOBAL.staticUrl }}/img/descending.gif");
+            background-color: #{{ GLOBAL.theme.colors.middle }};
+        }
+
+        .infotable tbody tr td {
+            font-size: 9pt;
+            text-align: center;
+            vertical-align: middle;
+            border: 1px solid #FFF;
+            padding: 3px;
+        }
+
+        div.hearts {
+            background-image: url("{{ GLOBAL.staticUrl }}/img/heart.png");
+            background-position: left top;
+            background-repeat: no-repeat;
+            height: 22px;
+            padding: 3px 0px 0px 22px;
+            vertical-align: text-bottom;
+        }
+
+        div.animatedlabel {
+            margin-top: 3px;
+            text-transform: uppercase;
+            font-size: 8pt;
+            letter-spacing: 2px;
+            font-weight: bold;
+        }
+    </style>
+    <script type="text/javascript" src="{{ GLOBAL.staticUrl }}/js/jquery.tablesorter.js"></script>
+    <script type="text/javascript">
+            $(function() {
+                $.tablesorter.addParser({
+                    id: 'formattednumber',
+                    is: function(s) {
+                        return false;
+                    },
+                    format: function(s) {
+                        var s = s.replace(",", "");
+                        return parseInt(s);
+                    },
+                    type: 'numeric'
+                });
+                
+                $.tablesorter.addParser({
+                    id: 'hearts',
+                    is: function(s) {
+                        return false;
+                    },
+                    format: function(s) {
+                        var s = new String(s);
+                        s = s.substr(s.indexOf(" ", 5));
+                        try {
+                            return parseInt(s.replace(/\,/g, ""));
+                        }
+                        catch (e) {
+                            return 0;
+                        }
+                    },
+                    type: 'numeric'
+                });
+                
+                $("#ringstable").tablesorter({
+                    sortList: [[0,0]],
+                    headers: {
+                        1: {
+                            sorter: false
+                        },
+                        2: {
+                            sorter: 'formattednumber'
+                        },
+                        3: {
+                            sorter: 'hearts'
+                        }
+                    }
+                });
+                
+                $("#licensestable").tablesorter({
+                    sortList: [[0,0]],
+                    headers: {
+                        1: {
+                            sorter: false
+                        },
+                        2: {
+                            sorter: 'formattednumber'
+                        },
+                        3: {
+                            sorter: 'hearts'
+                        }
+                    }
+                });
+                
+                $("#licensestable tbody tr td img").bind("mouseover, mousemove", function(e) {
+                    $("#largelicenseimage").attr("src", "{{ GLOBAL.staticUrl }}/img/coupleshop/licenses/large/" + $(e.target).data("imgname") + ".jpg");
+                    $("#largelicenseimage").css({
+                        "position": "absolute",
+                        "left": (e.pageX + 5) + "px",
+                        "top": (e.pageY + 5) + "px"
+                    });
+                    $("#largelicenseimage").show();
+                });
+                
+                $("#licensestable tbody tr td img").bind("mouseout", function(e) {
+                    $("#largelicenseimage").attr("src", "");
+                    $("#largelicenseimage").hide();
+                });
+            });
+        </script>
+{% endblock %}
+
+{% block body %}
+    <div class="contentwrapper2col">
+        <div class="float">
+            <div class="sectionwrapper">
+                <div class="sectionheading">Rings</div>
+                <table style="border:0px; width:100%;" class="infotable" id="ringstable">
+                    <thead>
+                        <tr>
+                            <th class="header" style="width:200px;">Name</th>
+                            <th style="width:100px;">Picture</th>
+                            <th class="header" style="width:100px;">Cost</th>
+                            <th class="header" style="width:100px;">Min Couple Level/Hearts</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        <tr><td style="width:200px;">Albitegold Special</td><td style="width:100px;"><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/rings/albitegoldspecial.jpg" /><div class="animatedlabel">ANIMATED</div></td><td style="width:100px;">9,900</td><td style="width:100px;"><div>Lv. <span class="level">61</span></div> <div class="hearts">100,000</div></td></tr>
+                        <tr><td style="width:200px;">All Beauty</td><td style="width:100px;"><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/rings/allbeauty.jpg" /></td><td style="width:100px;">6,500</td><td style="width:100px;"><div>Lv. <span class="level">26</span></div> <div class="hearts">6,500</div></td></tr>
+                        <tr><td style="width:200px;">Apatite Special</td><td style="width:100px;"><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/rings/apatitespecial.jpg" /></td><td style="width:100px;">9,900</td><td style="width:100px;"><div>Lv. <span class="level">61</span></div> <div class="hearts">300,000</div></td></tr>
+                        <tr><td style="width:200px;">Bejeweled Cancer Zodiac</td><td style="width:100px;"><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/rings/bejeweledcancerzodiac.jpg" /></td><td style="width:100px;">4,500</td><td style="width:100px;"><div>Lv. <span class="level">6</span></div> <div class="hearts">300</div></td></tr>
+                        <tr><td style="width:200px;">Black Cat Nero Ring</td><td style="width:100px;"><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/rings/blackcatneroring.jpg" /></td><td style="width:100px;">4,500</td><td style="width:100px;"><div>Lv. <span class="level">6</span></div> <div class="hearts">300</div></td></tr>
+                        <tr><td style="width:200px;">Bling Crown</td><td style="width:100px;"><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/rings/blingcrown.jpg" /></td><td style="width:100px;">6,000</td><td style="width:100px;"><div>Lv. <span class="level">21</span></div> <div class="hearts">4,200</div></td></tr>
+                        <tr><td style="width:200px;">Bluegreen Elephant</td><td style="width:100px;"><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/rings/bluegreenelephant.jpg" /></td><td style="width:100px;">5,000</td><td style="width:100px;"><div>Lv. <span class="level">11</span></div> <div class="hearts">1,100</div></td></tr>
+                        <tr><td style="width:200px;">Born-to-love Emerald</td><td style="width:100px;"><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/rings/borntoloveemerald.jpg" /></td><td style="width:100px;">6,000</td><td style="width:100px;"><div>Lv. <span class="level">21</span></div> <div class="hearts">4,200</div></td></tr>
+                        <tr><td style="width:200px;">Cintamani Blackdragon</td><td style="width:100px;"><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/rings/cintamaniblackdragon.jpg" /></td><td style="width:100px;">4,000</td><td style="width:100px;"><div>Lv. <span class="level">1</span></div> <div class="hearts">0</div></td></tr>
+                        <tr><td style="width:200px;">Cream Pudding</td><td style="width:100px;"><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/rings/creampudding.jpg" /></td><td style="width:100px;">4,000</td><td style="width:100px;"><div>Lv. <span class="level">1</span></div> <div class="hearts">0</div></td></tr>
+                        <tr><td style="width:200px;">Cute Green Frogy Ring</td><td style="width:100px;"><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/rings/cutegreenfrogyring.jpg" /></td><td style="width:100px;">5,500</td><td style="width:100px;"><div>Lv. <span class="level">16</span></div> <div class="hearts">2,400</div></td></tr>
+                        <tr><td style="width:200px;">Cutie Panda</td><td style="width:100px;"><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/rings/cutiepanda.jpg" /></td><td style="width:100px;">5,500</td><td style="width:100px;"><div>Lv. <span class="level">16</span></div> <div class="hearts">2,400</div></td></tr>
+                        <tr><td style="width:200px;">Eternal Love Silver Ring</td><td style="width:100px;"><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/rings/eternallovesilverring.jpg" /></td><td style="width:100px;">5,000</td><td style="width:100px;"><div>Lv. <span class="level">11</span></div> <div class="hearts">1,100</div></td></tr>
+                        <tr><td style="width:200px;">Everlasting Amber Ring</td><td style="width:100px;"><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/rings/everlastingamberring.jpg" /></td><td style="width:100px;">4,500</td><td style="width:100px;"><div>Lv. <span class="level">6</span></div> <div class="hearts">300</div></td></tr>
+                        <tr><td style="width:200px;">Flower Diamond</td><td style="width:100px;"><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/rings/flowerdiamond.jpg" /></td><td style="width:100px;">7,500</td><td style="width:100px;"><div>Lv. <span class="level">36</span></div> <div class="hearts">12,600</div></td></tr>
+                        <tr><td style="width:200px;">Forever Heart</td><td style="width:100px;"><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/rings/foreverheart.jpg" /></td><td style="width:100px;">4,500</td><td style="width:100px;"><div>Lv. <span class="level">6</span></div> <div class="hearts">300</div></td></tr>
+                        <tr><td style="width:200px;">Fresh Scent Flower Ring</td><td style="width:100px;"><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/rings/freshscentflowerring.jpg" /><div class="animatedlabel">ANIMATED</div></td><td style="width:100px;">4,500</td><td style="width:100px;"><div>Lv. <span class="level">6</span></div> <div class="hearts">300</div></td></tr>
+                        <tr><td style="width:200px;">Fuchsia Bus</td><td style="width:100px;"><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/rings/fuchsiabus.jpg" /></td><td style="width:100px;">4,500</td><td style="width:100px;"><div>Lv. <span class="level">6</span></div> <div class="hearts">300</div></td></tr>
+                        <tr><td style="width:200px;">Halloween Party Skull Ring</td><td style="width:100px;"><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/rings/halloweenpartyskullring.jpg" /></td><td style="width:100px;">4,000</td><td style="width:100px;"><div>Lv. <span class="level">1</span></div> <div class="hearts">0</div></td></tr>
+                        <tr><td style="width:200px;">Indiecoalite Special</td><td style="width:100px;"><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/rings/indiecoalitespecial.jpg" /></td><td style="width:100px;">9,900</td><td style="width:100px;"><div>Lv. <span class="level">61</span></div> <div class="hearts">700,000</div></td></tr>
+                        <tr><td style="width:200px;">Juicy-Sweety Grapes</td><td style="width:100px;"><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/rings/juicysweetygrapes.jpg" /></td><td style="width:100px;">5,500</td><td style="width:100px;"><div>Lv. <span class="level">16</span></div> <div class="hearts">2,400</div></td></tr>
+                        <tr><td style="width:200px;">Kiss-CHU Sexy-Lips</td><td style="width:100px;"><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/rings/kisschusexylips.jpg" /></td><td style="width:100px;">5,000</td><td style="width:100px;"><div>Lv. <span class="level">11</span></div> <div class="hearts">1,100</div></td></tr>
+                        <tr><td style="width:200px;">LoveClick Mouse</td><td style="width:100px;"><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/rings/loveclickmouse.jpg" /></td><td style="width:100px;">4,500</td><td style="width:100px;"><div>Lv. <span class="level">6</span></div> <div class="hearts">300</div></td></tr>
+                        <tr><td style="width:200px;">Love Together Maple Leaf</td><td style="width:100px;"><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/rings/lovetogethermapleleaf.jpg" /></td><td style="width:100px;">5,000</td><td style="width:100px;"><div>Lv. <span class="level">11</span></div> <div class="hearts">1,100</div></td></tr>
+                        <tr><td style="width:200px;">Lovely Bouquet</td><td style="width:100px;"><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/rings/lovelybouquet.jpg" /></td><td style="width:100px;">5,500</td><td style="width:100px;"><div>Lv. <span class="level">16</span></div> <div class="hearts">2,400</div></td></tr>
+                        <tr><td style="width:200px;">Lucky 4 Leaf Clover Ring</td><td style="width:100px;"><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/rings/lucky4leafcloverring.jpg" /></td><td style="width:100px;">5,000</td><td style="width:100px;"><div>Lv. <span class="level">11</span></div> <div class="hearts">1,100</div></td></tr>
+                        <tr><td style="width:200px;">Luscious Apple</td><td style="width:100px;"><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/rings/lusciousapple.jpg" /></td><td style="width:100px;">5,500</td><td style="width:100px;"><div>Lv. <span class="level">16</span></div> <div class="hearts">2,400</div></td></tr>
+                        <tr><td style="width:200px;">Melodical Piano</td><td style="width:100px;"><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/rings/melodicalpiano.jpg" /></td><td style="width:100px;">5,000</td><td style="width:100px;"><div>Lv. <span class="level">11</span></div> <div class="hearts">1,100</div></td></tr>
+                        <tr><td style="width:200px;">Moon & Star Gold Ring</td><td style="width:100px;"><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/rings/moonstargoldring.jpg" /></td><td style="width:100px;">5,000</td><td style="width:100px;"><div>Lv. <span class="level">11</span></div> <div class="hearts">1,100</div></td></tr>
+                        <tr><td style="width:200px;">My Destiny Lilac Ring</td><td style="width:100px;"><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/rings/mydestinylilacring.jpg" /></td><td style="width:100px;">6,000</td><td style="width:100px;"><div>Lv. <span class="level">21</span></div> <div class="hearts">4,200</div></td></tr>
+                        <tr><td style="width:200px;">My Jewel Heart Ring</td><td style="width:100px;"><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/rings/myjewelheartring.jpg" /></td><td style="width:100px;">6,000</td><td style="width:100px;"><div>Lv. <span class="level">21</span></div> <div class="hearts">4,200</div></td></tr>
+                        <tr><td style="width:200px;">One Love Jewel Ring</td><td style="width:100px;"><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/rings/onelovejewelring.jpg" /></td><td style="width:100px;">5,500</td><td style="width:100px;"><div>Lv. <span class="level">16</span></div> <div class="hearts">2,400</div></td></tr>
+                        <tr><td style="width:200px;">Pink Bunny</td><td style="width:100px;"><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/rings/pinkbunny.jpg" /></td><td style="width:100px;">5,500</td><td style="width:100px;"><div>Lv. <span class="level">16</span></div> <div class="hearts">2,400</div></td></tr>
+                        <tr><td style="width:200px;">Pink Rose Happiness</td><td style="width:100px;"><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/rings/pinkrosehappiness.jpg" /><div class="animatedlabel">ANIMATED</div></td><td style="width:100px;">8,500</td><td style="width:100px;"><div>Lv. <span class="level">46</span></div> <div class="hearts">20,700</div></td></tr>
+                        <tr><td style="width:200px;">Precious-Pearls Special</td><td style="width:100px;"><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/rings/preciouspearlsspecial.jpg" /></td><td style="width:100px;">9,900</td><td style="width:100px;"><div>Lv. <span class="level">61</span></div> <div class="hearts">1,000,000</div></td></tr>
+                        <tr><td style="width:200px;">Prettier Than Flower Ring</td><td style="width:100px;"><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/rings/prettierthanflowerring.jpg" /></td><td style="width:100px;">5,500</td><td style="width:100px;"><div>Lv. <span class="level">16</span></div> <div class="hearts">2,400</div></td></tr>
+                        <tr><td style="width:200px;">Prismatic Star</td><td style="width:100px;"><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/rings/prismaticstar.jpg" /></td><td style="width:100px;">5,000</td><td style="width:100px;"><div>Lv. <span class="level">1</span></div> <div class="hearts">0</div></td></tr>
+                        <tr><td style="width:200px;">Promise Love</td><td style="width:100px;"><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/rings/promiselove.jpg" /></td><td style="width:100px;">7,000</td><td style="width:100px;"><div>Lv. <span class="level">31</span></div> <div class="hearts">9,300</div></td></tr>
+                        <tr><td style="width:200px;">Pure Blue Heart Ring</td><td style="width:100px;"><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/rings/pureblueheartring.jpg" /></td><td style="width:100px;">4,500</td><td style="width:100px;"><div>Lv. <span class="level">6</span></div> <div class="hearts">300</div></td></tr>
+                        <tr><td style="width:200px;">Pure White Snowman Ring</td><td style="width:100px;"><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/rings/purewhitesnowmanring.jpg" /><div class="animatedlabel">ANIMATED</div></td><td style="width:100px;">6,500</td><td style="width:100px;"><div>Lv. <span class="level">26</span></div> <div class="hearts">6,500</div></td></tr>
+                        <tr><td style="width:200px;">RubelliteGold Special</td><td style="width:100px;"><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/rings/rubellitegoldspecial.jpg" /></td><td style="width:100px;">9,900</td><td style="width:100px;"><div>Lv. <span class="level">61</span></div> <div class="hearts">500,000</div></td></tr>
+                        <tr><td style="width:200px;">Scrumptious Sandwich</td><td style="width:100px;"><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/rings/scrumptioussandwich.jpg" /></td><td style="width:100px;">5,000</td><td style="width:100px;"><div>Lv. <span class="level">11</span></div> <div class="hearts">1,100</div></td></tr>
+                        <tr><td style="width:200px;">Seven Seas Sailing</td><td style="width:100px;"><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/rings/sevenseassailing.jpg" /></td><td style="width:100px;">5,500</td><td style="width:100px;"><div>Lv. <span class="level">16</span></div> <div class="hearts">2,400</div></td></tr>
+                        <tr><td style="width:200px;">Shiny Cute</td><td style="width:100px;"><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/rings/shinycute.jpg" /></td><td style="width:100px;">5,500</td><td style="width:100px;"><div>Lv. <span class="level">16</span></div> <div class="hearts">2,400</div></td></tr>
+                        <tr><td style="width:200px;">Shot of</td><td style="width:100px;"><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/rings/shotof.jpg" /></td><td style="width:100px;">8,000</td><td style="width:100px;"><div>Lv. <span class="level">41</span></div> <div class="hearts">16,400</div></td></tr>
+                        <tr><td style="width:200px;">Silver Emblem</td><td style="width:100px;"><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/rings/silveremblem.jpg" /></td><td style="width:100px;">6,000</td><td style="width:100px;"><div>Lv. <span class="level">21</span></div> <div class="hearts">4,200</div></td></tr>
+                        <tr><td style="width:200px;">Silver Wings Silver Love</td><td style="width:100px;"><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/rings/silverwingssilverlove.jpg" /></td><td style="width:100px;">4,000</td><td style="width:100px;"><div>Lv. <span class="level">1</span></div> <div class="hearts">0</div></td></tr>
+                        <tr><td style="width:200px;">Soft-Sheep Head</td><td style="width:100px;"><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/rings/softsheephead.jpg" /></td><td style="width:100px;">5,500</td><td style="width:100px;"><div>Lv. <span class="level">16</span></div> <div class="hearts">2,400</div></td></tr>
+                        <tr><td style="width:200px;">Sparklefly Ring</td><td style="width:100px;"><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/rings/sparkleflyring.jpg" /></td><td style="width:100px;">4,500</td><td style="width:100px;"><div>Lv. <span class="level">1</span></div> <div class="hearts">0</div></td></tr>
+                        <tr><td style="width:200px;">Studly Mustache</td><td style="width:100px;"><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/rings/studlymustache.jpg" /></td><td style="width:100px;">4,000</td><td style="width:100px;"><div>Lv. <span class="level">1</span></div> <div class="hearts">0</div></td></tr>
+                        <tr><td style="width:200px;">Succulent Watermelon</td><td style="width:100px;"><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/rings/succulentwatermelon.jpg" /></td><td style="width:100px;">5,000</td><td style="width:100px;"><div>Lv. <span class="level">11</span></div> <div class="hearts">1,100</div></td></tr>
+                        <tr><td style="width:200px;">Summer Wave</td><td style="width:100px;"><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/rings/summerwave.jpg" /><div class="animatedlabel">ANIMATED</div></td><td style="width:100px;">7,000</td><td style="width:100px;"><div>Lv. <span class="level">31</span></div> <div class="hearts">9,300</div></td></tr>
+                        <tr><td style="width:200px;">Surprise Gift</td><td style="width:100px;"><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/rings/surprisegift.jpg" /></td><td style="width:100px;">5,000</td><td style="width:100px;"><div>Lv. <span class="level">11</span></div> <div class="hearts">1,100</div></td></tr>
+                        <tr><td style="width:200px;">Sweet Lovers Donut Ring</td><td style="width:100px;"><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/rings/sweetloversdonutring.jpg" /></td><td style="width:100px;">4,500</td><td style="width:100px;"><div>Lv. <span class="level">6</span></div> <div class="hearts">300</div></td></tr>
+                        <tr><td style="width:200px;">Tanzanite Special</td><td style="width:100px;"><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/rings/tanzanitespecial.jpg" /></td><td style="width:100px;">9,900</td><td style="width:100px;"><div>Lv. <span class="level">61</span></div> <div class="hearts">200,000</div></td></tr>
+                        <tr><td style="width:200px;">Twinkling Gaze</td><td style="width:100px;"><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/rings/twinklinggaze.jpg" /></td><td style="width:100px;">4,500</td><td style="width:100px;"><div>Lv. <span class="level">6</span></div> <div class="hearts">300</div></td></tr>
+                        <tr><td style="width:200px;">Unicorn & Stars Sky</td><td style="width:100px;"><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/rings/unicornstarssky.jpg" /></td><td style="width:100px;">6,000</td><td style="width:100px;"><div>Lv. <span class="level">21</span></div> <div class="hearts">4,200</div></td></tr>                            </tbody>
+                        <tr><td style="width:200px;">You-are My-Heart</td><td style="width:100px;"><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/rings/youaremyheart.jpg" /></td><td style="width:100px;">6,500</td><td style="width:100px;"><div>Lv. <span class="level">26</span></div> <div class="hearts">6,500</div></td></tr>
+                </table>
+            </div>
+            <div class="sectionwrapper">
+                <div class="sectionheading">Licenses</div>
+                <table style="border:0px;" class="infotable" id="licensestable">
+                    <thead>
+                        <tr>
+                            <th class="header" style="width:200px;">Name</th>
+                            <th>Picture</th>
+                            <th class="header" style="width:70px;">Cost</th>
+                            <th class="header" style="width:70px;">Min Couple Level/Hearts</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        <tr><td>Autumn Leaves Certificate</td><td style="width:140px;"><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/licenses/small/autumnleavescertificate.jpg" data-imgname="autumnleavescertificate" /></td><td>1,100</td><td><div>Lv. <span class="level">1</span></div> <div class="hearts">0</div></td></tr>
+                        <tr><td>Bear Cub</td><td style="width:140px;"><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/licenses/small/bearcub.jpg" data-imgname="bearcub" /></td><td>1,100</td><td><div>Lv. <span class="level">11</span></div> <div class="hearts">1,100</div></td></tr>
+                        <tr><td>Being Together</td><td style="width:140px;"><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/licenses/small/beingtogether.jpg" data-imgname="beingtogether" /></td><td>1,600</td><td><div>Lv. <span class="level">1</span></div> <div class="hearts">0</div></td></tr>
+                        <tr><td>Butterflies & Flowers Certificate</td><td style="width:140px;"><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/licenses/small/butterfliesflowerscertificate.jpg" data-imgname="butterfliesflowerscertificate" /></td><td>1,100</td><td><div>Lv. <span class="level">21</span></div> <div class="hearts">4,200</div></td></tr>
+                        <tr><td>Classic Couple</td><td style="width:140px;"><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/licenses/small/classiccouple.jpg" data-imgname="classiccouple" /></td><td>100</td><td><div>Lv. <span class="level">1</span></div> <div class="hearts">0</div></td></tr>
+                        <tr><td>Clouds-in-the-sky Couple</td><td style="width:140px;"><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/licenses/small/cloudsintheskycouple.jpg" data-imgname="cloudsintheskycouple" /></td><td>1,100</td><td><div>Lv. <span class="level">1</span></div> <div class="hearts">0</div></td></tr>
+                        <tr><td>Couple Garden Certificate</td><td style="width:140px;"><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/licenses/small/couplegardencertificate.jpg" data-imgname="couplegardencertificate" /></td><td>1,100</td><td><div>Lv. <span class="level">1</span></div> <div class="hearts">0</div></td></tr>
+                        <tr><td>Crispy Bread Certificate</td><td style="width:140px;"><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/licenses/small/crispybreadcertificate.jpg" data-imgname="crispybreadcertificate" /></td><td>1,100</td><td><div>Lv. <span class="level">21</span></div> <div class="hearts">4,200</div></td></tr>
+                        <tr><td>Cute Pet</td><td style="width:140px;"><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/licenses/small/cutepet.jpg" data-imgname="cutepet" /></td><td>1,100</td><td><div>Lv. <span class="level">16</span></div> <div class="hearts">2,400</div></td></tr>
+                        <tr><td>Daily Beach Couple</td><td style="width:140px;"><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/licenses/small/dailybeachcouple.jpg" data-imgname="dailybeachcouple" /></td><td>1,100</td><td><div>Lv. <span class="level">21</span></div> <div class="hearts">4,200</div></td></tr>
+                        <tr><td>Dessert Time Certificate</td><td style="width:140px;"><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/licenses/small/desserttimecertificate.jpg" data-imgname="desserttimecertificate" /></td><td>1,100</td><td><div>Lv. <span class="level">16</span></div> <div class="hearts">2,400</div></td></tr>
+                        <tr><td>Dressing Room Certificate</td><td style="width:140px;"><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/licenses/small/dressingroomcertificate.jpg" data-imgname="dressingroomcertificate" /></td><td>1,100</td><td><div>Lv. <span class="level">6</span></div> <div class="hearts">300</div></td></tr>
+                        <tr><td>Fall-in-Love Certificate</td><td style="width:140px;"><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/licenses/small/fallinlovecertificate.jpg" data-imgname="fallinlovecertificate" /></td><td>1,100</td><td><div>Lv. <span class="level">6</span></div> <div class="hearts">300</div></td></tr>
+                        <tr><td>Field Day</td><td style="width:140px;"><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/licenses/small/fieldday.jpg" data-imgname="fieldday" /></td><td>1,100</td><td><div>Lv. <span class="level">11</span></div> <div class="hearts">1,100</div></td></tr>
+                        <tr><td>Fire-Balloon Certificate</td><td style="width:140px;"><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/licenses/small/fireballooncertificate.jpg" data-imgname="fireballooncertificate" /></td><td>1,100</td><td><div>Lv. <span class="level">6</span></div> <div class="hearts">300</div></td></tr>
+                        <tr><td>Fireworks Certificate</td><td style="width:140px;"><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/licenses/small/fireworkscertificate.jpg" data-imgname="fireworkscertificate" /></td><td>1,100</td><td><div>Lv. <span class="level">11</span></div> <div class="hearts">1,100</div></td></tr>
+                        <tr><td>Fun Camping Certificate</td><td style="width:140px;"><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/licenses/small/funcampingcertificate.jpg" data-imgname="funcampingcertificate" /></td><td>1,100</td><td><div>Lv. <span class="level">16</span></div> <div class="hearts">2,400</div></td></tr>
+                        <tr><td>Gifting Time Certificate</td><td style="width:140px;"><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/licenses/small/giftingtimecertificate.jpg" data-imgname="giftingtimecertificate" /></td><td>1,100</td><td><div>Lv. <span class="level">1</span></div> <div class="hearts">0</div></td></tr>
+                        <tr><td>Halloween Party Certificate</td><td style="width:140px;"><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/licenses/small/halloweenpartycertificate.jpg" data-imgname="halloweenpartycertificate" /></td><td>1,100</td><td><div>Lv. <span class="level">1</span></div> <div class="hearts">0</div></td></tr>
+                        <tr><td>Love Christmas Couple Certificate</td><td style="width:140px;"><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/licenses/small/lovechristmascouplecertificate.jpg" data-imgname="lovechristmascouplecertificate" /></td><td>1,100</td><td><div>Lv. <span class="level">6</span></div> <div class="hearts">300</div></td></tr>
+                        <tr><td>Love Picnic</td><td style="width:140px;"><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/licenses/small/lovepicnic.jpg" data-imgname="lovepicnic" /></td><td>1,100</td><td><div>Lv. <span class="level">1</span></div> <div class="hearts">0</div></td></tr>
+                        <tr><td>Lovely Cafe</td><td style="width:140px;"><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/licenses/small/lovelycafe.jpg" data-imgname="lovelycafe" /></td><td>1,100</td><td><div>Lv. <span class="level">11</span></div> <div class="hearts">1,100</div></td></tr>
+                        <tr><td>Maple Certificate</td><td style="width:140px;"><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/licenses/small/maplecertificate.jpg" data-imgname="maplecertificate" /></td><td>1,100</td><td><div>Lv. <span class="level">6</span></div> <div class="hearts">300</div></td></tr>
+                        <tr><td>Merry Christmas Certificate</td><td style="width:140px;"><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/licenses/small/merrychristmascertificate.jpg" data-imgname="merrychristmascertificate" /></td><td>1,100</td><td><div>Lv. <span class="level">1</span></div> <div class="hearts">0</div></td></tr>
+                        <tr><td>Moon Wanderer</td><td style="width:140px;"><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/licenses/small/moonwanderer.jpg" data-imgname="moonwanderer" /></td><td>1,100</td><td><div>Lv. <span class="level">1</span></div> <div class="hearts">0</div></td></tr>
+                        <tr><td>Movie Cinema</td><td style="width:140px;"><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/licenses/small/moviecinema.jpg" data-imgname="moviecinema" /></td><td>1,100</td><td><div>Lv. <span class="level">16</span></div> <div class="hearts">2,400</div></td></tr>
+                        <tr><td>My Dating Day Certificate</td><td style="width:140px;"><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/licenses/small/mydatingdaycertificate.jpg" data-imgname="mydatingdaycertificate" /></td><td>1,100</td><td><div>Lv. <span class="level">21</span></div> <div class="hearts">4,200</div></td></tr>
+                        <tr><td>New Year</td><td style="width:140px;"><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/licenses/small/newyear.jpg" data-imgname="newyear" /></td><td>1,100</td><td><div>Lv. <span class="level">1</span></div> <div class="hearts">0</div></td></tr>
+                        <tr><td>New Year New Start Certificate</td><td style="width:140px;"><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/licenses/small/newyearnewstartcertificate.jpg" data-imgname="newyearnewstartcertificate" /></td><td>1,100</td><td><div>Lv. <span class="level">1</span></div> <div class="hearts">0</div></td></tr>
+                        <tr><td>Pink Rabbit</td><td style="width:140px;"><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/licenses/small/pinkrabbit.jpg" data-imgname="pinkrabbit" /></td><td>1,100</td><td><div>Lv. <span class="level">11</span></div> <div class="hearts">1,100</div></td></tr>
+                        <tr><td>Puppy Hide & Seek Certificate</td><td style="width:140px;"><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/licenses/small/puppyhideseekcertificate.jpg" data-imgname="puppyhideseekcertificate" /></td><td>1,100</td><td><div>Lv. <span class="level">1</span></div> <div class="hearts">0</div></td></tr>
+                        <tr><td>South-Pole Exploration</td><td style="width:140px;"><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/licenses/small/southpoleexploration.jpg" data-imgname="southpoleexploration" /></td><td>1,100</td><td><div>Lv. <span class="level">16</span></div> <div class="hearts">2,400</div></td></tr>
+                        <tr><td>Twinkle Twinkle Moon Certificate</td><td style="width:140px;"><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/licenses/small/twinkletwinklemooncertificate.jpg" data-imgname="twinkletwinklemooncertificate" /></td><td>1,100</td><td><div>Lv. <span class="level">1</span></div> <div class="hearts">0</div></td></tr>                            </tbody>
+                </table>
+            </div>
+        </div>
+    <div class="float">
+        <div class="sectionwrapper">
+            <div class="sectionheading">Outfits</div>
+            <table style="border:0px;" class="infotable">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Picture</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    <tr><td>Aroma</td><td><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/outfits/aroma.jpg" /></td></tr>
+                    <tr><td>Beach Crayon</td><td><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/outfits/beachcrayon.jpg" /></td></tr>
+                    <tr><td>Big Love</td><td><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/outfits/biglove.jpg" /></td></tr>
+                    <tr><td>Chic Gothic</td><td><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/outfits/chicgothic.jpg" /></td></tr>
+                    <tr><td>Cutie Pie Bunny</td><td><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/outfits/cutiepiebunny.jpg" /></td></tr>
+                    <tr><td>Don't Be Sick Baby</td><td><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/outfits/dontbesickbaby.jpg" /></td></tr>
+                    <tr><td>Flower Garden</td><td><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/outfits/flowergarden.jpg" /></td></tr>
+                    <tr><td>Free Spirited Bohemian</td><td><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/outfits/freespiritedbohemian.jpg" /></td></tr>
+                    <tr><td>Fun Date</td><td><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/outfits/fundate.jpg" /></td></tr>
+                    <tr><td>Fun Firework</td><td><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/outfits/funfirework.jpg" /></td></tr>
+                    <tr><td>Good Day Warm</td><td><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/outfits/gooddaywarm.jpg" /></td></tr>
+                    <tr><td>Halloween Wedding</td><td><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/outfits/halloweenwedding.jpg" /></td></tr>
+                    <tr><td>Hopping Rabbit</td><td><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/outfits/hoppingrabbit.jpg" /></td></tr>
+                    <tr><td>IHeartU</td><td><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/outfits/iheartu.jpg" /></td></tr>
+                    <tr><td>Jelly Cat-Footprints</td><td><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/outfits/jellycatfootprints.jpg" /></td></tr>
+                    <tr><td>KissKiss</td><td><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/outfits/kisskiss.jpg" /></td></tr>
+                    <tr><td>Let's Play</td><td><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/outfits/letsplay.jpg" /></td></tr>
+                    <tr><td>Lively European</td><td><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/outfits/livelyeuropean.jpg" /></td></tr>
+                    <tr><td>Love Bunny</td><td><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/outfits/lovebunny.jpg" /></td></tr>
+                    <tr><td>Lovely Blue</td><td><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/outfits/lovelyblue.jpg" /></td></tr>
+                    <tr><td>Lovely Bubble</td><td><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/outfits/lovelybubble.jpg" /></td></tr>
+                    <tr><td>Lovely Funny</td><td><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/outfits/lovelyfunny.jpg" /></td></tr>
+                    <tr><td>Lovely Zebra</td><td><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/outfits/lovelyzebra.jpg" /></td></tr>
+                    <tr><td>Lovey Dovey</td><td><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/outfits/loveydovey.jpg" /></td></tr>
+                    <tr><td>My Artist</td><td><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/outfits/myartist.jpg" /></td></tr>
+                    <tr><td>Petite Dino</td><td><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/outfits/petitedino.jpg" /></td></tr>
+                    <tr><td>Petite Kiss</td><td><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/outfits/petitekiss.jpg" /></td></tr>
+                    <tr><td>Rainy Day</td><td><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/outfits/rainyday.jpg" /></td></tr>
+                    <tr><td>Star Smile</td><td><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/outfits/starsmile.jpg" /></td></tr>
+                    <tr><td>Unstoppable Biker</td><td><img src="{{ GLOBAL.staticUrl }}/img/coupleshop/outfits/unstoppablebiker.jpg" /></td></tr>                            </tbody>
+            </table>
+        </div>
+    </div>
+    <div style="clear:both;"></div>
+</div>
+{% endblock %}

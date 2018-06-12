@@ -1,0 +1,8 @@
+{{ sectionStart("Random Friend") }}
+	<div class="text-center">
+		<a href="/community/profile/{{ moduleData[6].friend.id }}/">
+			<div><img src="{{ GLOBAL.staticUrl}}/img/profilepictures/{% if moduleData[6].friend.profile_pic_type != "" %}{{ moduleData[6].friend.id }}.{{ moduleData[6].friend.profile_pic_type }}{% else %}default.png{% endif %}" alt="{{ moduleData[6].friend.display_name }}'s Profile Picture" /></div>
+			<div style="margin-top:3px;">{{ moduleData[6].friend.display_name }}</div>
+		</a>
+	</div>
+{{ sectionEnd() }}

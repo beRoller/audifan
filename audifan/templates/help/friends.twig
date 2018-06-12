@@ -1,0 +1,30 @@
+{% extends "base.twig" %}
+
+{% block title %}Audifan.net - Help - Adding/Deleting Friends{% endblock %}
+
+{% block pagetitle %}<a href="/help/">Help</a>: Adding/Deleting Friends{% endblock %}
+
+{% block head %}
+    <style>
+    li > img {
+        border: 1px solid #954e9d;
+        border-radius: 3px;
+        padding: 3px;
+    }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="contentwrapperhalf">
+        <div class="float">
+            <ul>
+                <li>To send someone a friend request, go to their profile and click the "Add As Friend" link at the top.<br /><img src="{{ GLOBAL.staticUrl }}/img/helpguides/friend01.png" /></li>
+                <li>You will receive a notification when someone sends you a friend request.<br /><img src="{{ GLOBAL.staticUrl }}/img/helpguides/friend02.png" /></li>
+                <li>To accept or decline a friend request, click the "My Requests" link at the top of any page and click Accept or Decline next to the person's name.<br /><img src="{{ GLOBAL.staticUrl }}/img/helpguides/friend03.png" /></li>
+                <li>To unsend a friend request, click the "My Requests" link at the top of any page and click Unsend next to the person's name.<br /><img src="{{ GLOBAL.staticUrl }}/img/helpguides/friend04.png" />
+                <li>Friend requests expire after 30 days.</li>
+                <li>To delete someone from your friends, click "My Friends" at the top of any page and click Unfriend under the person's name.<br /><img src="{{ GLOBAL.staticUrl }}/img/helpguides/friend05.png" /></li>
+            </ul>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,57 @@
+{% extends "base.twig" %}
+
+{% block title %}Audifan.net - {{ name }} - Friends{% endblock %}
+
+{% block pagetitle %}<a href="/community/profile/{{ id }}/">{{ name }}</a>'s Friends ({{ friendCount }}){% endblock %}
+
+{% block head %}
+	
+{% endblock %}
+
+{% block body %}
+	{% if friendCount > 0 %}
+		<div class="row">
+			{% for f in friends %}
+				<div class="col-md-4 text-center" style="margin-top:10px;">
+					<a href="/">
+						<div><img src="{{ GLOBAL.staticUrl }}/img/profilepictures/{% if f.profile_pic_type != "" %}{{ f.id }}.{{ f.profile_pic_type }}{% else %}default.png{% endif %}" alt="{{ f.display_name }}'s Profile Picture"></div>
+						<div>{{ f.display_name }}</div>
+					</a>
+					{% if ownFriends %}
+						<div>
+							<a href="#" class="unfriend" data-id="{{ f.id }}" data-name="{{ f.display_name }}"><i class="fa"></i> Unfriend</a>
+						</div>
+					{% endif %}
+				</div>
+				{% if (loop.index0 % 3) == 2 %}
+					<div class="clearfix visible-md visible-lg"></div>
+				{% endif %}
+			{% endfor %}
+		</div>
+	{% else %}
+		
+	{% endif %}
+{% endblock %}
+
+{% block endofpage %}
+	<script>
+		(function($) {
+			$("a.unfriend").click(function(e) {
+				var el = $(e.currentTarget);
+				var id = el.data("id");
+				var name = el.data("name");
+
+				$.confirmModal({
+	                title: "Please Confirm",
+	                message: "Are you sure you want to unfriend " + name + "?",
+	                confirmCallback: function() {
+	                    window.location = '?do=remove&id=' + id;
+	                }
+	            });
+
+	            e.preventDefault();
+	            return false;
+			});
+		})(jQuery);
+	</script>
+{% endblock %}

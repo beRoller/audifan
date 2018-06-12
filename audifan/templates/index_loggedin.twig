@@ -1,0 +1,131 @@
+{% from "macros/badges.twig" import badges %}
+{% from "macros/usercard.twig" import userCard %}
+
+<div class="contentwrapper2col">
+    <div class="float" id="newscol">
+        <div style="text-align:right; margin-bottom:10px;">
+            <span style="margin:5px; background-color:#{{ GLOBAL.theme.colors.lighter }}; padding:5px; cursor:pointer;" id="hidenewsbutton">&lt; Hide News</span>
+        </div>
+        <div style="width:490px; float:left;" id="newscontent">
+            {% include "index_newsscroller.twig" %}
+            {% include "index_news.twig" %}
+            {% include "index_right.twig" %}
+            {% include "index_facebook.twig" %}
+        </div>
+    </div>
+
+    <div class="float" id="feedcol">
+        <div style="text-align:center; font-size:16pt; font-weight:bold; margin-bottom:10px;">Hello {{ GLOBAL.user.getNickname() }}!</div>
+        
+        {% if GLOBAL.user.isAdmin() %}
+        <div class="sectionwrapper _center">
+            [ADMIN] There {{ openTickets|pluralize("is", "are") }} {{ openTickets }} open <a href="/admin/ticketlist/">ticket{{ openTickets|pluralize }}</a>.
+        </div>
+        {% endif %}
+        
+        {% if stuff.coinBoxes or stuff.badgeVouchers or stuff.vipDrawingVouchers %}
+            <div class="sectionwrapper">
+                <div class="sectionheading"><a href="/account/stuff/">My Stuff</a> Notices</div>
+                <div class="_center">
+                    {% if stuff.coinBoxes %}
+                        <div>* You have {{ stuff.coinBoxes }} unopened Coin Box{{ stuff.coinBoxes|pluralize("", "es") }}! *</div>
+                    {% endif %}
+                    
+                    {% if stuff.badgeVouchers %}
+                        <div>* You have {{ stuff.badgeVouchers }} unclaimed Badge Voucher{{ stuff.badgeVouchers|pluralize }}! *</div>
+                    {% endif %}
+                    
+                    {% if stuff.vipDrawingVouchers %}
+                        <div>* You won the VIP Drawing!  Claim your prize before the voucher expires! *</div>
+                    {% endif %}
+                    
+                    <div style="margin-top:5px;">
+                        You can claim prize vouchers and open coin boxes on the <a href="/account/stuff/">My Stuff</a> page.
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+        <div class="sectionwrapper">
+            <div class="sectionheading">My Notifications</div>
+            <div class="_center">
+                {% for n in notifications %}
+                    <div style="margin-bottom:10px; position:relative; padding-left:20px;" id="mynotif_{{ n.dbid }}">
+                        {% if n.dbid %}
+                            <div style="position:absolute; left:0px; top:0px;" title="Delete Notification"><a href="javascript:;" onclick="deleteNotif({{ n.dbid }});">[X]</a></div>
+                        {% endif %}
+                        <div>{{ n.html|raw }}</div>
+                        <div class="feednotiftime">{{ n.time|relativeTime }} ago</div>
+                    </div>
+                {% else %}
+                    <div class="_center">(None)</div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="sectionwrapper">
+            <div class="sectionheading">My Feed</div>
+            <div class="_right" style="margin-bottom:3px;"><a href="/community/profile/{{ GLOBAL.user.getId() }}/conversation/{{ GLOBAL.user.getId() }}/?compose=true">Post a Status Update</a></div>
+            <div id="feedpostcontainer">
+                {% for f in feed %}
+                    <div class="feedpost">
+                        {{ userCard({
+                            staticUrl: GLOBAL.staticUrl,
+                            id: f.from_id,
+                            nickname: f.from_display_name,
+                            inventory: f.itemstring|split(','),
+                            vip_rank: f.viprank,
+                            quest_points: f.qp,
+                            quest_rank: f.qrank,
+                            profile_pic_type: f.profile_pic_type,
+                            character: {
+                                ign: f.ign,
+                                level: f.level,
+                                fam: f.fam,
+                                fam_member_type: f.fam_member_type
+                            }
+                        }) }}
+                        
+                        <!--<div class="feedpostnames">
+                            <img class="feedpostpic" src="{{ GLOBAL.staticUrl }}/img/profilepictures/{% if f.profile_pic_type %}{{ f.from_id }}.{{ f.profile_pic_type }}{% else %}default.png{% endif %}" />
+                            <span class="feedname"><a href="/community/profile/{{ f.from_id }}/">{{ f.from_display_name }}</a></span>
+                                {% if f.to_id != f.from_id %}
+                                <span class="feednamearrow">&gt;</span>
+                                <span class="feedname"><a href="/community/profile/{{ f.to_id }}/">{{ f.to_display_name }}</a></span>
+                                {% endif %}
+                        </div>
+                        <div class="feedbadges">
+                            {{ badges(GLOBAL.staticUrl, f.itemstring|split(','), f.viprank, f.qp, f.qrank) }}
+                        </div>-->
+                        <div class="feedcontent">
+                            {% if f.to_id != f.from_id %}
+                                <div>&gt; To <a href="/community/profile/{{ f.to_id }}/">{{ f.to_display_name }}</a></div>
+                            {% endif %}
+                            <div style="margin-left:15px; margin-top:7px;">
+                                {{ f.comment|bbcode }}
+                            </div>
+                        </div>
+                        <div class="feedcontentlinks">
+                            <span><a href="/community/comment/{{ f.id }}/">{{ f.time|relativeTime }} ago</a></span>
+                            {% if f.to_id != f.from_id and f.to_id == GLOBAL.user.getId() %}
+                                <span><a href="/community/profile/{{ f.from_id }}/conversation/{{ GLOBAL.user.getId() }}/?compose=true"><i class="fa fa-reply"></i> Reply to {{ f.from_display_name }}</a></span>
+                                    {% else %}
+                                        {% if f.from_id != GLOBAL.user.getId() %}
+                                    <span><a href="/community/profile/{{ f.from_id }}/conversation/{{ GLOBAL.user.getId() }}/?compose=true"><i class="fa fa-comment"></i> Post Comment to {{ f.from_display_name }}</a></span>
+                                        {% endif %}
+                                        {% if f.from_id != f.to_id and f.to_id != GLOBAL.user.getId() %}
+                                    <span><a href="/community/profile/{{ f.to_id }}/conversation/{{ GLOBAL.user.getId() }}/?compose=true"><i class="fa fa-comment"></i> Post Comment to {{ f.to_display_name }}</a></span>
+                                        {% endif %}
+                                    {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <div id="expandfeedcontainer">
+                <span id="expandfeedtext">Expand Feed</span>
+            </div>
+        </div>
+    </div>
+
+    <div style="clear:both;"></div>
+</div>

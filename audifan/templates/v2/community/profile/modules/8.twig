@@ -1,0 +1,17 @@
+{{ sectionStart('Recent <a href="/community/happybox/">Happy Box</a> Prizes') }}
+	<div style="max-height:200px; overflow-y:auto; overflow-x:hidden;">
+		<ul>
+			{% for p in moduleData[8].prizes %}
+				<li style="margin-bottom:5px;">
+					{% if p.prize_id == -1 %}
+						Won {{ p.prize_data1|number_format }} ({{ (p.prize_data1 - p.prize_data2)|number_format }} + {{ p.prize_data2|number_format }} Bonus) Coins {{ p.win_time|relativeTime }} ago.
+					{% elseif p.prize_id == -2 %}
+						Won the JACKPOT with {{ p.prize_data1|number_format }} Coins {{ p.win_time|relativeTime }} ago.
+					{% else %}
+						Won a {{ moduleData[8].itemInfo[p.prize_id][2]|raw }} {{ p.win_time|relativeTime }} ago.
+					{% endif %}
+				</li>
+			{% endfor %}
+		</ul>
+	</div>
+{{ sectionEnd() }}

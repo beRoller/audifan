@@ -1,0 +1,28 @@
+{% extends "base.twig" %}
+
+{% block pagetitle %}Member List by {% if cat == "ign" %}Character IGN{% else %}Nickname{% endif %}{% endblock %}
+
+{% block head %}
+    <style>
+        @media (min-width: 768px) {
+            .list-item {
+                min-height: 150px;
+            }
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="container-fluid">
+        {% for m in members %}
+            <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 text-center list-item">
+                {% if cat == "ign" %}
+                    <h3>{{ m.ign }}</h3>
+                    <h4>Owned by <a href="/community/profile/{{ m.id }}/">{{ m.display_name }}</a></h4>
+                {% else %}
+                    <h3><a href="/community/profile/{{ m.id }}/">{{ m.display_name }}</a></h3>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

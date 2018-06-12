@@ -1,0 +1,191 @@
+{% extends "base.twig" %}
+{% import "macros/forms.twig" as forms %}
+
+{% block pagetitle %}Couple Garden Timer{% endblock %}
+
+{% block body %}
+    <div class="row garden-timer-container">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    For the most accurate times, click the respective "Start Timer" button <b>after</b> you're finished, and click the water, dust, and fertilize buttons <b>after</b> you plant new seeds.
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <div id="timermessage">Your timers are loading... <i class="fa fa-spin fa-spinner"></i></div>
+                </div>
+            </div>
+            
+            <div class="row">
+                
+            </div>
+            
+            <div class="row" id="timers">
+                <div class="col-md-12">
+                    {% for i in 0..numTimers-1 %}
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="timercontainer panel" id="timer_{{ timers[i].timer_id }}" data-id="{{ timers[i].timer_id }}">
+                                    <div class="panel-heading">
+                                        <!-- Timer Name -->
+                                        <div class="row">
+                                            <div class="col-md-12 timername" id="timername_{{ timers[i].timer_id }}">
+                                                <a href="#"><span id="timernamedisplay_{{ timers[i].timer_id }}">{{ timers[i].timer_name|default("(Unnamed)") }} <i class="fa fa-pencil"></i></span></a>
+                                            </div>
+                                            <div class="col-md-12 timernameedit">
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <input type="text" value="{{ timers[i].timer_name }}" name="timername_{{ timers[i].timer_id }}" maxlength="20" class="form-control timernameeditinput" />
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="panel-body">
+                                        <!-- Timer Edit -->
+                                        <div class="row">
+                                            <div class="col-md-12 timernameedit" id="timernameedit_{{ timers[i].timer_id }}" style="display:none;">
+                                                {{ forms.textField("timername_"~timers[i].timer_id, timers[i].timer_name, "timernameeditinput_"~timers[i].timer_id, "timernameeditinput", 20) }}
+                                                {{ forms.submit("submit_nameedit", "Save All", "", "timernameeditsave") }}
+                                                {{ forms.button("Cancel", "timernameeditcancel_"~timers[i].timer_id, "timernameeditcancel") }}
+                                            </div>
+                                        </div>
+
+                                        <!-- Actual Timers -->
+                                        <div class="row">
+                                            <div class="col-md-4 col-sm-6 col-xs-12 timerlabel waterlabel" data-type="water">
+                                                Water
+                                                <div class="timerdisplay" id="timerdisplaywater_{{ timers[i].timer_id }}">0:00:00</div>
+                                                <div class="timerstart" id="timerstartwater_{{ timers[i].timer_id }}" style="display:none;">{{ forms.button("Start Water Timer", "waterstartbutton_"~timers[i].timer_id, "waterstartbutton") }}</div>
+                                                <div class="timersecretstart" id="timersecretstartwater_{{ timers[i].timer_id }}" style="display:none;">
+                                                    <div style="font-size:9pt; font-weight:bold;">
+                                                        Have you planted seeds in<br />
+                                                        your Secret Garden recently?
+                                                    </div>
+                                                    {{ forms.button("Yes", "", "secretyesbutton watersecretstartbuttonyes") }}
+                                                    {{ forms.button("No", "", "secretnobutton watersecretstartbuttonno") }}
+                                                    {{ forms.button("Cancel", "", "secretcancelbutton watersecretstartbuttoncancel") }}
+                                                </div>
+                                                <div class="timerstop" id="timerstopwater_{{ timers[i].timer_id }}" style="display:none;">
+                                                    {{ forms.button("Cancel Water Timer", "waterstopbutton_"~timers[i].timer_id, "waterstopbutton") }}
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-4 col-sm-6 col-xs-12 timerlabel dustlabel" data-type="dust">
+                                                Dust
+                                                <div class="timerdisplay" id="timerdisplaydust_{{ timers[i].timer_id }}">0:00:00</div>
+                                                <div class="timerstart" id="timerstartdust_{{ timers[i].timer_id }}" style="display:none;">{{ forms.button("Start Dust Timer", "duststartbutton_"~timers[i].timer_id, "duststartbutton") }}</div>
+                                                <div class="timersecretstart" id="timersecretstartdust_{{ timers[i].timer_id }}" style="display:none;">
+                                                    <div style="font-size:9pt; font-weight:bold;">
+                                                        Have you planted seeds in<br />
+                                                        your Secret Garden recently?
+                                                    </div>
+                                                    {{ forms.button("Yes", "dustsecretstartbuttonyes_"~timers[i].timer_id, "dustsecretstartbuttonyes") }}
+                                                    {{ forms.button("No", "dustsecretstartbuttonno_"~timers[i].timer_id, "dustsecretstartbuttonno") }}
+                                                    {{ forms.button("Cancel", "dustsecretstartbuttoncancel_"~timers[i].timer_id, "dustsecretstartbuttoncancel") }}
+                                                </div>
+                                                <div class="timerstop" id="timerstopdust_{{ timers[i].timer_id }}" style="display:none;">
+                                                    {{ forms.button("Cancel Dust Timer", "duststopbutton_"~timers[i].timer_id, "duststopbutton") }}
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-4 col-sm-6 col-xs-12 timerlabel fertilizelabel" data-type="fertilize">
+                                                Fertilize
+                                                <div class="timerdisplay" id="timerdisplayfertilize_{{ timers[i].timer_id }}">0:00:00</div>
+                                                <div class="timerstart" id="timerstartfertilize_{{ timers[i].timer_id }}" style="display:none;">{{ forms.button("Start Fertilize Timer", "fertilizestartbutton_"~timers[i].timer_id, "fertilizestartbutton") }}</div>
+                                                <div class="timerstop" id="timerstopfertilize_{{ timers[i].timer_id }}" style="display:none;">
+                                                    {{ forms.button("Cancel Fertilize Timer", "fertilizestopbutton_"~timers[i].timer_id, "fertilizestopbutton") }}
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-4 col-sm-6 col-xs-12 timerlabel rosemarylabel" data-type="rosemary">
+                                                Rosemary
+                                                <div class="timerdisplay" id="timerdisplayrosemary_{{ timers[i].timer_id }}">0:00:00</div>
+                                                <div class="timerstart" id="timerstartrosemary_{{ timers[i].timer_id }}" style="display:none;">{{ forms.button("Start Rosemary Timer", "rosemarystartbutton_"~timers[i].timer_id, "rosemarystartbutton") }}</div>
+                                                <div class="timerstop" id="timerstoprosemary_{{ timers[i].timer_id }}" style="display:none;">
+                                                    {{ forms.button("Cancel Rosemary Timer", "rosemarystopbutton_"~timers[i].timer_id, "rosemarystopbutton") }}
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-4 col-sm-6 col-xs-12 timerlabel spearmintlabel" data-type="spearmint">
+                                                Spearmint
+                                                <div class="timerdisplay" id="timerdisplayspearmint_{{ timers[i].timer_id }}">0:00:00</div>
+                                                <div class="timerstart" id="timerstartspearmint_{{ timers[i].timer_id }}" style="display:none;">{{ forms.button("Start Spearmint Timer", "spearmintstartbutton_"~timers[i].timer_id, "spearmintstartbutton") }}</div>
+                                                <div class="timerstop" id="timerstopspearmint_{{ timers[i].timer_id }}" style="display:none;">
+                                                    {{ forms.button("Cancel Spearmint Timer", "spearmintstopbutton_"~timers[i].timer_id, "spearmintstopbutton") }}
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-4 col-sm-6 col-xs-12 timerlabel peppermintlabel" data-type="peppermint">
+                                                Peppermint
+                                                <div class="timerdisplay" id="timerdisplaypeppermint_{{ timers[i].timer_id }}">0:00:00</div>
+                                                <div class="timerstart" id="timerstartpeppermint_{{ timers[i].timer_id }}" style="display:none;">{{ forms.button("Start Peppermint Timer", "peppermintstartbutton_"~timers[i].timer_id, "peppermintstartbutton") }}</div>
+                                                <div class="timerstop" id="timerstoppeppermint_{{ timers[i].timer_id }}" style="display:none;">
+                                                    {{ forms.button("Cancel Peppermint Timer", "peppermintstopbutton_"~timers[i].timer_id, "peppermintstopbutton") }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="panel-footer">
+                                        <!-- Timer Options -->
+                                        <div id="timerlinks" class="row">
+                                            <div class="col-md-3 text-center">
+                                                {% if timers[i].account_id1 != 0 and timers[i].account_id1 != GLOBAL.user.getId() %}
+                                                    <span style="margin:0px 10px;">Shared with {{ timers[i].display_name1 }}. <a href="?do=sharecancel&timer={{ timers[i].timer_id }}">Stop Sharing</a></span>
+                                                {% elseif timers[i].account_id2 != 0 and timers[i].account_id2 != GLOBAL.user.getId() %}
+                                                    <span style="margin:0px 10px;">Shared with {{ timers[i].display_name2 }}. <a href="?do=sharecancel&timer={{ timers[i].timer_id }}">Stop Sharing</a></span>
+                                                {% elseif timers[i].authorized != 0 %}    
+                                                    <span style="margin:0px 10px;">Share request sent. <a href="?do=sharecancel&timer={{ timers[i].timer_id }}">Cancel Request</a></span>
+                                                {% else %}
+                                                    <a href="javascript:;" onclick="showShareOptions({{ timers[i].timer_id }});"><span><i class="fa fa-exchange"></i> Share this Timer</span></a>
+                                                {% endif %}
+                                            </div>
+
+                                            <div class="col-md-3 text-center">
+                                                {% if numTimers > 1 %}
+                                                    <a href="?do=removetimer&timer={{ timers[i].timer_id }}" onclick="return confirm('Are you sure you want to remove this timer?');"><span><i class="fa fa-trash"></i> Delete this Timer</span></a>
+                                                {% endif %}
+                                            </div>
+
+                                            <div class="col-md-3 text-center">
+                                                {% if (i + 1) < numTimers %}
+                                                    <a href="?do=movetimer&direction=down&timer={{ timers[i].timer_id }}"><span><i class="fa fa-arrow-down"></i> Move this Timer Down</span></a>
+                                                {% endif %}
+                                            </div>
+
+                                            <div class="col-md-3 text-center">
+                                                {% if i > 0 %}
+                                                    <a href="?do=movetimer&direction=up&timer={{ timers[i].timer_id }}"><span><i class="fa fa-arrow-up"></i> Move this Timer Up</span></a>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+
+                                        <!-- Timer Sharing -->
+                                        <div class="timershareoptions" id="timershareoptions_{{ timers[i].timer_id }}" style="display:none;">
+                                            With whom do you want to share this timer? Please enter their display name: 
+                                            {{ forms.textField("share_displayname_"~timers[i].timer_id) }}
+                                            {{ forms.submit("submit_shareenable_"~timers[i].timer_id, "Save") }}
+                                            <input type="button" class="prettyinputbutton" value="Cancel" onclick="hideShareOptions({{ timers[i].timer_id }});" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

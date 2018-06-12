@@ -1,0 +1,52 @@
+{% extends "base.twig" %}
+
+{% block title %}Audifan.net - Community - View Comment{% endblock %}
+
+{% block body %}
+<div class="pagetitle">View Comment</div>
+<div class="contentwrapperhalf">
+    <div class="float">
+        <div class="sectionwrapper">
+            {% if comment.private and comment.from_id != GLOBAL.user.getId() and comment.to_id != GLOBAL.user.getId() %}
+                <div class="_center">
+                    {% if to_id == 0 %}
+                        This comment has been deleted.
+                    {% else %}
+                        This comment is private.<br />
+                        Only the writer and the recipient can see it.
+                    {% endif %}
+                </div>
+            {% else %}
+            <div class="sectionheading">
+                Comment written by <a href="/community/profile/{{ comment.from_id }}/">{{ comment.from_display_name }}</a>
+                {% if comment.to_id != comment.from_id %}
+                to <a href="/community/profile/{{ comment.to_id }}/">{{ comment.to_display_name }}</a>
+                {% endif %}
+            </div>
+            {{ comment.comment|bbcode }}
+            <div class="_center" style="margin-top:5px; font-style:italic;" title="{{ comment.time|date("c") }}">
+                Written {{ comment.time|relativeTime }} ago.
+            </div>
+            {% endif %}
+        </div>
+        
+        {% if comment.from_id == GLOBAL.user.getId() or comment.to_id == GLOBAL.user.getId() or GLOBAL.user.isAdmin() %}
+        <!--<div class="sectionwrapper">
+            <div class="sectionheading">Edit Comment {% if GLOBAL.user.isAdmin() %}[ADMIN]{% endif %}</div> -->
+            <form method="post" action="?">
+                <!--<div class="_center"><textarea class="prettyinputtext" style="width:450px; height:100px; resize:vertical;">{{ comment.comment }}</textarea></div>-->
+                <div class="_center" style="margin-top:5px;">
+                    <!--<input type="submit" name="submit_save" value="Save Changes" class="prettyinputbutton" style="margin-right:10px;" />-->
+                    <input type="button" id="delete" value="Delete Comment" class="prettyinputbutton" onclick="$('#delete').fadeOut('fast','swing',function(e) {$('#deleteconfirm').fadeIn('fast');});" />
+                    <span id="deleteconfirm" style="display:none;">
+                        Are you sure you want to delete this comment?
+                        <input type="submit" name="submit_delete" value="Yes" class="prettyinputbutton" style="margin-left:5px;" />
+                        <input type="button" value="Cancel" class="prettyinputbutton" style="margin-left:5px;" onclick="$('#deleteconfirm').fadeOut('fast','swing',function(e) {$('#delete').fadeIn('fast');});" />
+                    </span>
+                </div>
+            </form>
+        <!--</div>-->
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

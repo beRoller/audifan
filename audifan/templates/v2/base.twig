@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+
+<!-- 
+    #                                         
+   # #   #    # #####  # ######   ##   #    # 
+  #   #  #    # #    # # #       #  #  ##   # 
+ #     # #    # #    # # #####  #    # # #  # 
+ ####### #    # #    # # #      ###### #  # # 
+ #     # #    # #    # # #      #    # #   ## 
+ #     #  ####  #####  # #      #    # #    #
+               www.audifan.net
+-->
+
+<html>
+    <head lang="en">
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="google-site-verification" content="H3bbjOs7-cFSVZhhsbCVKK4XnWEWG7GhNU1s75q6xFA" />
+        
+        <title>{% block title %}Audifan.net{% endblock %}</title>
+        
+        <link rel="stylesheet" href="{{ GLOBAL.staticUrl }}/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="{{ GLOBAL.staticUrl }}/css/font-awesome.min.css" />
+        <link rel="stylesheet" href="{{ GLOBAL.staticUrl }}/css/style.css" />
+        
+        {% block head %}{% endblock %}
+    </head>
+    
+    <body class="{% if GLOBAL.user.isLoggedIn() %}logged-in{% endif %}">
+        <div>This version of Audifan is a work in progress! <a href="/customize/?beta=no">&lt;&lt; Go back to the live site</a></div>
+        <div class="container-fluid userbar" id="userbar">
+            <div class="col-md-12 col-lg-8 col-lg-offset-2 userbarcontent">
+                {% if GLOBAL.user.isLoggedIn() %}
+                    {% include "userbar_loggedin.twig" %}
+                {% else %}
+                    {% include "userbar_loggedout.twig" %}
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="container-fluid">
+            {% include "notifications.twig" %}
+            <div class="col-md-12 col-lg-8 col-lg-offset-2 maincontent">
+                {% include "header.twig" %}
+                
+                {% if GLOBAL.messages.error is not empty %}
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="alert alert-danger alert-dismissible">
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                
+                                {% if GLOBAL.messages.error|length > 1 %}
+                                    <ul>
+                                        {% for m in GLOBAL.messages.error %}
+                                            <li>{{ m }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                {% else %}
+                                    {{ GLOBAL.messages.error[0] }}
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+                
+                {% if GLOBAL.messages.success is not empty %}
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="alert alert-success alert-dismissible">
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                
+                                {% if GLOBAL.messages.success|length > 1 %}
+                                    <ul>
+                                        {% for m in GLOBAL.messages.success %}
+                                            <li>{{ m }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                {% else %}
+                                    {{ GLOBAL.messages.success[0] }}
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="pagetitle"><h1>{% block pagetitle %}{% endblock %}</h1></div>
+                    </div>
+                </div>
+                    
+                <div class="row">
+                    <div class="col-md-12">
+                        {% block body %}{% endblock %}
+                    </div>
+                </div>
+            </div>
+                    
+            {% include "footer.twig" %}
+        </div>
+        
+        <div id="jump-to-top">
+            <div class="visible-lg">
+                <i class="fa fa-chevron-up"></i>
+            </div>
+            
+            <div class="hidden-lg">
+                <i class="fa fa-chevron-up"></i> Jump to Top <i class="fa fa-chevron-up"></i>
+            </div>
+        </div>
+
+        <div class="modal fade" id="confirm-modal" tabindex="-1" role="dialog">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Modal Title</h4>
+              </div>
+              <div class="modal-body">
+                Modal Body
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default modal-cancel" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary modal-confirm">Save changes</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <script src="{{ GLOBAL.staticUrl }}/js/jquery-1.11.3.min.js"></script>
+        <script src="{{ GLOBAL.staticUrl }}/js/bootstrap.min.js"></script>
+        <script src="{{ GLOBAL.staticUrl }}/js/underscore.min.js"></script>
+        <script src="{{ GLOBAL.staticUrl }}/js/backbone.min.js"></script>
+        <script src="{{ GLOBAL.staticUrl }}/js/main.min.js"></script>
+        
+        {% block endofpage %}{% endblock %}
+    </body>
+</html>

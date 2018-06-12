@@ -1,0 +1,189 @@
+{% extends "base.twig" %}
+
+{% block title %}Audifan.net - Quests - Archive{% endblock %}
+
+{% block pagetitle %}<a href="/quests/">Quests</a>: Archive{% endblock %}
+
+{% block head %}
+    <style>
+            .archivetable {
+                border: 2px solid #FFF;
+                border-collapse: collapse;
+                width: 300px;
+                margin: auto;
+            }
+            
+            .archivetable tr th {
+                border: 1px solid #FFF;
+                font-size: 10pt;
+                font-weight: bold;
+                padding: 3px;
+                text-align: center;
+            }
+            
+            .archivetable tr td {
+                border: 1px solid #FFF;
+                font-size: 9pt;
+                padding: 3px;
+                text-align: center;
+            }
+        </style>
+{% endblock %}
+
+{% block body %}
+    <div class="contentwrapperhalf">
+        <div class="float">
+            <div class="_center" style="margin-bottom:15px;">
+                Each quest archive is an automatically generated ZIP file with all screenshots submitted in the respective month.<br />
+                They are available if you would like to review how we graded submissions.<br />
+                <br />
+                If you think a screenshot was incorrectly rejected or accepted, please contact us with the week in which the screenshot was submitted, nickname of the person who submitted, and the quest difficulty.<br />
+                <br />
+                Due to an issue with ImageShack, the August 2015 and September 2015 archives do not contain all screenshots from those months.
+            </div>
+            
+            <table class="archivetable">
+                <tr>
+                    <th>Month &amp; Year</th>
+                    <th>Archive File</th>
+                </tr>
+                <tr>
+                    <td>September 2014</td>
+                    <td><a href="{{ GLOBAL.staticUrl }}/files/questarchives/2014-9.zip">2014-9.zip</a></td>
+                </tr>
+                <tr>
+                    <td>October 2014</td>
+                    <td><a href="{{ GLOBAL.staticUrl }}/files/questarchives/2014-10.zip">2014-10.zip</a></td>
+                </tr>
+                <tr>
+                    <td>November 2014</td>
+                    <td><a href="{{ GLOBAL.staticUrl }}/files/questarchives/2014-11.zip">2014-11.zip</a></td>
+                </tr>
+                <tr>
+                    <td>December 2014</td>
+                    <td><a href="{{ GLOBAL.staticUrl }}/files/questarchives/2014-12.zip">2014-12.zip</a></td>
+                </tr>
+                <tr>
+                    <td>January 2015</td>
+                    <td><a href="{{ GLOBAL.staticUrl }}/files/questarchives/2015-1.zip">2015-1.zip</a></td>
+                </tr>
+                <tr>
+                    <td>February 2015</td>
+                    <td><a href="{{ GLOBAL.staticUrl }}/files/questarchives/2015-2.zip">2015-2.zip</a></td>
+                </tr>
+                <tr>
+                    <td>March 2015</td>
+                    <td><a href="{{ GLOBAL.staticUrl }}/files/questarchives/2015-3.zip">2015-3.zip</a></td>
+                </tr>
+                <tr>
+                    <td>April 2015</td>
+                    <td><a href="{{ GLOBAL.staticUrl }}/files/questarchives/2015-4.zip">2015-4.zip</a></td>
+                </tr>
+                <tr>
+                    <td>May 2015</td>
+                    <td><a href="{{ GLOBAL.staticUrl }}/files/questarchives/2015-5.zip">2015-5.zip</a></td>
+                </tr>
+                <tr>
+                    <td>June 2015</td>
+                    <td><a href="{{ GLOBAL.staticUrl }}/files/questarchives/2015-6.zip">2015-6.zip</a></td>
+                </tr>
+                <tr>
+                    <td>July 2015</td>
+                    <td><a href="{{ GLOBAL.staticUrl }}/files/questarchives/2015-7.zip">2015-7.zip</a></td>
+                </tr>
+                <tr>
+                    <td>August 2015<br />(Incomplete)</td>
+                    <td><a href="{{ GLOBAL.staticUrl }}/files/questarchives/2015-8.zip">2015-8.zip</a></td>
+                </tr>
+                <tr>
+                    <td>September 2015<br />(Incomplete)</td>
+                    <td><a href="{{ GLOBAL.staticUrl }}/files/questarchives/2015-9.zip">2015-9.zip</a></td>
+                </tr>
+                <tr>
+                    <td>October 2015</td>
+                    <td><a href="{{ GLOBAL.staticUrl }}/files/questarchives/2015-10.zip">2015-10.zip</a></td>
+                </tr>
+                <tr>
+                    <td>November 2015</td>
+                    <td><a href="{{ GLOBAL.staticUrl }}/files/questarchives/2015-11.zip">2015-11.zip</a></td>
+                </tr>
+                <tr>
+                    <td>December 2015</td>
+                    <td><a href="{{ GLOBAL.staticUrl }}/files/questarchives/2015-12.zip">2015-12.zip</a></td>
+                </tr>
+                <tr>
+                    <td>January 2016</td>
+                    <td><a href="{{ GLOBAL.staticUrl }}/files/questarchives/2016-1.zip">2016-1.zip</a></td>
+                </tr>
+                <tr>
+                    <td>February 2016</td>
+                    <td><a href="{{ GLOBAL.staticUrl }}/files/questarchives/2016-2.zip">2016-2.zip</a></td>
+                </tr>
+                <tr>
+                    <td>March 2016</td>
+                    <td><a href="{{ GLOBAL.staticUrl }}/files/questarchives/2016-3.zip">2016-3.zip</a></td>
+                </tr>
+                <tr>
+                    <td>April 2016</td>
+                    <td><a href="{{ GLOBAL.staticUrl }}/files/questarchives/2016-4.zip">2016-4.zip</a></td>
+                </tr>
+                <tr>
+                    <td>May 2016</td>
+                    <td><a href="{{ GLOBAL.staticUrl }}/files/questarchives/2016-5.zip">2016-5.zip</a></td>
+                </tr>
+                <tr>
+                    <td>June 2016</td>
+                    <td><a href="{{ GLOBAL.staticUrl }}/files/questarchives/2016-6.zip">2016-6.zip</a></td>
+                </tr>
+                <tr>
+                    <td>July 2016</td>
+                    <td><a href="{{ GLOBAL.staticUrl }}/files/questarchives/2016-7.zip">2016-7.zip</a></td>
+                </tr>
+                <tr>
+                    <td>August 2016</td>
+                    <td><a href="{{ GLOBAL.staticUrl }}/files/questarchives/2016-8.zip">2016-8.zip</a></td>
+                </tr>
+                <tr>
+                    <td>September 2016</td>
+                    <td><a href="{{ GLOBAL.staticUrl }}/files/questarchives/2016-9.zip">2016-9.zip</a></td>
+                </tr>
+                <tr>
+                    <td>October 2016</td>
+                    <td><a href="{{ GLOBAL.staticUrl }}/files/questarchives/2016-8.zip">2016-8.zip</a></td>
+                </tr>
+                <tr>
+                    <td>November 2016</td>
+                    <td><a href="{{ GLOBAL.staticUrl }}/files/questarchives/2016-8.zip">2016-8.zip</a></td>
+                </tr>
+                <tr>
+                    <td>December 2016</td>
+                    <td><a href="{{ GLOBAL.staticUrl }}/files/questarchives/2016-8.zip">2016-8.zip</a></td>
+                </tr>
+                <tr>
+                    <td>January 2017</td>
+                    <td><a href="{{ GLOBAL.staticUrl }}/files/questarchives/2017-1.zip">2017-1.zip</a></td>
+                </tr>
+                <tr>
+                    <td>February 2017</td>
+                    <td><a href="{{ GLOBAL.staticUrl }}/files/questarchives/2017-2.zip">2017-2.zip</a></td>
+                </tr>
+                <tr>
+                    <td>March 2017</td>
+                    <td><a href="{{ GLOBAL.staticUrl }}/files/questarchives/2017-3.zip">2017-3.zip</a></td>
+                </tr>
+                <tr>
+                    <td>April 2017</td>
+                    <td><a href="{{ GLOBAL.staticUrl }}/files/questarchives/2017-4.zip">2017-4.zip</a></td>
+                </tr>
+                <tr>
+                    <td>May 2017</td>
+                    <td><a href="{{ GLOBAL.staticUrl }}/files/questarchives/2017-5.zip">2017-5.zip</a></td>
+                </tr>
+                <tr>
+                    <td>June 2017</td>
+                    <td><a href="{{ GLOBAL.staticUrl }}/files/questarchives/2017-6.zip">2017-6.zip</a></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+{% endblock %}

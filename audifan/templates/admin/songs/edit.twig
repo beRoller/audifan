@@ -1,0 +1,53 @@
+{% extends "base.twig" %}
+{% import "macros/forms.twig" as form %}
+
+{% block title %}Audifan.net - {% endblock %}
+
+{% block pagetitle %}<a href="/admin/">Admin</a>: <a href="/admin/songs/view/">Song List</a>: Edit Song{% endblock %}
+
+{% block head %}
+    <style>
+        .short {
+            width: 50px;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="contentwrapperhalf">
+        <div class="float">
+            {{ form.start("?") }}
+
+            <div>ID: {{ song.id }}</div>
+            <div>Artist: {{ form.textField("artist", song.artist) }}</div>
+            <div>Title: {{ form.textField("title", song.title) }}</div>
+            <div>BPM: {{ form.textField("bpm", song.bpm, "", "short") }}</div>
+            <div>Length: {{ form.textField("lengthm", (song.length / 60)|round(0, 'floor'), "", "short") }} : {{ form.textField("lengths", (song.length % 60), "", "short") }} ({{ song.length }})</div>
+            <div>Master? {{ form.checkbox("master", song.master) }}</div>
+            <div>Premium? {{ form.checkbox("premium", song.premium) }}</div>
+            <div>Normal? {{ form.checkbox("normal", song.normal) }}</div>
+            <div>Night? {{ form.checkbox("night", song.night) }}</div>
+            <div>Beat Up Lv: {{ form.textField("beatup", song.beatup, "", "short") }}</div>
+            <div>One Two Lv: {{ form.textField("onetwo", song.onetwo, "", "short") }}</div>
+            <div>Ballroom? {{ form.checkbox("ballroom", song.ballroom) }}</div>
+            <div>Rhythm Holic Notes: {{ form.textField("rhythmholic", song.rhythmholic, "", "short") }}</div>
+            <div>Space Pang Pang? {{ form.checkbox("spacepangpang", song.spacepangpang) }}</div>
+            <div>Guitar Difficulties: {{ form.textField("guitar", song.guitar, "", "short") }}</div>
+            <div>Block Beat Lv: {{ form.textField("blockbeat", song.blockbeat, "", "short") }}</div>
+            
+            <div style="margin-top:5px;">
+                <div><b>New Flags:</b> ({{ song.new_flags }})</div>
+                {% for i in ["Normal","Night","Beat Up","One Two","Ballroom","Rhythm Holic","Space Pang Pang","Guitar","Block Beat"] %}
+                    <div>{{ form.checkbox("new_"~loop.index0, (song.new_flags b-and (2 ** loop.index0)) != 0) }} {{ i }} ({{ 2 ** loop.index0 }})</div>
+                {% endfor %}
+            </div>
+
+            <div style="margin-top: 10px;">
+                <span>{{ form.submit("submit", "Save") }}</span>
+                <span style="margin-left:20px;">{{ form.submit("delete", "Delete Song") }}</span>
+            </div>
+
+            {{ form.end }}
+        </div>
+    </div>
+{% endblock %}

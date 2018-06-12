@@ -1,0 +1,32 @@
+<div class="sectionwrapper">
+    <div class="sectionheading">This Week's VIPs</div>
+    <div class="_center">
+        {% for v in vips %}
+            <a href="/community/profile/{{ v.id }}/">{{ v.display_name }}</a>{% if not loop.last %}, {% endif %}
+        {% else %}
+            (None)
+        {% endfor %}
+        <div style="margin-top:5px;">These people logged in every day last week!</div>
+    </div>
+</div>
+<div class="sectionwrapper">
+    <div class="sectionheading">Today's Candle Days</div>
+    <div class="_center">
+        {% for c in candles %}
+            <a href="/community/profile/{{ c.id }}/">{{ c.display_name }}</a>{% if not loop.last %}, {% endif %}
+        {% else %}
+            (None)
+        {% endfor %}
+        <div style="margin-top:5px;">These people joined Audifan on this day!</div>
+    </div>
+</div>
+<div class="sectionwrapper">
+    <div class="sectionheading">Who's Online?</div>
+    <div class="_center">
+        {% for o in online %}
+            <a href="/community/profile/{{ o.id }}/" class="{% if o.account_type == 3 %}onlineadmin{% elseif o.has_candle %}onlinecandle{% elseif o.is_vip %}onlinevip{% endif %}">{{ o.display_name }}</a>{% if not loop.last %}, {% endif %}
+        {% else %}
+            (None)
+        {% endfor %}
+    </div>
+</div>

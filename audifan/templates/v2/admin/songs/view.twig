@@ -1,0 +1,88 @@
+{% extends "base.twig" %}
+
+{% block title %}{% endblock %}
+
+{% block head %}
+    <style>
+        .list {
+            border: 1px solid #fff;
+            border-collapse: collapse;
+            width: 100%;
+        }
+        
+        .list tr th, .list tr td {
+            font-size: 8pt;
+            text-align: center;
+            border: 1px solid #fff;
+            padding: 3px;
+        }
+        
+        .list tr th {
+            font-weight: bold;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="contentwrapperfull">
+        <div class="float">
+            <table class="list">
+                <tr>
+                    <th>ID</th>
+                    <th>Artist</th>
+                    <th>Title</th>
+                    <th>BPM</th>
+                    <th>Length</th>
+                    <th>Master?</th>
+                    <th>New Flags</th>
+                    <th>Premium?</th>
+                    <th>Normal?</th>
+                    <th>Night?</th>
+                    <th>BU Lv</th>
+                    <th>1,2 Lv</th>
+                    <th>Ballrm?</th>
+                    <th>Rhythmholic Notes</th>
+                    <th>SPP?</th>
+                    <th>TFC Diffs</th>
+                    <th>BB Lv</th>
+                    <th></th>
+                </tr>
+                {% spaceless %}
+                {% for s in songs %}
+                    <tr>
+                        <td>{{ s.id }}</td>
+                        <td>{{ s.artist }}</td>
+                        <td>{{ s.title }}</td>
+                        <td>{{ s.bpm }}</td>
+                        <td>{{ (s.length / 60)|round(0, 'floor') }}:{{ "%02d"|format(s.length % 60) }}<br />({{ s.length }})</td>
+                        <td>{{ s.master }}</td>
+                        <td>
+                            {{ s.new_flags }}
+                            {% if s.new_flags > 0 %}
+                                <br />(&nbsp;
+                                {% for i in ["normal","night","bu","1,2","ballrm","holic","spp","tfc","bb"] %}
+                                    {% if (s.new_flags b-and (2 ** loop.index0)) != 0 %}
+                                        {{ i }}&nbsp;
+                                    {% endif %}
+                                {% endfor %}
+                                )
+                            {% endif %}
+                        </td>
+                        <td>{{ s.premium }}</td>
+                        <td>{{ s.normal }}</td>
+                        <td>{{ s.night }}</td>
+                        <td>{{ s.beatup }}</td>
+                        <td>{{ s.onetwo }}</td>
+                        <td>{{ s.ballroom }}</td>
+                        <td>{{ s.rhythmholic }}</td>
+                        <td>{{ s.spacepangpang }}</td>
+                        <td>{{ s.guitar }}</td>
+                        <td>{{ s.blockbeat }}</td>
+                        <td><a href="/admin/songs/edit/{{ s.id }}/">Edit</a></td>
+                    </tr>
+                {% endfor %}
+                {% endspaceless %}
+            </table>
+        </div>
+    </div>
+{% endblock %}

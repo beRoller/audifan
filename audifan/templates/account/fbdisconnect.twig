@@ -1,0 +1,56 @@
+{% extends "base.twig" %}
+{% import "macros/forms.twig" as forms %}
+
+{% block title %}Audifan.net - Disconnect Facebook Account{% endblock %}
+
+{% block pagetitle %}Disconnect Facebook Account{% endblock %}
+
+{% block body %}
+    <div class="contentwrapperhalf">
+        <div class="float">
+        {% if email != "" %}
+            <div class="_center">
+                This will disconnect your Facebook account from your Audifan account.<br />
+                <br />
+                After your Facebook account is disconnected, you can log in using the email address on your account:<br />
+                {{ email }}.<br />
+                <br />
+                If you don't remember your password, you can use the "Forgot Your Password?" link on the Log In page.<br />
+                <br />
+                You will be logged out after you disconnect your Facebook account.<br />
+                <br />
+                {{ forms.start("/account/fbdisconnect/") }}
+                {{ forms.submit("submit_disconnect", "Disconnect Facebook Account") }}
+                {{ forms.end() }}
+            </div>
+        {% else %}
+            <div class="_center">
+                <div>
+                    In order to disconnect your Facebook account, you must have an email address and password for your account.  Please enter your email address and create a password below.<br />
+                    <br />
+                    <br />
+                    <b>**WARNING**</b><br />
+                    Please make sure that your email address is entered correctly.  Your account will go into an unverified state and your email must be verified before you can log in again.
+                </div>
+            </div>
+                {{ forms.start("/account/fbdisconnect/") }}
+                <div style="margin-top:15px;">
+                    <b>Email:</b> {{ forms.textField("email") }}
+                </div>
+                <div style="margin-top:15px;">
+                    <b>Confirm Email:</b> {{ forms.textField("email2") }}
+                </div>
+                <div style="margin-top:15px;">
+                    <b>Password:</b> {{ forms.password("password") }}
+                </div>
+                <div style="margin-top:15px;">
+                    <b>Confirm Password:</b> {{ forms.password("password2") }}
+                </div>
+                <div class="_center" style="margin-top:15px;">
+                    {{ forms.submit("submit_email", "Submit Email and Password") }}
+                </div>
+                {{ forms.end() }}
+        {% endif %}
+        </div>
+    </div>
+{% endblock %}

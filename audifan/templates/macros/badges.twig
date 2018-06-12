@@ -1,0 +1,46 @@
+{% macro badges(staticUrl, inventory, viprank, qp, qrank) %}
+<div class="badgecontainer">
+    {% if 1 in inventory %}
+    <img class="badge" src="{{ staticUrl }}/img/badges/admin.png" alt="Admin" title="Audifan Administrator" />
+    {% endif %}
+    
+    {% if 30 in inventory %}
+    <img class="badge" src="{{ staticUrl }}/img/badges/cabadge.png" alt="CA" title="Audition Community Agent" />
+    {% endif %}
+    
+    {% if 2 in inventory %}
+        <img class="badge" src="{{ staticUrl }}/img/badges/vip.gif" alt="VIP" title="VIP - Logged in every day last week." />
+    {% endif %}
+    
+    {% if 14 in inventory %}
+        <img class="badge" src="{{ staticUrl }}/img/badges/candle.png" alt="Candle" title="Joined Audifan on this day!" />
+    {% endif %}
+    
+    {% if 7 in inventory %}
+        <a href="/quests/"><img class="badge" src="{{ staticUrl }}/img/quest/badge1.png" alt="Thumbs Up" title="Completed one individual quest last week." /></a>
+    {% elseif 8 in inventory %}
+        <a href="/quests/"><img class="badge" src="{{ staticUrl }}/img/quest/badge2.png" alt="Bronze Medal" title="Completed two individual quests last week." /></a>
+    {% elseif 9 in inventory %}
+        <a href="/quests/"><img class="badge" src="{{ staticUrl }}/img/quest/badge3.gif" alt="Silver Medal" title="Completed three individual quests last week." /></a>
+    {% elseif 10 in inventory %}
+        <a href="/quests/"><img class="badge" src="{{ staticUrl }}/img/quest/badge4.gif" alt="Gold Medal" title="Completed all four individual quests last week (ACE)." /></a>
+    {% endif %}
+    
+    {% for i in [16,17,18,19,20,21,22,23,24,25,26,27,28,29,38] %}
+        {% if i in inventory %}
+        <img class="badge" src="{{ staticUrl }}/img/badges/{{ i }}.png" alt="Badge" title="This badge can be won from the Audifan Happy Box or purchased at the coin store." />
+        {% endif %}
+    {% endfor %}
+
+    {% if 39 in inventory %}
+        <a href="/community/happybox/"><img class="badge" src="{{ staticUrl }}/img/badges/jackpotbadge.gif" alt="Happy Box Jackpot" title="Most recent winner of the Happy Box Jackpot!" /></a>
+    {% endif %}
+    
+    {% if viprank %}
+    <span class="badge vipbadge" title="Ranking based on total VIPs earned."><a href="/community/vipranking/">VIP Rank</a>: {{ viprank }}</span>
+    {% endif %}
+    {% if qrank %}
+    <span class="badge questbadge" title="Quest points and ranking."><a href="/quests/">QP</a>: {{ qp|number_format }} / <a href="/quests/ranking/">Rank</a>: {{ qrank }}</span>
+    {% endif %}
+</div>
+{% endmacro %}

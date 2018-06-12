@@ -1,0 +1,17 @@
+{% extends "base.twig" %}
+
+{% block title %}Audifan.net - Patch Archive - All {{ year }} Patches{% endblock %}
+
+{% block pagetitle %}All {{ year }} Patches{% endblock %}
+
+{% block body %}
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2">
+        {% for p in patchNumbers %}
+            {{ sectionStart(monthNames[p[4:2] - 1] ~ " " ~ p[6:2] ~ ", " ~ p[0:4] ~ " Patch")|raw }}
+                {% include "/patch/patchinfo/" ~ p %}
+            {{ sectionEnd() }}
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

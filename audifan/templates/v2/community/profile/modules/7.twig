@@ -1,0 +1,59 @@
+{{ sectionStart('<a href="/quests/">Quest</a> Stats') }}
+	<div class="quest-stats-module">
+		<div class="row">
+			<div class="col-md-12 text-center">
+				<div class="total-points">{{ basicInfo.qp|number_format }}</div>
+				<div>Total Quest Points</div>
+			</div>
+		</div>
+		
+		<div class="row">
+			<div class="col-md-6">
+				<table class="table table-hover">
+					<thead>
+						<tr>
+							<th style="height:52px;"></th>
+							<th>Total Completed</th>
+							<th>Points</th>
+						</tr>
+					</thead>
+
+					<tbody>
+						{% for t in ["easy","medium","hard","insane","group","battle"] %}
+							<tr>
+								<th>{{ t|capitalize }}</th>
+								<td>{{ moduleData[7].questData["data_"~t~"_count"]|number_format }}</td>
+								<td>{{ moduleData[7].questData["data_"~t~"_points"]|number_format }}</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+			<div class="col-md-6">
+				<table class="table table-hover">
+					<thead>
+						<tr>
+							<th style="height:52px;"></th>
+							<th><a href="/quests/ranking/">Rank</a></th>
+						</tr>
+					</thead>
+
+					<tbody>
+						{% for r, name in {"overall":"Overall","overall_no_insane":"Overall w/o Insane","individual":"Individual Only","normal":"Normal Modes","beat_up":"Beat Up","one_two":"One Two Party","beat_rush":"Beat Rush","guitar":"Guitar Mode"} %}
+		                    <tr>
+		                        <th>{{ name }}</th>
+		                        <td>
+		                            {% if moduleData[7].questRanks["rank_"~r] > 0 %}
+		                            	{{ moduleData[7].questRanks["rank_"~r]|number_format }}
+		                            {% else %}
+		                            	??
+		                            {% endif %}
+		                        </td>
+		                    </tr>
+		                {% endfor %}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+{{ sectionEnd() }}

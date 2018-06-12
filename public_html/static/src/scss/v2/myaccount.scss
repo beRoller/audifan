@@ -1,0 +1,74 @@
+.my-account {
+    .panel {
+        &.edit {
+            border: 1px solid $link-color;
+            
+            .panel-body {
+                .field-display {
+                    display: none;
+                }
+                
+                .field-edit {
+                    display: block;
+                }
+            }
+            
+            .panel-footer {
+                display: none;
+            }
+        }
+        
+        .panel-body {
+            .field-display {
+                
+            }
+            
+            .field-edit {
+                display: none;
+                
+                label {
+                    line-height: 34px;
+                }
+            }
+        }
+        
+        .panel-footer {
+            border-top: 1px solid $link-color;
+            background-color: $link-color;
+            line-height: 1;
+            font-size: 12px;
+            font-weight: bold;
+            padding: 0px;
+            
+            a {
+                padding: 10px 15px;
+                display: block;
+                color: $text-color;
+                
+                &.toggle {
+                    font-size: 18px;
+                }
+                
+                .fa-pencil {
+                    color: #ffcc99;
+                }
+                
+                .fa-ban {
+                    color: #f88;
+                }
+                
+                .fa-chain-broken {
+                    color: #bbb;
+                }
+                
+                .fa-toggle-off {
+                    color: #ddd;
+                }
+                
+                .fa-toggle-on {
+                    color: #5f5;
+                }
+            }
+        }
+    }
+}

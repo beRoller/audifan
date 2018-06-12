@@ -1,0 +1,82 @@
+{% extends "base.twig" %}
+
+{% block title %}Audifan.net - Help - Quests{% endblock %}
+
+{% block pagetitle %}<a href="/help/">Help</a>: Quests{% endblock %}
+
+{% block head %}
+
+{% endblock %}
+
+{% block body %}
+    <div class="contentwrapperhalf">
+        <div class="float">
+            Each Sunday night, six quests are chosen. You'll have one week to complete the quests and submit screenshots for each.  Climb the rankings, earn points, and earn medals to challenge yourself and show off your skills!<br />
+            <br />
+            <ul>
+                <li>How Do Quests Work?
+                    <ul>
+                        <li>Quests are randomly chosen at 11:59 pm on Sunday nights.</li>
+                        <li>Screenshots must be submitted by 11:50pm the following Sunday.  From 11:50 to 11:59, screenshots cannot be submitted.</li>
+                        <li>Quests range from getting a high score or getting no misses to simply wearing an item while playing, and everything in between.  They also span many modes including expert tournament modes, Beat Up, Beat Rush, One Two Party, Rhythmholic, and more.</li>
+                        <li>A quest may not be chosen again for five weeks after it is picked.</li>
+                        <li>Individual Quests
+                            <ul>
+                                <li>The Easy, Medium, Hard, and Insane quests are Individual Quests.  They can be completed alone and the number of quest points (QP) that you get from them is fixed.</li>
+                                <li>Easy quests are worth 2 points, Medium are worth 4, Hard are worth 8, and Insane are worth 12.</li>
+                                <li>You can also earn a medal based on the number of Individual Quests that you complete:
+                                    <ul>
+                                        <li>Complete One Individual Quest: Thumbs Up <img src="{{ GLOBAL.staticUrl }}/img/quest/badge1.png" class="_vmiddle" /></li>
+                                        <li>Complete Two Individual Quests: Bronze <img src="{{ GLOBAL.staticUrl }}/img/quest/badge2.png" class="_vmiddle" /></li>
+                                        <li>Complete Three Individual Quests: Silver <img src="{{ GLOBAL.staticUrl }}/img/quest/badge3.gif" class="_vmiddle" /></li>
+                                        <li>Complete All Four Individual Quests (ACE): Gold <img src="{{ GLOBAL.staticUrl }}/img/quest/badge4.gif" class="_vmiddle" /></li>
+                                    </ul></li>
+                                <li>Your medal will appear on your profile, in comments, and next to your name on the rankings.</li>
+                                <li>A list of all those who have a medal is also on the quest homepage.</li>
+                            </ul>
+                        </li>
+                        <li>Group Quest<ul>
+                                <li>The group quest is judged the same way as an Individual Quest, but the modes selected for them are modes that require more than one person to play.</li>
+                                <li>The group quest is worth 10 points.</li>
+                            </ul>
+                        </li>
+                        <li>Battle Quest<ul>
+                                <li>The battle quest offers variable quest points based on how well you met the objective compared to all others who also submitted a screenshot for it.</li>
+                                <li>Examples of Battle Quest objectives are "Get as many points as you can" in a certain mode, "Get as many Perfects as you can" in Beat Up, or even "Get as many Bads as you can" in a certain mode.</li>
+                                <li>At the end of the week, when points are updated, you will receive at least 6 QP.  The number of QP you'll receive increases depending on how many people participated and how well you did compared to everyone else.  The maximum number of QP you can receive from the Battle Quest is 20.</li>
+                                <li>You can see the current range of points under the Battle Quest objective. The top placer will always receive the maximum number of points and the person in last place will always receive the minimum number of points. Everyone in between will receive points proportional to the score, number of perfects, etc. that they got compared to everyone else.</li>
+                                <li>A small ranking board on the quest homepage shows the ranking for the previous week's Battle Quest and how many quest points each person received.</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+                <li>Submitting a Screenshot
+                    <ul>
+                        <li>Click Submit a Screenshot to upload a screenshot for a quest.</li>
+                        <li>ALL screenshots MUST follow the submission requirements as listed on the <a href="/quests/submit/">Submit a Screenshot</a> page.  The requirements are:
+                            <ul>
+                                <li>You must submit a screenshot of the final scoreboard at the end of the game.</li>
+                                <li>You must use the /time command to display the time in chat in the screenshot. The screenshot must be taken within the current submission period.</li>
+                                <li>The screenshot you submit must be a screenshot taken by pressing the Print Screen (PrtScn) button and saved to your Audition "screenshot" folder. It may not be taken with any other program such as Fraps or saved by pasting into Photoshop, Paint, etc.</li>
+                                <li>The screenshot cannot be edited in any way. It must be the same exact file that was saved to your screenshot folder. You will be permanently banned from Audifan if you try to cheat.</li>
+                            </ul>
+                        </li>
+                        <li>A grader will check your screenshot as soon as possible after you submit it.</li>
+                        <li>You can check the status, view the screenshot, or delete a submission on the <a href="/quests/submissions/">Submission Details page</a>. For Battle quests, once your screenshot has been accepted, the value you got for it (i.e. score, number of perfects, etc.) is displayed on this page as well.</li>
+                        <li>If one of your screenshots is rejected by a grader while there is still time left to submit, you can submit again.  However, there is NO guarantee that the screenshot will be graded before time is up, so please double check your submissions!</li>
+                        <li>Once the screenshot is graded as complete, you cannot submit another screenshot. Therefore, the screenshot that you submit for the battle quest should be your best and final attempt.</li>
+                        <li>Your QP and medal will be updated after all screenshots from all participants have been graded for the week.</li>
+                    </ul>
+                </li>
+                <li>Rankings
+                    <ul>
+                        <li>Ties are broken in favor of whomever was first to start doing quests.  In other words, the person who has the earliest timestamp on their first submission ever.</li>
+                        <li>Each ranking board has a description of how points are determined.</li>
+                        <li>Mode rankings only include points earned from Individual Quests.</li>
+                        <li>Rankings are usually updated immediately after points are updated.  However, you can see when rankings were last updated on any Ranking page.</li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+{% endblock %}

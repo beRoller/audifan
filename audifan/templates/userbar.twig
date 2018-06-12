@@ -1,0 +1,128 @@
+<div id="userbarwrapper">
+    {% if GLOBAL.user.isLoggedIn() %}
+    <div id="userbarloginwrapper">
+        <div id="userbarloginlinkwrapper">
+            {% if GLOBAL.user.isAdmin() %}
+            <span><a href="/admin/"><img src="{{ GLOBAL.staticUrl }}/img/badges/admin.png" style="border:0px;" alt="Admin" /></a></span>
+            {% endif %}
+            <span><b><a href="/community/profile/{{ GLOBAL.user.getId() }}/">{{ GLOBAL.user.getNickname() }}</a></b></span>
+            <span><a href="/community/profile/{{ GLOBAL.user.getId() }}/"><i class="fa fa-th-large"></i> My Profile</a></span>
+            <span><a href="/account/stuff/"><i class="fa fa-briefcase"></i> My Stuff</a></span>
+            <span><a href="/community/requests/"><i class="fa fa-list"></i> My Requests</a></span>
+            <span><a href="/community/profile/{{ GLOBAL.user.getId() }}/characters/"><i class="fa fa-user"></i> My Characters</a></span>
+            <span><a href="/community/profile/{{ GLOBAL.user.getId() }}/comments/"><i class="fa fa-comment"></i> My Comments</a></span>
+            <span><a href="/community/profile/{{ GLOBAL.user.getId() }}/friends/"><i class="fa fa-users"></i> My Friends</a></span>
+            <span><a href="/account/myaccount/"><i class="fa fa-cog"></i> My Account</a></span>
+            <span><a href="/account/logout/?thru={{ GLOBAL.requestUri }}"><i class="fa fa-sign-out"></i> Log Out</a></span>
+        </div>
+        <div id="userbarmoreinfowrapper" style="display:none;">
+            <div id="userbarmoreinfotitle">Your Stats</div>
+            <div id="userbarmoreinfosectionwrapper">
+                <div class="float">
+                    <div class="userbarmoreinfosectiontitle"><a href="/community/happybox/">Happy Box</a></div>
+                    <div id="userbarmoreinfohb" style="background-image:url('{{ GLOBAL.staticUrl }}/img/hb.png');">
+                        <b>Time Until Next Spin:</b><br />
+                        <span data-countdown="{{ GLOBAL.status.hb }}" data-countdowndone="Ready Now!"></span>
+                    </div>
+                </div>
+                <div class="float">
+                    <div class="userbarmoreinfosectiontitle"><a href="/community/gardentimer/">Couple Garden Timers</a></div>
+                    <div id="userbarmoreinfogardenwrapper">
+                        <div class="minitimersectionwrapper">
+                            <div class="minitimersection" style="background-image:url('{{ GLOBAL.staticUrl }}/img/couplegarden/water.png');">
+                                <span data-countdown="{{ GLOBAL.status.garden.water }}" data-countdowndone="Ready!">0:00:00</span>
+                            </div>
+                            <div class="minitimersection" style="background-image:url('{{ GLOBAL.staticUrl }}/img/couplegarden/dust.png');">
+                                <span data-countdown="{{ GLOBAL.status.garden.dust }}" data-countdowndone="Ready!">0:00:00</span>
+                            </div>
+                            <div class="minitimersection" style="background-image:url('{{ GLOBAL.staticUrl }}/img/couplegarden/fertilize.png');">
+                                <span data-countdown="{{ GLOBAL.status.garden.fertilize }}" data-countdowndone="Ready!">0:00:00</span>
+                            </div>
+                        </div>
+                        <div class="minitimersectionwrapper">
+                            <div class="minitimersection" style="background-image:url('{{ GLOBAL.staticUrl }}/img/couplegarden/rosemary.png');">
+                                <span data-countdown="{{ GLOBAL.status.garden.rosemary }}" data-countdowndone="Ready!">0:00:00</span>
+                            </div>
+                            <div class="minitimersection" style="background-image:url('{{ GLOBAL.staticUrl }}/img/couplegarden/spearmint.png');">
+                                <span data-countdown="{{ GLOBAL.status.garden.spearmint }}" data-countdowndone="Ready!">0:00:00</span>
+                            </div>
+                            <div class="minitimersection" style="background-image:url('{{ GLOBAL.staticUrl }}/img/couplegarden/peppermint.png');">
+                                <span data-countdown="{{ GLOBAL.status.garden.peppermint }}" data-countdowndone="Ready!">0:00:00</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="float">
+                    <div class="userbarmoreinfosectiontitle"><a href="/quests/">Quests</a></div>
+                    <div style="margin-top:3px;">
+                        <div class="_center">{{ GLOBAL.status.quests.points|number_format }} Total QP / <a href="/quests/ranking/">Rank {% if GLOBAL.status.quests.rank > 0 %}{{ GLOBAL.status.quests.rank }}{% else %}??{% endif %}</a></div>
+                        
+                        <div class="_center" style="margin-top:15px;"><b>Your Submissions This Week</b></div>
+                        {% for i, diff in ["Easy","Medium","Hard","Insane","Group","Battle"] %}
+                            <div style="margin-top:3px;"><b>{{ diff }}:</b> {{ GLOBAL.status.quests.submissions[i + 1] }}{% if GLOBAL.status.quests.submissions[i + 1] == "Rejected" %} - <a href="/quests/submissions/">See Why</a>{% endif %}</div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="float">
+                    <div class="userbarmoreinfosectiontitle">VIP Status</div>
+                    <div class="_center">Log in every day to get VIP Status.</div>
+                    <div id="userbarmoreinfovipwrapper">
+                        {% for day, name in ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"] %}
+                            <div class="userbarmoreinfovipday">
+                                <span>{{ name }}</span>
+                                {% if (GLOBAL.user.getFlag("vip_count_days") b-and (2 ** (7 - day - 1))) != 0 %}
+                                    <i class="fa fa-check" style="color:#00ff00;" title="Success!"></i>
+                                {% elseif GLOBAL.now.getDayNumberOfWeek() > (day + 1) %}
+                                    <i class="fa fa-close" style="color:#ff0000;" title="Missed!"></i>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div style="clear:both;"></div>
+            </div>
+            <div id="userbarmoreinfoclose">[ <a href="javascript:;" id="userbarmoreinfocloselink">Close</a> ]</div>
+        </div>
+        <div id="userbarstatusbar">
+            <span><a href="/store/"><img src="{{ GLOBAL.staticUrl }}/img/coins/coin19.png" class="_vmiddle" style="margin-right:5px;" /><span class="coinbalancedisplay">{{ GLOBAL.status.coins|number_format }}</span></a></span>
+            <span><b><a href="/community/happybox/">HB</a>:</b> <span data-countdown="{{ GLOBAL.status.hb }}" data-countdowndone="Ready!">0:00:00</span></span>
+            <span>
+                <b><a href="/community/gardentimer/">Garden</a>:</b> 
+                W - <span data-countdown="{{ GLOBAL.status.garden.water }}" data-countdowndone="Ready!">0:00:00</span>, D - <span data-countdown="{{ GLOBAL.status.garden.dust }}" data-countdowndone="Ready!">0:00:00</span>, F - <span data-countdown="{{ GLOBAL.status.garden.fertilize }}" data-countdowndone="Ready!">0:00:00</span>
+            </span>
+            <span>
+                <b><a href="/quests/">Quests</a>:</b>
+                <span style="margin-right:5px;">{{ GLOBAL.status.quests.points|number_format }} QP{% if GLOBAL.status.quests.rank > 0 %} / <a href="/quests/ranking/">#{{ GLOBAL.status.quests.rank }}</a>{% endif %}</span>
+                {% for i, diff in ["E","M","H","I","G","B"] %}
+                    <span class="{% if GLOBAL.status.quests.submissions[i+1]=="Pending" %}userbarquestpending{% elseif GLOBAL.status.quests.submissions[i+1]=="Complete" %}userbarquestcomplete{% elseif GLOBAL.status.quests.submissions[i+1]=="Rejected"%}userbarquestrejected{% endif %}">{{ diff }}</span>
+                {% endfor %}
+            </span>
+            <span>
+                <b><a href="/community/vipdrawing/">VIP</a>:</b>
+                {% for day, letter in ["M","T","W","T","F","S","S"] %}
+                    <span class="{% if (GLOBAL.user.getFlag("vip_count_days") b-and (2 ** (7 - day - 1))) != 0 %}userbarvipsuccess{% elseif GLOBAL.now.getDayNumberOfWeek() > (day + 1) %}userbarvipmissed{% endif %}">{{ letter }}</span>
+                {% endfor %}
+            </span>
+            <span>[ <a href="javascript:;" id="userbarmoreinfoopenlink">More Info</a> ]</span>
+        </div>
+    </div>
+    {% else %}
+    <div id="userbarnologinwrapper">
+        <form method="post" action="/account/">
+            <input type="hidden" name="token" value="{{ GLOBAL.formTokens.login }}" />
+            <input type="hidden" name="thru" value="{{ GLOBAL.requestUri }}" />
+            <span class="userbarnologinsection"><b>Welcome!</b></span>
+            <span class="userbarnologinsection">Email: <input class="prettyinputtext" type="email" name="email" /></span>
+            <span class="userbarnologinsection">Password: <input class="prettyinputtext" type="password" name="password" /></span>
+            <span class="userbarnologinsection" title="Check this box to stay logged in."><input type="checkbox" name="rememberme" class="_vmiddle" /> <span class="_vmiddle">Remember?</span></span>
+            <span class="userbarnologinsection">
+                <input type="submit" name="submit_login" value="Log In" class="prettyinputbutton" />
+                <input type="button" value="Register" class="prettyinputbutton" onclick="window.location='/account/';" style="margin-left:5px;" />
+            </span>
+            <span class="userbarnologinsection">
+                <a href="javascript:;" onclick="_.logInWithFacebook();"><img src="{{ GLOBAL.staticUrl }}/img/loginwithfacebook.png" alt="Login with Facebook" /></a>
+            </span>
+        </form>
+    </div>
+    {% endif %}
+</div>

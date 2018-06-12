@@ -1,0 +1,32 @@
+{% macro comment(cmt, staticUrl) %}
+	{% from "macros/usercard.twig" import userCard %}
+
+	<div class="comment-container">
+		{{ userCard({
+            staticUrl: staticUrl,
+            id: cmt.from_id,
+            nickname: cmt.from_display_name,
+            inventory: cmt.itemstring|split(','),
+            vip_rank: cmt.viprank,
+            quest_points: cmt.qp,
+            quest_rank: cmt.qrank,
+            profile_pic_type: cmt.profile_pic_type,
+            character: {
+                ign: cmt.ign,
+                level: cmt.level,
+                fam: cmt.fam,
+                fam_member_type: cmt.fam_member_type
+            }
+        }) }}
+
+		<div class="comment-body">
+			{{ cmt.comment|bbcode }}
+		</div>
+
+		<div class="comment-time">
+			<a href="/community/comment/{{ cmt.id }}/" title="{{ cmt.time|date('r') }}">
+				{{ cmt.time|relativeTime }} ago
+			</a>
+		</div>
+	</div>
+{% endmacro %}

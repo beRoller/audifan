@@ -1,0 +1,37 @@
+<!-- My Teams -->
+<div class="sectionheading">My Teams</div>
+{% if editMode %}
+    <div class="_center" style="margin-bottom:5px;">Edit your teams on your <a href="/community/profile/{{ basicInfo.id }}/characters/">Character page</a>.</div>
+{% endif %}
+{% for c in characterInfo if (c.team1 != "" or c.team2 != "") %}
+    <div class="characterteamwrapper">
+        <div class="_center">{{ c.ign }}</div>
+        <table class="characterteammates">
+            <tr>
+                <td class="teammate1">
+                    {% if c.team1 != "" %}
+                        <a href="/community/search/?query={{ c.team1|url_encode }}&in=igns" title="Click to search for this IGN.">{{ c.team1 }}</a>
+                    {% else %}
+                        ??
+                    {% endif %}
+                </td>
+                <td class="teammatemiddle">
+                    {% if c.team_title > 0 %}
+                        <img src="{{ GLOBAL.staticUrl }}/img/siggenerator/sigtitles/{{ c.team_title }}_1.png" />
+                    {% else %}
+                        &
+                    {% endif %}
+                </td>
+                <td class="teammate2">
+                    {% if c.team2 != "" %}
+                        <a href="/community/search/?query={{ c.team2|url_encode }}&in=igns" title="Click to search for this IGN.">{{ c.team2 }}</a>
+                    {% else %}
+                        ??
+                    {% endif %}
+                </td>
+            </tr>
+        </table>
+    </div>
+{% else %}
+    <div class="_center">No characters have teammates.</div>
+{% endfor %}

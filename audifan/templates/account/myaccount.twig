@@ -1,0 +1,164 @@
+{% extends "base.twig" %}
+{% import "macros/forms.twig" as forms %}
+
+{% block title %}Audifan.net - My Account{% endblock %}
+
+{% block head %}
+<style type="text/css">
+    .field {
+        margin: 7px 0px;
+    }
+    
+    .spaceleft {
+        margin-left: 3px;
+    }
+    
+    #passwordtable {
+        border: 0px;
+        border-collapse: collapse;
+    }
+    
+    #passwordtable tr th {
+        font-weight: bold;
+        text-align: left;
+        width: 175px;
+        
+    }
+    
+    #passwordtable tr td, #passwordtable tr th {
+        padding: 5px;
+        padding-left: 0px;
+    }
+</style>
+
+<script type="text/javascript">
+    
+    $(function() {
+        $("#nicknamechangelink").click(function() {
+            $("#nickname1").fadeOut("fast", "swing", function() {
+                $("#nicknamechange").fadeIn("fast");
+            });
+        });
+        
+        $("#nicknamechangecancel").click(function() {
+            $("#nicknamechange").fadeOut("fast", "swing", function() {
+                $("#nickname1").fadeIn("fast");
+            });
+        });
+        
+        $("#passwordchangelink").click(function() {
+            $("#passworddisplay").fadeOut("fast", "swing", function() {
+                $("#passwordchange").fadeIn("fast");
+            });
+        });
+        
+        $("#passwordchangecancel").click(function() {
+            $("#passwordchange").fadeOut("fast", "swing", function() {
+                $("#currentpassword, #newpassword, #newpassword2").val("");
+                $("#passworddisplay").fadeIn("fast");
+            });
+        });
+    });
+    
+</script>
+{% endblock %}
+
+{% block pagetitle %}My Account{% endblock %}
+
+{% block body %}
+<div class="contentwrapperhalf">
+    <div class="float">
+        {% if email != "" %}
+        <div class="field">
+            <b>Email:</b> {{ email }}
+        </div>
+        {% endif %}
+        <div class="field">
+            {{ forms.start() }}
+            <b>Nickname:</b> 
+            <span id="nickname1">{{ GLOBAL.user.getNickname() }} [<a href="javascript:;" id="nicknamechangelink">Change</a>]</span>
+            <span id="nicknamechange" style="display:none;">
+                {% if canChangeName %}
+                {{ forms.textField("nickname", GLOBAL.user.getNickname(), "", "", 20) }}
+                {{ forms.submit("submit_nickname", "Save", "", "spaceleft") }}
+                {{ forms.button("Cancel", "nicknamechangecancel", "spaceleft") }}
+                {% else %}
+                    You may only change your name once every 15 days.  You last changed it {{ lastNameChange|relativeTime }} ago. <a href="javascript:;" id="nicknamechangecancel">OK</a>
+                {% endif %}
+            </span>
+            {{ forms.end() }}
+        </div>
+        {% if email != "" %}
+        <div class="field">
+            <div id="passworddisplay">
+                <b>Password:</b> 
+                <span id="password1">[<a href="javascript:;" id="passwordchangelink">Change</a>]</span>
+            </div>
+            <div id="passwordchange" style="display:none;">
+                {{ forms.start("/account/myaccount/") }}
+                <table id="passwordtable">
+                    <tr>
+                        <th>Current Password:</th>
+                        <td>{{ forms.password("currentpassword", "currentpassword") }}</td>
+                    </tr>
+                    <tr>
+                        <th>New Password:</th>
+                        <td>{{ forms.password("newpassword", "newpassword") }}</td>
+                    </tr>
+                    <tr>
+                        <th>Confirm New Password:</th>
+                        <td>{{ forms.password("newpassword2", "newpassword2") }}</td>
+                    </tr>
+                    <tr>
+                        <th></th>
+                        <td>
+                            <!--<div><b>You will be logged out after you change your password.</b></div>-->
+                            {{ forms.submit("submit_password", "Save") }}
+                            {{ forms.button("Cancel", "passwordchangecancel", "", "spaceleft") }}
+                        </td>
+                    </tr>
+                </table>
+                {{ forms.end() }}
+            </div>
+        </div>
+        {% endif %}
+        <div class="field">
+            <b>Facebook Connectivity:</b> {% if fbid != "" %}Connected with <a href="http://www.facebook.com/profile.php?id={{ fbid }}" target="_blank">this profile</a>. <a href="/account/fbdisconnect/">Disconnect</a>{% else %}Not Connected{% endif %}
+        </div>
+        <div class="field">
+            <b>Invisible Mode:</b> {% if invisible %}On{% else %}Off{% endif %}. <a href="?do=invisible">{% if invisible %}Turn Off{% else %}Turn On{% endif %}</a>
+            <div style="margin-left:20px;">
+                Invisible Mode will remove your name from the "Who's Online?" list and always show you as "Offline" on your profile.
+            </div>
+        </div>
+        <div class="field">
+            <b>Language Filter:</b> {% if language %}On{% else %}Off{% endif %}. <a href="?do=language">{% if language %}Turn Off{% else %}Turn On{% endif %}</a>
+            <div style="margin-left:20px;">
+                The Language Filter will censor strong language posted by users of the site.
+            </div>
+        </div>
+        {#<div class="field" style="margin-top:20px;">
+            <b>Copy Account from Main Site to BETA Site</b>
+            <div style="margin-left:20px;">
+                This will copy your current account data from the main site (audifan.net) to the beta site (beta.audifan.net).  Existing beta site data will be erased.  Your main account data will never be affected by the beta site.<br />
+                All data EXCEPT the following will be copied:
+                <ul>
+                    <li>Your profile comments and status updates.</li>
+                    <li>Your friends.</li>
+                    <li>Your friend requests.</li>
+                    <li>Your garden timers.</li>
+                    <li>Your tickets.</li>
+                    <li>Your quest submissions.</li>
+                    <li>Your quest and VIP rankings.</li>
+                    <li>Your recent Happy Box prizes.</li>
+                    <li>Your notifications.</li>
+                </ul>
+                To start copying, click the button below.  It will take a few moments to complete.<br />
+                <form method="post" action="/account/myaccount/">
+                    <input type="submit" value="Start Copy" name="submit_copy" class="prettyinputbutton" style="margin-top:10px;" />
+                </form>
+            </div>
+        </div>#}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,53 @@
+{% macro pagination(urlBefore, urlAfter, totalPages, currentPage) %}
+    <ul class="pagination pagination-sm">
+    	{% if currentPage > 1 %}
+	    	<li>
+	    		<a href="{{ urlBefore }}1{{ urlAfter }}"><i class="fa fa-angle-double-left"></i> First Page</a>
+	    	</li>
+	    	<li>
+	    		<a href="{{ urlBefore }}{{ currentPage - 1 }}{{ urlAfter }}"><i class="fa fa-angle-left"></i> Previous Page</a>
+	    	</li>
+    	{% else %}
+    		<li class="disabled">
+    			<a><i class="fa fa-angle-double-left"></i> First Page</a>
+    		</li>
+    		<li class="disabled">
+    			<a><i class="fa fa-angle-left"></i> Previous Page</a>
+    		</li>
+    	{% endif %}
+
+    	<li class="clearfix visible-xs"></li>
+
+    	{% if currentPage < totalPages %}
+    		<li>
+	    		<a href="{{ urlBefore }}{{ currentPage + 1 }}{{ urlAfter }}">Next Page <i class="fa fa-angle-right"></i></a>
+	    	</li>
+	    	<li>
+	    		<a href="{{ urlBefore }}{{ totalPages }}{{ urlAfter }}">Last Page <i class="fa fa-angle-double-right"></i></a>
+	    	</li>
+	    {% else %}
+	    	<li class="disabled">
+    			<a>Next Page <i class="fa fa-angle-right"></i></a>
+    		</li>
+    		<li class="disabled">
+    			<a>Last Page <i class="fa fa-angle-double-right"></i></a>
+    		</li>
+	    {% endif %}
+    </ul>
+
+    <ul class="pagination pagination-sm">
+    	{% if totalPages > 0 %}
+	    	{% for p in 1..totalPages %}
+	    		{% if p == currentPage %}
+	    			<li class="active">
+		    			<a>{{ p }}</a>
+		    		</li>
+	    		{% else %}
+	    			<li>
+		    			<a href="{{ urlBefore }}{{ p }}{{ urlAfter }}">{{ p }}</a>
+		    		</li>
+	    		{% endif %}
+	    	{% endfor %}
+	    {% endif %}
+    </ul>
+{% endmacro %}

@@ -1,0 +1,215 @@
+{% extends "base.twig" %}
+{% from "macros/badges.twig" import badges %}
+{% import "macros/forms.twig" as forms %}
+
+{% block title %}Audifan.net - {{ basicInfo.display_name }}{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" type="text/css" href="{{ GLOBAL.staticUrl }}/css/profile-{{ GLOBAL.theme.name }}-v20151216.css" media="screen" />
+<script type="text/javascript" src="{{ GLOBAL.staticUrl }}/js/swfobject.js"></script>
+<script type="text/javascript">
+    
+function addFriend() {
+    $("#addfriend").fadeOut("fast", "swing", function() {
+        $("#addfriend").html("Adding...");
+        $("#addfriend").fadeIn("fast", "swing", function() {
+            _.ajax({"addfriend":1}, null, function(d) {
+                $("#addfriend").fadeOut("fast", "swing", function() {
+                    $("#addfriend").html(d.message);
+                    $("#addfriend").fadeIn("fast");
+                });
+            });
+        });
+    });
+}
+
+{% for c in characterInfo %}
+$(function () {
+    swfobject.embedSWF('{{ GLOBAL.staticUrl }}/swf/profilecharactericons-v1.7.swf', 'charactericons_{{ c.id }}', '250', '32', '8', null, null, {
+        wmode: 'opaque',
+        allowScriptAccess: 'never',
+        bgcolor: '#{{ GLOBAL.theme.colors.darker }}',
+        menu: 'false',
+        flashvars: 'useparams=1&bgcolor={{ GLOBAL.theme.colors.darker }}&gender={{ c.gender }}&teamtitle={{ c.team_title }}&storymedal1={{ c.story_medal }}&storymedal2={{ c.story_medal2 }}&ring={{ c.ring }}&tournexpert={{ c.tourn_expert }}&tournbeatup={{ c.tourn_beatup }}&tournbeatrush={{ c.tourn_beatrush }}&tournguitar={{ c.tourn_guitar }}&tournteam={{ c.tourn_team }}&tourncouple={{ c.tourn_couple }}&tournballroom={{ c.tourn_ballroom }}&diary={{ c.diary }}&guitarctrlr={{ c.guitar_ctrlr }}'
+    }, {style: 'margin:0px;'});
+});
+{% endfor %}
+
+{% if not editMode and (8 in leftModules or 8 in rightModules) %}
+    $(function() {
+        _.ajax({
+            "steamidlookup": 1
+        }, function(){}, function(d) {
+            $("#steaminfopic").attr("src", d.profile.avatarmedium);
+            $("#steaminfolink").attr("href", d.profile.profileurl).html(d.profile.personaname);
+            //if (d.playtime.playtime_2weeks)
+            //    $("#steaminfoweekplaytime").html(_.round(d.playtime.playtime_2weeks / 60, 1) + " hours played past 2 weeks");
+            $("#steaminfototalplaytime").html(_.round(d.playtime.playtime_forever / 60, 1) + " total hours of Audition played");
+            if (d.profile.gameid && d.profile.gameid === "349720")
+                $("#steaminfoplaying").show();
+            $("#steaminfoloading").hide();
+            $("#steaminfocontainer").show();
+        });
+    });
+{% endif %}
+
+</script>
+{% endblock %}
+
+{% block body %}
+{% if ownProfile %}
+<div id="editprofilenotice">
+    {% if editMode %}
+    <div style="margin-bottom:5px;">
+        Your profile is in Edit Mode.
+    </div>
+    <input type="button" value="Exit Edit Mode" onclick="window.location='?';" class="prettyinputbutton" style="margin-left:10px;" />
+    {% else %}
+    <div style="margin-bottom:5px;">This is your profile.</div>
+    <input type="button" value="Enter Edit Mode" onclick="window.location='?edit';" class="prettyinputbutton" />
+    <input type="button" value="Hide This" onclick="$('#editprofilenotice').slideUp('fast');" class="prettyinputbutton" style="margin-left:10px;" />
+    {% endif %}
+</div>
+{% endif %}
+<div id="basicinfocontainer">
+    <div id="basicinfopicture">
+        <img src="{{ GLOBAL.staticUrl }}/img/profilepictures/{% if basicInfo.profile_pic_type != "" %}{{ basicInfo.id }}.{{ basicInfo.profile_pic_type }}{% else %}default.png{% endif %}?_={{ "now"|date("U") }}" alt="{{ basicInfo.display_name }}'s Profile Picture" />
+        {% if editMode %}
+            <div id="picturechangelinkcontainer" class="_center">
+                <div style="margin-top:5px;"><a href="javascript:;" onclick="$('#picturechangelinkcontainer').fadeOut('fast','swing',function(){$('#picturechange').fadeIn('fast');});"><img src="{{ GLOBAL.staticUrl }}/img/fff/picture_edit.png" class="_vmiddle" style="margin-right:5px;" />Change Picture</a></div>
+                    {% if basicInfo.profile_pic_type != "" %}
+                    <div style="margin-top:5px;"><a href="?edit&deletepicture=1" onclick="return confirm('Are you sure you want to delete your profile picture?');"><img src="{{ GLOBAL.staticUrl }}/img/fff/picture_delete.png" class="_vmiddle" style="margin-right:5px;" />Delete Picture</a></div>
+                    {% endif %}
+            </div>
+            <div id="picturechange" class="_center" style="margin-top:5px; display:none;">
+                <div><a href="javascript:;" onclick="$('#picreqs').fadeToggle('fast');">What are the picture requirements?</a></div>
+                <div id="picreqs" class="_center" style="position:absolute; left:inherit; top:inherit; width:300px; background-color:#{{ GLOBAL.theme.colors.darkest }}; padding:5px; opacity:.9; display:none;">
+                    Your picture must be in PNG, GIF, or JPEG format.<br />
+                    If you picture is larger than 200x200, it will be resized.
+                    <div style="margin-top:5px;">
+                        <a href="javascript:;" onclick="$('#picreqs').fadeOut('fast');">Close</a>
+                    </div>
+                </div>
+                <div style="margin-top:5px;">
+                    {{ forms.start("?edit", "post", "", true) }}
+                    <input type="file" name="pic" style="background-color: #{{ GLOBAL.theme.colors.darker }}; color:#ffffff;" />
+                    <div style="margin-top:5px;">{{ forms.submit("submit_newpicture", "Upload New Picture") }}</div>
+                    <div style="margin-top:5px;"><input type="button" class="prettyinputbutton" onclick="$('#picturechange').fadeOut('fast','swing',function(){$('#picturechangelinkcontainer').fadeIn('fast');});" value="Cancel" /></div>
+                    {{ forms.end() }}
+                </div>
+            </div>
+        {% endif %}
+    </div>
+    <div id="basicinfo">
+        <div id="basicinfoname">{{ basicInfo.display_name }}</div>
+        <div id="basicinfoonlinestatus">
+            {% if not basicInfo.invisible and onlineNow %}
+                <img src="{{ GLOBAL.staticUrl }}/img/online.png" alt="Invisible" />
+                <span>Online Now!</span>
+            {% else %}
+                <img src="{{ GLOBAL.staticUrl }}/img/offline.png" alt="Invisible" />
+                <span>Offline.</span>
+            {% endif %}
+            <span style="margin-left:25px;">Joined on {{ basicInfo.join_time|date("F j, Y") }}.</span>
+        </div>
+        {{ badges(GLOBAL.staticUrl, basicInfo.itemstring|split(','), basicInfo.viprank, basicInfo.qp, basicInfo.qrank) }}
+        <div id="basicinfolinks">
+            <a href="/community/profile/{{ basicInfo.id }}/characters/"><i class="fa fa-user"></i> View Characters</a>
+            <a href="/community/profile/{{ basicInfo.id }}/comments/"><i class="fa fa-comment"></i> View Comments</a>
+            <a href="/community/profile/{{ basicInfo.id }}/friends/"><i class="fa fa-users"></i> View Friends</a>
+            {% if GLOBAL.user.isLoggedIn() and not ownProfile %}
+                <span id="addfriend">
+                    {% if isFriend %}
+                        <i class="fa fa-thumbs-up"></i> You are friends.
+                    {% else %}
+                        <a href="javascript:;" onclick="addFriend();"><i class="fa fa-user-plus"></i> Add As Friend</a>
+                    {% endif %}
+                </span>
+            {% endif %}
+        </div>
+        {% if GLOBAL.user.isAdmin() %}
+        <div style="margin-top:10px;">
+            <b>Admin:</b> <a href="/admin/account/view/?id={{ basicInfo.id }}" target="_blank">View Account Info</a> | <a href="/admin/account/stuff/?id={{ basicInfo.id }}" target="_blank">View Account Stuff</a>
+        </div>
+        {% endif %}
+    </div>
+    <div style="clear:both;"></div>
+</div>
+<div class="contentwrapper2col">
+    <div class="float">
+        {% for m in leftModules %}
+            <div class="sectionwrapper">
+            {% if editMode %}
+            <div class="editmodewrapper">
+            {% endif %}
+            
+            {% include "community/profile/modules/" ~ m ~ ".twig" %}
+            
+            {% if editMode %}
+            <div class="editmodeoptionscontainer">
+                {% if not loop.first %}
+                <span class="editmodeoption"><img src="{{ GLOBAL.staticUrl }}/img/fff/arrow_up.png" alt="Move Up" /><a href="?edit&module={{ m }}&do=moveup">Move Up</a></span>
+                {% endif %}
+                {% if not loop.last %}
+                <span class="editmodeoption"><img src="{{ GLOBAL.staticUrl }}/img/fff/arrow_down.png" alt="Move Down" /><a href="?edit&module={{ m }}&do=movedown">Move Down</a></span>
+                {% endif %}
+                <span class="editmodeoption"><img src="{{ GLOBAL.staticUrl }}/img/fff/arrow_right.png" alt="Move to Right Side" /><a href="?edit&module={{ m }}&do=moveother">Move to Right Side</a></span>
+                <span class="editmodeoption"><img src="{{ GLOBAL.staticUrl }}/img/fff/cancel.png" alt="Hide Module" /><a href="?edit&module={{ m }}&do=hide">Hide Module</a></span>
+            </div>
+            </div>
+            {% endif %}
+        </div>
+        {% else %}
+        <div style="height:1px;"></div>
+        {% endfor %}
+    </div>
+    <div class="float">
+        {% for m in rightModules %}
+        <div class="sectionwrapper">
+            {% if editMode %}
+            <div class="editmodewrapper">
+            {% endif %}
+            
+            {% include "community/profile/modules/" ~ m ~ ".twig" %}
+            
+            {% if editMode %}
+            <div class="editmodeoptionscontainer">
+                {% if not loop.first %}
+                    <span class="editmodeoption"><img src="{{ GLOBAL.staticUrl }}/img/fff/arrow_up.png" alt="Move Up" /><a href="?edit&module={{ m }}&do=moveup">Move Up</a></span>
+                {% endif %}
+                {% if not loop.last %}
+                    <span class="editmodeoption"><img src="{{ GLOBAL.staticUrl }}/img/fff/arrow_down.png" alt="Move Down" /><a href="?edit&module={{ m }}&do=movedown">Move Down</a></span>
+                {% endif %}
+                <span class="editmodeoption"><img src="{{ GLOBAL.staticUrl }}/img/fff/arrow_left.png" alt="Move to Left Side" /><a href="?edit&module={{ m }}&do=moveother">Move to Left Side</a></span>
+                <span class="editmodeoption"><img src="{{ GLOBAL.staticUrl }}/img/fff/cancel.png" alt="Hide Module" /><a href="?edit&module={{ m }}&do=hide">Hide Module</a></span>
+            </div>
+            </div>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+    <div style="clear:both;"></div>
+</div>
+
+{% if editMode %}
+<div class="contentwrapperhalf">
+    <div class="hiddenmodulecontainer">
+        <div class="sectionheading">Hidden Modules</div>
+        {% for m in hiddenModules %}
+        <div class="sectionwrapper">
+            <div class="editmodewrapper">
+                {% include "community/profile/modules/" ~ m ~ ".twig" %}
+                
+                <div class="editmodeoptionscontainer">
+                    <span class="editmodeoption"><a href="?edit&module={{ m }}&do=addleft">Add to Left Side</a></span>
+                    <span class="editmodeoption"><a href="?edit&module={{ m }}&do=addright">Add to Right Side</a></span>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="_center">(None)</div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+{% endblock %}

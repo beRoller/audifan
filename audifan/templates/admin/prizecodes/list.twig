@@ -1,0 +1,37 @@
+{% extends "base.twig" %}
+
+{% block title %}{% endblock %}
+
+{% block head %}
+    <style>
+        .tbl tr th, .tbl tr td {
+            text-align: center;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="contentwrapperfull">
+        <div class="float">
+            <table class="tbl" style="width:100%;">
+                <tr>
+                    <th>Code</th>
+                    <th>Prize ID</th>
+                    <th>Prize Duration</th>
+                    <th>Prize Charges</th>
+                    <th>Code Expires</th>
+                </tr>
+
+                {% for c in codes %}
+                    <tr>
+                        <td>{{ c.prize_code }}</td>
+                        <td>{{ c.prize_item }}</td>
+                        <td>{{ c.prize_duration }}</td>
+                        <td>{{ c.prize_charges }}</td>
+                        <td>{{ c.prize_code_expire }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+{% endblock %}

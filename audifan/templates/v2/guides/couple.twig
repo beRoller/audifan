@@ -1,0 +1,143 @@
+{% extends "base.twig" %}
+
+{% block pagetitle %}Couple Guide{% endblock %}
+
+{% block head %}
+    <style>
+        body {
+            position: relative;
+        }
+        
+        #navcontainer {
+            padding-top: 10px;
+            display: inline-block;
+        }
+        
+        #navcontainer.affix {
+            top: 0px;
+        }
+        
+        .nav > li > a {
+            background-color: #002b39;
+            color: #fff;
+            text-align: center;
+        }
+        
+        .nav > li > a:hover, .nav > li > a:focus, .nav > li.active > a {
+            background-color: #09c;
+            color: #fff;
+        }
+        
+        .guide-contents-container {
+            padding-top: 10px;
+        }
+        
+        .heart-label-row {
+            margin-top: 10px;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-4 col-sm-5">
+            <div id="navcontainer" class="hidden-xs">
+                <ul class="nav nav-stacked">
+                    <li role="presentation"><a href="#required-hearts">Required Hearts</a></li>
+                    <li role="presentation"><a href="#wedding-requirements">Wedding Requirements</a></li>
+                    <li role="presentation"><a href="#love-party-requirements">Love Party Requirements</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-8 col-sm-7 col-xs-12">
+            <div class="guide-contents-container">
+                <div id="required-hearts">
+                    {{ sectionStart("Required Hearts")|raw }}
+                    
+                    {% for level,hearts in [0,20,60,120,200,300,420,560,720,900,1100,1320,1560,1820,2100,2400,2720,3060,3420,3800,4200,4620,5060,5520,6000,6500,7020,7560,8120,8700,9300,9920,10560,11220,11900,12600,13320,14060,14820,15600,16400,17220,18060,18920,19800,20700,21620,22560,23520,24500,26520,27620,28760,30000,31420,33180,35600,39320,45620,57060] %}
+                        {% if level % 5 == 0 %}
+                            <div class="row heart-label-row">
+                                <div class="col-md-12 text-center">
+                                    <img src="{{ GLOBAL.staticUrl }}/img/rings/small/{{ ((level/5)|round(0, "floor")) + 1 }}.png" />
+                                    <img src="{{ GLOBAL.staticUrl }}/img/coupleleveltitles/{{ ((level/5)|round(0, "floor")) + 1 }}.png" />
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        <div class="row">
+                            <div class="col-md-6 col-xs-6 text-right">Level {{ level + 1 }}</div>
+                            <div class="col-md-6 col-xs-6">{{ hearts|number_format }}</div>
+                        </div>
+                    {% endfor %}
+                    
+                    <div class="row heart-label-row">
+                        <div class="col-md-12 text-center">
+                            <img src="{{ GLOBAL.staticUrl }}/img/rings/small/13.png" />
+                            <img src="{{ GLOBAL.staticUrl }}/img/coupleleveltitles/13.png" />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 col-xs-6 text-right"><img src="{{ GLOBAL.staticUrl }}/img/coupleleveltitles/max.png" /></div>
+                        <div class="col-md-6 col-xs-6">78,760</div>
+                    </div>
+                    
+                    {{ sectionEnd()|raw }}
+                </div>
+                
+                
+                
+                
+                
+                <div id="wedding-requirements">
+                    {{ sectionStart("Wedding Requirements")|raw }}
+                    <div class="row">
+                        <div class="col-md-12 text-center">
+                            With each ticket, you have 3 attempts to pass.<br />
+                            The requirements are lowered after each attempt.<br />
+                            Wedding Party uses the song Audition - Wedding Day (130 bpm) on Couple Dance mode.
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-12 text-center">
+                            Attempt #1
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-offset-1 col-md-10 col-xs-offset-0 col-xs-12">
+                            <div><b>Perfects:</b> 12</div>
+                            <div><b>Synchro Perfects:</b> 3</div>
+                            <div><b>Score:</b> 160,000</div>
+                        </div>
+                    </div>
+                    {{ sectionEnd()|raw }}
+                </div>
+                
+                
+                
+                
+                
+                <div id="love-party-requirements">
+                    {{ sectionStart("Love Party Requirements")|raw }}
+                    Content
+                    {{ sectionEnd()|raw }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block endofpage %}
+    <script>
+        $("#navcontainer").affix({
+            offset: {
+                top: $("#navcontainer").offset().top
+            }
+        });
+        
+        $("body").scrollspy({
+            target: "#navcontainer"
+        });
+    </script>
+{% endblock %}

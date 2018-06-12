@@ -1,0 +1,162 @@
+/**
+    Generic customization of Bootstrap components.
+*/
+
+.form-control {
+    color: $text-color;
+    background-color: $menu-background-color;
+    border: 1px solid $link-color;
+}
+
+.btn {
+    color: $text-color !important;
+    background-color: $menu-background-color-hover;
+    border: 1px solid $link-color;
+    
+    &:hover, &:focus, &:active {
+        color: $text-color;
+        background-color: $menu-background-color-hover + #111111;
+    }
+}
+
+select {
+    background-color: $menu-background-color;
+    border: 1px solid $link-color;
+    border-radius: 3px;
+    padding: 3px;
+}
+
+.panel {
+    background-color: $content-background-color-2;
+    margin-top: 10px;
+    
+    .panel-heading {
+        background-color: $content-background-color-3;
+        font-weight: bold;
+    }
+    
+    .panel-footer {
+        border-top: 1px solid $link-color;
+        background-color: $content-background-color-3;
+        line-height: 1;
+    }
+}
+
+.table.table-hover > tbody > tr:hover {
+    background-color: #333;
+}
+
+.modal {
+    color: #000000;
+}
+
+
+
+// tabbed navigation
+.nav-tabs {
+    border-bottom: 1px solid #0099cc;
+    
+    > li {
+        a {
+            background-color: #002B39;
+            border-color: #0099cc;
+        }
+        
+        a:hover {
+            background-color: #0088bb;
+            border-color: #0099cc;
+            color: #002B39;
+        }
+        
+        &.active {
+            a, a:hover, a:focus {
+                background-color: #0099cc;
+                color: #002B39;
+                border-top-color: #0099cc;
+                border-left-color: #0099cc;
+                border-right-color: #0099cc;
+                font-weight: bold;
+            }
+        }
+    }
+}
+        
+.tab-content {
+    padding: 10px;
+}
+
+
+
+.pagination.pagination-sm {
+    text-align: center;
+    width: 100%;
+
+    > li {
+        display: inline-block;
+
+        > a {
+            background-color: $menu-background-color;
+            border: 0px;
+            color: #fff;
+
+            &:hover {
+                background-color: ($menu-background-color + #111);
+            }
+        }
+
+        &:first-child {
+            a, span {
+                border-top-left-radius: 0px;
+                border-bottom-left-radius: 0px;
+            }
+        }
+
+        &:last-child {
+            a, span {
+                border-top-right-radius: 0px;
+                border-bottom-right-radius: 0px;
+            }
+        }
+
+        &.active {
+            > a {
+                border: 1px solid #fff;
+                font-weight: bold;
+            }
+        }
+
+        &.disabled {
+            > a {
+                color: #777;
+            }
+        }
+    }
+}
+
+
+
+.modal {
+    .modal-dialog {
+        .modal-content {
+            background-color: $content-background-color-3;
+            color: $text-color;
+
+            .modal-header {
+                border-bottom: 1px solid $menu-background-color-hover;
+
+                .close {
+                    text-shadow: 0 1px 0 $page-background-color;
+                    color: $text-color;
+                }
+            }
+
+            .modal-body {
+                text-align: center;
+            }
+
+            .modal-footer {
+                border-top: 1px solid $menu-background-color-hover;
+            }
+        }
+    }
+}

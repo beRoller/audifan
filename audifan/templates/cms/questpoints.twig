@@ -1,0 +1,29 @@
+{% extends "cms/base.twig" %}
+{% import "macros/forms.twig" as forms %}
+
+{% block title %}Audifan.net - CMS - Update Quest Points{% endblock %}
+
+{% block pagetitle %}<a href="/cms/">Audifan.net CMS</a> &gt; Update Quest Points{% endblock %}
+
+{% block cmscontent %}
+    <h3 style="margin-bottom:5px;">Update Quest Points</h3>
+    <div>
+        Update everyone's quest points for the specified year/week number.<br />
+        The week must be over and all screenshots must be graded for the week.<br />
+        <b>Current Year:</b> {{ "now"|date("Y") }}<br />
+        <b>Current Week Number:</b> {{ "now"|date("W") }}
+    </div>
+    <div style="margin-top:5px;">
+        {{ forms.start("/cms/questpoints/") }}
+        <div>
+            <b>Year:</b> {{ forms.selectFull("year", ("now"|date("Y"))..2014, "", "", true) }}
+        </div>
+        <div>
+            <b>Week Number:</b> {{ forms.selectFull("year", 0..52, "", "", true) }}
+        </div>
+        <div>
+            {{ forms.submit("submit_updateqp", "Update Quest Points") }}
+        </div>
+        {{ forms.end() }}
+    </div>
+{% endblock %}

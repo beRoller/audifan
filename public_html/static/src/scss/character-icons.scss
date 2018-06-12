@@ -1,0 +1,32 @@
+.ciconcontainer {
+    height: 32px;
+    padding-left: 25%;
+
+    &:after {
+    	clear: both;
+    }
+}
+
+.cicon {
+    float: left;
+    background-image: url('/static/img/charactericonsprite.png');
+    background-repeat: no-repeat;
+    background-position: 0px 0px;
+    width: 32px;
+    height: 32px;
+    margin-left: -5px;
+}
+
+.cicon-text {
+    float: left;
+    line-height: 32px;
+    margin-right: 6px;
+    min-width: 65px;
+    text-align: right;
+}
+
+@for $i from 1 through 4 {
+	.cicon-team-#{$i} {
+		background-position: #{-352 - (($i - 1)*32)}px -192px;
+	}
+}

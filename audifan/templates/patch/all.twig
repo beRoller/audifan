@@ -1,0 +1,20 @@
+{% extends "base.twig" %}
+
+{% block title %}Audifan.net - Patch Archive - All {{ year }} Patches{% endblock %}
+
+{% block head %}
+{% endblock %}
+
+{% block body %}
+<div class="contentwrapperfull">
+    <div class="float">
+        <div class="pagetitle">All {{ year }} Patches</div>
+        {% for p in patchNumbers %}
+            <div class="sectionwrapper">
+                <div class="sectionheading">{{ monthNames[p[4:2] - 1] }} {{ p[6:2] }}, {{ p[0:4] }} Patch</div>
+                {% include "/patch/patchinfo/" ~ p %}
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

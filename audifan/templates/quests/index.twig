@@ -1,0 +1,548 @@
+{% extends "base.twig" %}
+
+{% block title %}Audifan.net - Quests{% endblock %}
+
+{% block head %}
+    <style>
+        .questcategory {
+            background-color: #{{ GLOBAL.theme.colors.darkerhighlight }};
+            padding: 5px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+
+        .questcategorylabel {
+            text-align: center;
+            font-size: 16pt;
+            font-weight: bold;
+        }
+
+        .questcategorydescription {
+            text-align: center;
+            font-size: 11pt;
+        }
+
+        .questsection {
+            position: relative;
+            border-width: 1px;
+            border-style: solid;
+            border-radius: 5px;
+            border-bottom-left-radius: 0px;
+            padding: 5px;
+            margin-top: 10px;
+        }
+
+        #questsection_easy { border-color: #25ff00; }
+        #questsection_medium { border-color: #ffa200; }
+        #questsection_hard { border-color: #ff0000; }
+        #questsection_insane { border-color: #da00d7; }
+        #questsection_group { border-color: #0099ff; }
+        #questsection_battle { border-color: #ccff33; }
+
+        .questsection:first-child {
+            margin-top: 0px;
+        }
+
+        .questsectionlabel {
+            font-size: 20pt;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 7px;
+        }
+        #questsectionlabel_easy { color: #25ff00; }
+        #questsectionlabel_medium { color: #ffa200; }
+        #questsectionlabel_hard { color: #ff0000; }
+        #questsectionlabel_insane { color: #da00d7; }
+        #questsectionlabel_group { color: #0099ff; }
+        #questsectionlabel_battle { color: #ccff33; }
+
+        .questtext {
+            font-size: 12pt;
+            text-align: center;
+        }
+
+        .questworth {
+            text-align: center;
+            font-size: 11pt;
+            font-style: italic;
+            margin-top: 7px;
+        }
+
+        .queststatus {
+            border-width: 1px;
+            border-style: none solid solid solid;
+            border-bottom-left-radius: 5px;
+            border-bottom-right-radius: 5px;
+            padding: 3px;
+            font-size: 9pt;
+            display: inline-block;
+        }
+        #queststatus_easy { border-color: #25ff00; }
+        #queststatus_medium { border-color: #ffa200; }
+        #queststatus_hard { border-color: #ff0000; }
+        #queststatus_insane { border-color: #da00d7; }
+        #queststatus_group { border-color: #0099ff; }
+        #queststatus_battle { border-color: #ccff33; }
+
+        .queststatuscontainer {
+            background-color: #{{ GLOBAL.theme.colors.darkerhighlight }};
+            width: 100%;
+            padding: 3px;
+            position: relative;
+            top: -6px;
+            left: -3px;
+        }
+
+        .queststatustext {
+            position: relative;
+            top: 7px;
+            left: 5px;
+        }
+
+        .submissiontable {
+            border: 1px solid #FFF;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        .submissiontable tr td, .submissiontable tr th {
+            border: 1px solid #FFF;
+            padding: 2px;
+            text-align:center;
+        }
+
+        .submissiontable tr td {
+            font-size: 9pt;
+        }
+
+        .submissiontable tr th {
+            font-size: 10pt;
+            font-weight: bold;
+        }
+
+        .topten {
+            background-color: #333;
+            padding: 3px;
+            text-align: center;
+            font-size: 9pt;
+            border-radius: 5px;
+        }
+
+        .toptenhighlight {
+            background-color: #444;
+            padding: 3px;
+            text-align: center;
+            font-size: 9pt;
+            border-radius: 5px;
+        }
+
+        .reqflashon {
+            color: #ffff00;
+            font-weight: bold;
+        }
+
+        @keyframes reqflashanim {
+            0% {
+                color: #ffffff;
+                font-weight: normal;
+            }
+            50% {
+                color: #ffff00;
+                font-weight: bold;
+            }
+        }
+
+        #reqflash {
+            -moz-animation: reqflashanim 3s linear 0s infinite;
+            -webkit-animation: reqflashanim 3s linear 0s infinite;
+            animation: reqflashanim 3s linear 0s infinite;
+        }
+    </style>
+    <script type="text/javascript">
+        /*$(function() {
+         setInterval(function() {
+         if ($("#reqflash").hasClass("reqflashon"))
+         $("#reqflash").removeClass("reqflashon");
+         else
+         $("#reqflash").addClass("reqflashon");
+         }, 750);
+         });*/
+    </script>
+{% endblock %}
+
+{% block body %}
+    <div class="_right"><a href="/help/quests/">How Do Quests Work?</a></div>
+    <div class="pagetitle">Quests</div>
+    <div class="contentwrapper2col">
+        <div class="float">
+            <div class="sectionwrapper">
+                <div class="sectionheading">This Week's Quests</div>
+                <div>
+                    <div class="_center">
+                        <div style="font-style:italic;">{% include "generated/questdaterange.twig" %}</div>
+                        <div style="margin:3px 0px;">
+                            Quest submissions are due on Sunday by 11:50pm, Audition time.<br />
+                            New quests are randomly selected on Sunday at 11:59pm, Audition time.<br />
+                            <div id="reqflash" style="margin-top:3px;">BEFORE ATTEMPTING A QUEST, be sure to read the <a href="/quests/submit/">screenshot requirements</a>.</div>
+                        </div>
+                    </div>
+
+                    <div class="questcategory">
+                        <div class="questcategorylabel">Individual Quests</div>
+                        <div class="questcategorydescription">
+                            Individual quests can be completed by yourself.<br />
+                            They award medals based on how many you complete.<br />
+                            Only points from Individual Quests count toward mode rankings.
+                        </div>
+                        {% for i, label in {1:"easy",2:"medium",3:"hard",4:"insane"} %}
+                            <div class="questsection" id="questsection_{{ label }}">
+                                <div class="questsectionlabel" id="questsectionlabel_{{ label }}">{{ label|capitalize }}</div>
+                                <div class="questtext">
+                                    {% if thisWeeksQuests[i] == "" %}
+                                        No quest exists or quests are currently being updated.<br />
+                                        Please check back later.
+                                    {% else %}
+                                        {{ thisWeeksQuests[i]|raw }}
+                                    {% endif %}
+                                </div>
+                                {% if thisWeeksQuests[i] != "" %}
+                                    <div class="questworth">Worth {{ questWorths[i] }} points</div>
+                                {% endif %}
+                            </div>
+                            {% if GLOBAL.user.isLoggedIn() and thisWeeksQuests[i] != "" %}
+                                <div class="queststatus" id="queststatus_{{ label }}">
+                                    <div class="queststatuscontainer">
+                                        <div class="queststatustext">
+                                            <span style="font-weight:bold; margin-right:5px;">Your Submission Status:</span>
+                                            {% if submissionInfo[i] == "Pending" %}
+                                                Pending Review
+                                            {% elseif submissionInfo[i] == "Rejected" %}
+                                                Rejected - See the <a href="/quests/submissions/">submission details page</a>
+                                            {% elseif submissionInfo[i] == "Complete" %}
+                                                Complete!
+                                            {% else %}
+                                                Not Yet Submitted - <a href="/quests/submit/">Submit Now</a>!
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+
+                    <div class="questcategory">
+                        <div class="questcategorydescription">
+                            You will have to play with at least one other<br />
+                            person in order to complete the group quest.
+                        </div>
+                        <div class="questsection" id="questsection_group">
+                            <div class="questsectionlabel" id="questsectionlabel_group">Group</div>
+                            <div class="questtext">
+                                {% if thisWeeksQuests[5] == "" %}
+                                    No quest exists or quests are currently being updated.<br />
+                                    Please check back later.
+                                {% else %}
+                                    {{ thisWeeksQuests[5]|raw }}
+                                {% endif %}
+                            </div>
+                            {% if thisWeeksQuests[5] != "" %}
+                                <div class="questworth">Worth 10 points</div>
+                            {% endif %}
+                        </div>
+                        {% if GLOBAL.user.isLoggedIn() and thisWeeksQuests[5] != "" %}
+                            <div class="queststatus" id="queststatus_group">
+                                <div class="queststatuscontainer">
+                                    <div class="queststatustext">
+                                        <span style="font-weight:bold; margin-right:5px;">Your Submission Status:</span>
+                                        {% if submissionInfo[5] == "Pending" %}
+                                            Pending Review
+                                        {% elseif submissionInfo[5] == "Rejected" %}
+                                            Rejected - See the <a href="/quests/submissions/">submission details page</a>
+                                        {% elseif submissionInfo[5] == "Complete" %}
+                                            Complete!
+                                        {% else %}
+                                            Not Yet Submitted - <a href="/quests/submit/">Submit Now</a>!
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="questcategory">
+                        <div class="questcategorydescription">
+                            The battle quest awards points based on how well you meet the objective compared to all others who participate.
+                        </div>
+                        <div class="questsection" id="questsection_battle">
+                            <div class="questsectionlabel" id="questsectionlabel_battle">Battle</div>
+                            <div class="questtext">
+                                {% if thisWeeksQuests[6] == "" %}
+                                    No quest exists or quests are currently being updated.<br />
+                                    Please check back later.
+                                {% else %}
+                                    {{ thisWeeksQuests[6]|raw }}
+                                {% endif %}
+                            </div>
+                            {% if thisWeeksQuests[6] != "" %}
+                                <div class="questworth">
+                                    {% if maxBattleQuestPoints <= 6 %}
+                                        Currently worth at least 6 points
+                                    {% else %}
+                                        Currently worth between 6 and {{ maxBattleQuestPoints }} points
+                                    {% endif %}
+                                    {% if maxBattleQuestPoints < 20 %}
+                                        <br />(increases as more people participate)
+                                    {% endif %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        {% if GLOBAL.user.isLoggedIn() and thisWeeksQuests[6] != "" %}
+                            <div class="queststatus" id="queststatus_battle">
+                                <div class="queststatuscontainer">
+                                    <div class="queststatustext">
+                                        <span style="font-weight:bold; margin-right:5px;">Your Submission Status:</span>
+                                        {% if submissionInfo[6] == "Pending" %}
+                                            Pending Review
+                                        {% elseif submissionInfo[6] == "Rejected" %}
+                                            Rejected - See the <a href="/quests/submissions/">submission details page</a>
+                                        {% elseif submissionInfo[6] == "Complete" %}
+                                            Complete!
+                                        {% else %}
+                                            Not Yet Submitted - <a href="/quests/submit/">Submit Now</a>!
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="float">
+            <div class="sectionwrapper">
+                <div class="sectionheading"><a href="/quests/submit/">Submit a Screenshot</a></div>
+            </div>
+
+            {% if GLOBAL.user.isLoggedIn() %}
+                {% if GLOBAL.user.isMod() %}
+                    <div class="sectionwrapper">
+                        <div class="sectionheading"><a href="/quests/grader/">Go to Grader Hub</a></div>
+                        <div class="_center">({{ ungradedCount }} ungraded screenshot{{ ungradedCount|pluralize }})</div>
+                    </div>
+                {% endif %}
+
+                <div class="sectionwrapper">
+                    <div class="sectionheading">Quest Stats</div>
+                    <div style="margin-top:5px;">
+                        <div style="text-align:center;">
+                            <div style="font-size:20pt;">{{ (questData.data_easy_points+questData.data_medium_points+questData.data_hard_points+questData.data_insane_points+questData.data_group_points+questData.data_battle_points)|number_format }}</div>
+                            <div style="font-size:8pt; font-weight:bold; letter-spacing:2px;">TOTAL QUEST POINTS (QP)</div>
+                        </div>
+
+                        <div style="margin-top:8px;">
+                            <div style="float:left; margin-left:145px; width:145px; font-size:8pt; text-align:center;">Total Completed</div>
+                            <div style="float:left; width:145px; font-size:8pt; text-align:center;">Points</div>
+                            <div style="clear:both;"></div>
+                        </div>
+
+                        <div>
+                            <div style="float:left; width:145px; font-size:9pt; text-align:center;">Easy</div>
+                            <div style="float:left; width:145px; font-size:8pt; text-align:center;">{{ questData["data_easy_count"] }}</div>
+                            <div style="float:left; width:145px; font-size:8pt; text-align:center;">{{ questData["data_easy_points"] }}</div>
+                            <div style="clear:both;"></div>
+                        </div>
+
+                        <div>
+                            <div style="float:left; width:145px; font-size:9pt; text-align:center;">Medium</div>
+                            <div style="float:left; width:145px; font-size:8pt; text-align:center;">{{ questData["data_medium_count"] }}</div>
+                            <div style="float:left; width:145px; font-size:8pt; text-align:center;">{{ questData["data_medium_points"] }}</div>
+                            <div style="clear:both;"></div>
+                        </div>
+
+                        <div>
+                            <div style="float:left; width:145px; font-size:9pt; text-align:center;">Hard</div>
+                            <div style="float:left; width:145px; font-size:8pt; text-align:center;">{{ questData["data_hard_count"] }}</div>
+                            <div style="float:left; width:145px; font-size:8pt; text-align:center;">{{ questData["data_hard_points"] }}</div>
+                            <div style="clear:both;"></div>
+                        </div>
+
+                        <div>
+                            <div style="float:left; width:145px; font-size:9pt; text-align:center;">Insane</div>
+                            <div style="float:left; width:145px; font-size:8pt; text-align:center;">{{ questData["data_insane_count"] }}</div>
+                            <div style="float:left; width:145px; font-size:8pt; text-align:center;">{{ questData["data_insane_points"] }}</div>
+                            <div style="clear:both;"></div>
+                        </div>
+
+                        <div>
+                            <div style="float:left; width:145px; font-size:9pt; text-align:center;">Group</div>
+                            <div style="float:left; width:145px; font-size:8pt; text-align:center;">{{ questData["data_group_count"] }}</div>
+                            <div style="float:left; width:145px; font-size:8pt; text-align:center;">{{ questData["data_group_points"] }}</div>
+                            <div style="clear:both;"></div>
+                        </div>
+
+                        <div>
+                            <div style="float:left; width:145px; font-size:9pt; text-align:center;">Battle</div>
+                            <div style="float:left; width:145px; font-size:8pt; text-align:center;">{{ questData["data_battle_count"] }}</div>
+                            <div style="float:left; width:145px; font-size:8pt; text-align:center;">{{ questData["data_battle_points"] }}</div>
+                            <div style="clear:both;"></div>
+                        </div>
+
+                        <div style="margin-top:5px; text-align:center; font-size:9pt;">
+                            Quest Points are updated after all participants' submissions for the week have been checked.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sectionwrapper">
+                    <div class="sectionheading">My Recent Submissions</div>
+                    <table class="submissiontable">
+                        <tr>
+                            <th>Date</th>
+                            <th>Quest</th>
+                            <th>Status</th>
+                        </tr>
+                        {% for sub in recentSubmissions %}
+                            <tr>
+                                <td>{{ sub.submit_time|date("M j") }}</td>
+                                <td>{{ diffs[sub.req_difficulty-1] }}</td>
+                                <td>{{ statuses[sub.submit_grade_status] }}</td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td style="text-align:center;" colspan="3">(No recent submissions.)</td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                    <div class="_center" style="margin-top:5px;">
+                        <a href="/quests/submissions/">View All Submissions &amp; Details</a>
+                    </div>
+                </div>
+            {% endif %}
+
+            <div class="sectionwrapper">
+                <div class="sectionheading">Current Medalists</div>
+
+                <div class="_center">
+                    <img src="{{ GLOBAL.staticUrl }}/img/quest/badge1.png" class="_vmiddle" />
+                    <b>Completed One Individual Quest</b>
+                    <img src="{{ GLOBAL.staticUrl }}/img/quest/badge1.png" class="_vmiddle" />
+                </div>
+                <div class="_center" style="margin-bottom:10px;">
+                    {% for m in medalists[1] %}
+                        <a href="/community/profile/{{ m.id }}/">{{ m.display_name }}</a>{% if not loop.last %}, {% endif %}
+                    {% else %}
+                        (None)
+                    {% endfor %}
+                </div>
+
+                <div class="_center">
+                    <img src="{{ GLOBAL.staticUrl }}/img/quest/badge2.png" class="_vmiddle" />
+                    <b>Completed Two Individual Quests</b>
+                    <img src="{{ GLOBAL.staticUrl }}/img/quest/badge2.png" class="_vmiddle" />
+                </div>
+                <div class="_center" style="margin-bottom:10px;">
+                    {% for m in medalists[2] %}
+                        <a href="/community/profile/{{ m.id }}/">{{ m.display_name }}</a>{% if not loop.last %}, {% endif %}
+                    {% else %}
+                        (None)
+                    {% endfor %}
+                </div>
+
+                <div class="_center">
+                    <img src="{{ GLOBAL.staticUrl }}/img/quest/badge3.gif" class="_vmiddle" />
+                    <b>Completed Three Individual Quests</b>
+                    <img src="{{ GLOBAL.staticUrl }}/img/quest/badge3.gif" class="_vmiddle" />
+                </div>
+                <div class="_center" style="margin-bottom:10px;">
+                    {% for m in medalists[3] %}
+                        <a href="/community/profile/{{ m.id }}/">{{ m.display_name }}</a>{% if not loop.last %}, {% endif %}
+                    {% else %}
+                        (None)
+                    {% endfor %}
+                </div>
+
+                <div class="_center">
+                    <img src="{{ GLOBAL.staticUrl }}/img/quest/badge4.gif" class="_vmiddle" />
+                    <b>Completed All Four Individual Quests (ACE)</b>
+                    <img src="{{ GLOBAL.staticUrl }}/img/quest/badge4.gif" class="_vmiddle" />
+                </div>
+                <div class="_center" style="margin-bottom:10px;">
+                    {% for m in medalists[4] %}
+                        <a href="/community/profile/{{ m.id }}/">{{ m.display_name }}</a>{% if not loop.last %}, {% endif %}
+                    {% else %}
+                        (None)
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="sectionwrapper">
+                <div class="sectionheading">Top 10 Overall</div>
+                <table class="submissiontable">
+                    <tr>
+                        <th>Rank</th>
+                        <th>Name</th>
+                        <th>Total QP</th>
+                    </tr>
+                    {% for t in topTen %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td><a href="/community/profile/{{ t.id }}/">{{ t.display_name }}</a></td>
+                            <td>{{ t.qp|number_format }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+                <div class="_center" style="margin-top:5px;">
+                    <a href="/quests/ranking/">View All Rankings</a>
+                </div>
+            </div>
+            <div class="sectionwrapper">
+                <div class="sectionheading">Last Week's Battle Quest Ranking</div>
+                <div class="_center" style="margin-bottom:5px;">{{ bqLastWeekReq.req_text|raw }}</div>
+                <table class="submissiontable">
+                    <tr>
+                        <th>Rank</th>
+                        <th>Name</th>
+                        <th>{{ bqLastWeekReq.req_noun|capitalize }} Achieved</th>
+                        <th>QP Earned</th>
+                    </tr>
+                    {% for b in bqLastWeekParticipants %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td><a href="/community/profile/{{ b.id }}/">{{ b.display_name }}</a></td>
+                            <td>{{ b.submit_battle_score|number_format }}</td>
+                            <td>{{ b.points }}</td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="4">
+                                (Points from last week have not been updated yet<br />
+                                or nobody participated in last week's battle quest)
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+                
+                {% if bqLastWeekParticipants|length > 0 %}
+                <div style="margin-top:7px;">
+                    <div style="margin-bottom:3px; text-align:center; font-weight:bold;">Required {{ bqLastWeekReq.req_noun|capitalize }} for Each QP Amount</div>
+                    <table class="submissiontable">
+                        <tr>
+                            <th>QP Earned</th>
+                            <th>Required {{ bqLastWeekReq.req_noun|capitalize }}</th>
+                        </tr>
+                        {% for i, b in bqQpToScore %}
+                            <tr>
+                                <td>{{ i + 6 }}</td>
+                                <td>
+                                    {{ b|number_format }}{% if not loop.last %} ~ {{ (bqQpToScore[i + 1] - 1)|number_format }}{% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+{% endblock %}

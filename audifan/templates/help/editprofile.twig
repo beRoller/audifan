@@ -1,0 +1,40 @@
+{% extends "base.twig" %}
+
+{% block title %}Audifan.net - Help - Profile Editing{% endblock %}
+
+{% block pagetitle %}<a href="/help/">Help</a>: Profile Editing{% endblock %}
+
+{% block head %}
+    <style>
+    li > img {
+        border: 1px solid #954e9d;
+        border-radius: 3px;
+        padding: 3px;
+    }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="contentwrapperhalf">
+        <div class="float">
+            <ul>
+                <li>Profile editing is integrated into your profile so you can get an idea of what it will look like while you are editing it.</li>
+                <li>To edit your profile:<ul>
+                    <li>Log in and click My Profile at the top of any page.<br /><img src="{{ GLOBAL.staticUrl }}/img/helpguides/editprofile01.png" /></li>
+                    <li>Next, click Enter Edit Mode at the top of your profile.<br /><img src="{{ GLOBAL.staticUrl }}/img/helpguides/editprofile02.png" /></li>
+                    </ul></li>
+                <li>While your profile is in Edit Mode, you can do the following:<ul>
+                        <li>Click a "Move" link at the bottom of a module to move it around.<br /><img src="{{ GLOBAL.staticUrl }}/img/helpguides/editprofile03.png" /></li>
+                        <li>Click the "Hide Module" link to remove the module from your visible profile.  Hidden modules will appear at the bottom of your profile.  You can re-add a hidden module by clicking either "Add to Right Side" or "Add to Left Side."<img src="{{ GLOBAL.staticUrl }}/img/helpguides/editprofile04.png" />
+                        <li>Moving, hiding, or showing a module will automatically save your layout.</li>
+                        <li>Click Change Picture under your profile picture to change it.<br /><img src="{{ GLOBAL.staticUrl }}/img/helpguides/editprofile05.png" /></li>
+                        <li>At the bottom of the Latest Comments module, you can allow or disallow comments. Be sure to click the save button if you change it.<br /><img src="{{ GLOBAL.staticUrl }}/img/helpguides/editprofile06.png" /></li>
+                        <li>On the Favorite Songs module, you can check any number of your favorite songs to remove them from the list.<br /><img src="{{ GLOBAL.staticUrl }}/img/helpguides/editprofile07.png" /></li>
+                        <li>On the About Me module, you can edit the content that will appear in this module.  Be sure to click the save button to save your changes.</li>
+                    </ul></li>
+                <li>Click "Exit Edit Mode" at the top of your profile to go back to viewing your profile as everyone else sees it.<br /><img src="{{ GLOBAL.staticUrl }}/img/helpguides/editprofile08.png" /></li>
+                
+            </ul>
+        </div>
+    </div>
+{% endblock %}

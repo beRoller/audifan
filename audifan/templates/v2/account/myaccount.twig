@@ -1,0 +1,154 @@
+{% extends "base.twig" %}
+
+{% block body %}
+    <div class="row my-account">
+        <div class="col-md-6">
+            <div class="panel">
+                <div class="panel-heading text-center">Email</div>
+                <div class="panel-body text-center">
+                    {{ email }}
+                </div>
+            </div>
+                
+            <div class="panel nickname">
+                <div class="panel-heading text-center">Nickname</div>
+                <div class="panel-body">
+                    <div class="field-display text-center">{{ GLOBAL.user.getNickname() }}</div>
+                    <div class="field-edit">
+                        {% if canChangeName %}
+                            <form action="/account/myaccount/" method="post">
+                                <div class="row">
+                                    <div class="col-md-7">
+                                        <label>New Nickname:</label>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <input type="text" class="form-control" name="nickname" value="{{ GLOBAL.user.getNickname() }}" />
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 text-center">
+                                        <input type="submit" name="submit_nickname" class="form-control" value="Change Nickname" />
+                                    </div>
+                                    <div class="col-md-6 text-center">
+                                        <input type="button" class="form-control cancel-change" value="Cancel" />
+                                    </div>
+                                </div>
+                            </form>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="panel-footer text-center">
+                    {% if canChangeName %}
+                        <a href="#" class="change"><i class="fa fa-pencil"></i> Change</a>
+                    {% else %}
+                        <a href="#"><i class="fa fa-ban"></i> You can change your nickname in {{ (lastNameChange+(3600*24*15))|relativeTime }}.</a>
+                    {% endif %}
+                </div>
+            </div>
+                
+            <div class="panel password">
+                <div class="panel-heading text-center">Password</div>
+                <div class="panel-body">
+                    <div class="field-display text-center">**********</div>
+                    <div class="field-edit">
+                        <form action="/account/myaccount/" method="post">
+                            <div class="row">
+                                <div class="col-md-7">
+                                    <label>Current Password:</label>
+                                </div>
+                                <div class="col-md-5">
+                                    <input type="password" class="form-control" name="currentpassword" />
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-7">
+                                    <label>New Password:</label>
+                                </div>
+                                <div class="col-md-5">
+                                    <input type="password" class="form-control" name="newpassword" />
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-7">
+                                    <label>Confirm New Password:</label>
+                                </div>
+                                <div class="col-md-5">
+                                    <input type="password" class="form-control" name="newpassword2" />
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 text-center">
+                                    <input type="submit" class="form-control" value="Change Password" name="submit_password" />
+                                </div>
+                                <div class="col-md-6 text-center">
+                                    <input type="button" class="form-control cancel-change" value="Cancel" />
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="panel-footer text-center">
+                    <a href="#" class="change"><i class="fa fa-pencil"></i> Change</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="panel fb">
+                <div class="panel-heading text-center">Facebook Connectivity</div>
+                <div class="panel-body text-center">
+                    {% if fbid != "" %}
+                        Connected with <a href="http://www.facebook.com/profile.php?id={{ fbid }}" target="_blank">this profile</a>.
+                    {% else %}
+                        (Not Connected)
+                    {% endif %}
+                </div>
+                {% if fbid != "" %}
+                <div class="panel-footer text-center">
+                    <a href="/account/fbdisconnect/"><i class="fa fa-chain-broken"></i> Disconnect</a>
+                </div>
+                {% endif %}
+            </div>
+            
+            <div class="panel invisible-mode">
+                <div class="panel-heading text-center">Invisible Mode</div>
+                <div class="panel-body text-center">
+                    <div>Invisible Mode will remove your name from the "Who's Online?" list and always show you as "Offline" on your profile.</div>
+                </div>
+                <div class="panel-footer text-center">
+                    {% if invisible %}
+                        <a href="?do=invisible" class="toggle"><i class="fa fa-toggle-on"></i> <span>ON</span></a>
+                    {% else %}
+                        <a href="?do=invisible" class="toggle"><i class="fa fa-toggle-off"></i> <span>OFF</span></a>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="panel language-filter">
+                <div class="panel-heading text-center">Language Filter</div>
+                <div class="panel-body text-center">
+                    <div>The Language Filter will censor strong language posted by users of the site.</div>
+                </div>
+                <div class="panel-footer text-center">
+                    {% if language %}
+                        <a href="?do=language" class="toggle"><i class="fa fa-toggle-on"></i> <span>ON</span></a>
+                    {% else %}
+                        <a href="?do=language" class="toggle"><i class="fa fa-toggle-off"></i> <span>OFF</span></a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block endofpage %}
+    <script>
+        
+        $(".my-account .panel-footer a.change").click(function(e) {
+            $(this).closest(".panel").addClass("edit");
+            
+            e.preventDefault();
+            return false;
+        });
+        
+    </script>
+{% endblock %}

@@ -1,0 +1,27 @@
+<!-- Couple -->
+<div class="sectionheading">My Couples</div>
+{% if editMode %}
+    <div class="_center" style="margin-bottom:5px;">Edit your couples on your <a href="/community/profile/{{ basicInfo.id }}/characters/">Character page</a>.</div>
+{% endif %}
+{% for c in characterInfo if c.couple != "" %}
+    <table class="characterteammates">
+        <tr>
+            <td class="teammate1">
+                {{ c.ign }}
+            </td>
+            <td class="teammatemiddle">
+                <img src="{{ GLOBAL.staticUrl }}/img/rings/large/{{ (c.couple_level/5)|round(0, "ceil") }}.png" />
+                {% if c.couple_level == 61 %}
+                    <img src="{{ GLOBAL.staticUrl }}/img/coupleleveltitles/max.png" />
+                {% elseif c.couple_level > 0 %}
+                    Lv. {{ c.couple_level }}
+                {% endif %}
+            </td>
+            <td class="teammate2">
+                <a href="/community/search/?query={{ c.couple|url_encode }}&in=igns" title="Click to search for this IGN.">{{ c.couple }}</a>
+            </td>
+        </tr>
+    </table>
+{% else %}
+    <div class="_center">No characters have a couple.</div>
+{% endfor %}

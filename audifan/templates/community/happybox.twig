@@ -1,0 +1,433 @@
+{% extends "base.twig" %}
+
+{% macro itemExpire(seconds) %}
+    {% if seconds > 0 %}
+        Expires in {{ seconds|secondsToWords }}.
+    {% elseif seconds == -1 %}
+        Indefinite
+    {% endif %}
+{% endmacro %}
+{% from _self import itemExpire %}
+
+{% block title %}Audifan.net - Happy Box{% endblock %}
+
+{% block endofpage %}
+    <script type="text/javascript" src="{{ GLOBAL.staticUrl }}/js/kemuvi.beziermove.js"></script>
+    <script type="text/javascript" src="{{ GLOBAL.staticUrl }}/js/audifan.happybox-v2.1.js"></script>
+    <script type="text/javascript">
+        (function ($) {
+            $.fn.itemtip = function () {
+                // this = jQuery object
+                var OFFSETX = 20,
+                        OFFSETY = -20;
+
+                this.bind({
+                    mouseenter: function (e) {
+                        // this = DOM element
+
+                        var data = $(this).data("itemtip");
+
+                        $("#itemtip_container").html(data);
+
+                        $("#itemtip_container").css({
+                            left: (e.pageX + OFFSETX) + "px",
+                            top: (e.pageY + OFFSETY) + "px"
+                        });
+                        $("#itemtip_container").show();
+                    },
+                    mouseleave: function (e) {
+                        $("#itemtip_container").hide();
+                    },
+                    mousemove: function (e) {
+                        $("#itemtip_container").css({
+                            left: (e.pageX + OFFSETX) + "px",
+                            top: (e.pageY + OFFSETY) + "px"
+                        });
+                    }
+                });
+            }
+        })(jQuery);
+
+        $("[data-itemtip]").itemtip();
+    </script>
+{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" type="text/css" href="{{ GLOBAL.staticUrl }}/css/happybox-v2.0.css" />
+    <style>
+        .cooldownbonuswrapper {
+            margin: 15px 0px;
+            text-align: center;
+        }
+
+        .cooldownbonuswrapper:last-child {
+            margin-top: 15px;
+            margin-bottom: 0px;
+        }
+
+        .cooldownbonusname {
+            font-size: 9pt;
+            font-weight: bold;
+        }
+
+        .cooldownbonusamount {
+            font-size: 8pt;
+        }
+
+        .cooldownbonusexpire {
+            font-size: 8pt;
+            font-style: italic;
+        }
+
+        .firework {
+            position: absolute;
+            left: 0px;
+            top: 0px;
+            width: 256px;
+            height: 256px;
+            background-image: url("{{ GLOBAL.staticUrl }}/img/fireworksprite.png");
+            background-position: 0px 0px;
+        }
+        
+        .itemtiphotspot {
+            border-bottom: 1px dashed #FFF;
+        }
+
+        #itemtip_container {
+            position: absolute;
+            left: 0px;
+            top: 0px;
+            font-size: 9pt;
+            background-color: #{{ GLOBAL.theme.colors.darkest }};
+            opacity: .85;
+            padding: 5px;
+            border: 1px solid #FFF;
+            border-radius: 20px;
+            text-align: center;
+        }
+        
+        .winnerpiccontainer {
+            float: left;
+            width: 50px;
+            height: 50px;
+            margin-right: 5px;
+            text-align: center;
+        }
+        
+        img.winnerpic {
+            max-height: 50px;
+            max-width: 100%;
+        }
+
+        #winnercounttable {
+            width: 100%;
+            border: 2px solid #FFF;
+            border-spacing: 0px;
+            border-collapse: collapse;
+            margin: auto;
+        }
+
+        #winnercounttable tr th {
+            border: 1px solid #FFF;
+            padding: 5px;
+            text-align: center;
+            font-size: 9pt;
+            font-weight: bold;
+        }
+
+        #winnercounttable tr td {
+            border: 1px solid #FFF;
+            padding: 5px;
+            text-align: center;
+            font-size: 9pt;
+        }
+
+        .recentprizes {
+            margin-top: 5px;
+            font-size: 9pt;
+        }
+
+        .recentprizes > div {
+            margin: 7px;
+        }
+
+        #happyboxjackpot {
+            text-align: center;
+            width: 400px;
+            background-color: #C80D38;
+            border-radius: 5px;
+            border: 1px solid #FFF254;
+            padding: 5px;
+            margin: auto;
+            margin-bottom: 5px;
+        }
+
+        #jackpotamount {
+            font-size: 1.6em;
+            font-weight: bold;
+        }
+
+        #jackpotlabel {
+            font-size: 1.05em;
+            margin-top: 5px;
+        }
+        
+        .floatingcoin {
+            position: absolute;
+            background-image: url('{{ GLOBAL.staticUrl }}/img/coins/coin19.png');
+            width: 19px;
+            height: 19px;
+            z-index: 99999;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="pagetitle">Audifan Happy Box</div>
+    {% if GLOBAL.user.isLoggedIn() %}
+        <div class="contentwrapper2col">
+            <div class="float">
+                <div style="margin:auto;">
+                    <div id="happyboxjackpot">
+                        <div id="jackpotamount">{{ jackpotInfo.happyBoxJackpotAmount|number_format }}</div>
+                        <div id="jackpotlabel">
+                            <div>Current Coin Jackpot</div>
+                            <div>
+                                {% if jackpotInfo.happyBoxJackpotAmount >= 1000 %}
+                                    ({{ "%0.2f"|format(jackpotInfo.happyBoxJackpotChance/100) }}% chance to win)
+                                {% else %}
+                                    (Can only be won when it contains at least 1,000 coins)
+                                {% endif %}
+                            </div>
+                            {% if lastJackpotWinner %}
+                                <div>Last won with {{ lastJackpotWinner.prize_data1|number_format }} Coins by <a href="/community/profile/{{ lastJackpotWinner.account_id }}/" style="color:#ffff88;">{{ lastJackpotWinner.display_name }}</a></div>
+                            {% endif %}
+                        </div>
+                    </div>
+                        
+                        <div id="happybox">
+                            <div id="happyboxballspin" class="happyboxballspinstatic"></div>
+                            
+                            <div id="happyboxnexttext">Next</div>
+                            <div id="happyboxspintext">Spin</div>
+                            
+                            <div id="happyboxnumberslot1" class="happyboxnumber0"></div>
+                            <div id="happyboxnumberslot2" class="happyboxnumber0"></div>
+                            <div id="happyboxcolon"></div>
+                            <div id="happyboxnumberslot3" class="happyboxnumber0"></div>
+                            <div id="happyboxnumberslot4" class="happyboxnumber0"></div>
+                            
+                            <div id="happyboxgo" class="happyboxgo{% if timeTilNextSpin > 1 %}un{% endif %}available"></div>
+                            
+                            <div id="happyboxnextspintime" data-seconds="{{ timeTilNextSpin }}"></div>
+                            <div id="happyboxtotalcooldown">Cooldown reduced by {{ "%0.1f"|format(cooldownReductionHours) }} hours</div>
+                            
+                            <audio id="happyboxaudio">
+                                <source src="{{ GLOBAL.staticUrl }}/audio/happy.wav" type="audio/wav">
+                            </audio>
+                            
+                            <div id="happyboxprizetextcontainer" style="display:none;">
+                                <div id="happyboxprizetextclose">X</div>
+                                <div id="happyboxprizetext"></div>
+                            </div>
+                        </div>
+                </div>
+            </div>
+            <div class="float">
+                <div class="_center" style="margin-bottom:10px;">
+                    <a href="/help/happybox/">How Does the Happy Box Work?</a>
+                </div>
+
+                <div class="sectionwrapper">
+                    <div class="sectionheading">My Cooldown Bonuses</div>
+                    <div>
+                        {% set hasBonus = false %}
+                        {% if GLOBAL.user.getQP() > 0 %}
+                            <div class="cooldownbonuswrapper">
+                                <div class="cooldownbonusname">{{ GLOBAL.user.getQP()|number_format }} Quest Points</div>
+                                <div class="cooldownbonusamount">
+                                    {% if GLOBAL.user.getQP() >= qpThreshold %}
+                                        -50.00% Cooldown
+                                    {% else %}
+                                        -{{ "%.2f"|format((GLOBAL.user.getQP()/(qpThreshold*2))*100) }}% Cooldown
+                                    {% endif %}
+                                </div>
+                                <div class="cooldownbonusexpire">Indefinite</div>
+                            </div>
+                            {% set hasBonus = true %}
+                        {% endif %}
+
+                        {% if 2 in inventory %}
+                            <div class="cooldownbonuswrapper">
+                                <div class="cooldownbonusname">VIP Status</div>
+                                <div class="cooldownbonusamount">-40.00% Cooldown</div>
+                                <div class="cooldownbonusexpire">{{ itemExpire(itemTimeLeft[2]) }}</div>
+                            </div>
+                            {% set hasBonus = true %}
+                        {% endif %}
+
+                        {% if 3 in inventory %}
+                            <div class="cooldownbonuswrapper">
+                                <div class="cooldownbonusname">-10% Cooldown Item</div>
+                                <div class="cooldownbonusamount">-10.00% Cooldown</div>
+                                <div class="cooldownbonusexpire">{{ itemExpire(itemTimeLeft[3]) }}</div>
+                            </div>
+                            {% set hasBonus = true %}
+                        {% elseif 4 in inventory %}
+                            <div class="cooldownbonuswrapper">
+                                <div class="cooldownbonusname">-25% Cooldown Item</div>
+                                <div class="cooldownbonusamount">-25.00% Cooldown</div>
+                                <div class="cooldownbonusexpire">{{ itemExpire(itemTimeLeft[4]) }}</div>
+                            </div>
+                            {% set hasBonus = true %}
+                        {% elseif 5 in inventory %}
+                            <div class="cooldownbonuswrapper">
+                                <div class="cooldownbonusname">-40% Cooldown Item</div>
+                                <div class="cooldownbonusamount">-40.00% Cooldown</div>
+                                <div class="cooldownbonusexpire">{{ itemExpire(itemTimeLeft[5]) }}</div>
+                            </div>
+                            {% set hasBonus = true %}
+                        {% endif %}
+
+                        {% if 6 in inventory %}
+                            <div class="cooldownbonuswrapper">
+                                <div class="cooldownbonusname">-100% Cooldown Item [ADMIN ITEM]</div>
+                                <div class="cooldownbonusamount">-100.00% Cooldown</div>
+                                <div class="cooldownbonusexpire">{{ itemExpire(itemTimeLeft[6]) }}</div>
+                            </div>
+                            {% set hasBonus = true %}
+                        {% endif %}
+
+                        {% if 7 in inventory %}
+                            <div class="cooldownbonuswrapper">
+                                <div class="cooldownbonusname">Thumbs Up Quest Medal</div>
+                                <div class="cooldownbonusamount">-7 Minutes and 30 Seconds Cooldown</div>
+                                <div class="cooldownbonusexpire">{{ itemExpire(itemTimeLeft[7]) }}</div>
+                            </div>
+                            {% set hasBonus = true %}
+                        {% elseif 8 in inventory %}
+                            <div class="cooldownbonuswrapper">
+                                <div class="cooldownbonusname">Bronze Quest Medal</div>
+                                <div class="cooldownbonusamount">-15 Minutes and 30 Seconds Cooldown</div>
+                                <div class="cooldownbonusexpire">{{ itemExpire(itemTimeLeft[8]) }}</div>
+                            </div>
+                            {% set hasBonus = true %}
+                        {% elseif 9 in inventory %}
+                            <div class="cooldownbonuswrapper">
+                                <div class="cooldownbonusname">Silver Quest Medal</div>
+                                <div class="cooldownbonusamount">-22 Minutes and 30 Seconds Cooldown</div>
+                                <div class="cooldownbonusexpire">{{ itemExpire(itemTimeLeft[9]) }}</div>
+                            </div>
+                            {% set hasBonus = true %}
+                        {% elseif 10 in inventory %}
+                            <div class="cooldownbonuswrapper">
+                                <div class="cooldownbonusname">Gold Quest Medal</div>
+                                <div class="cooldownbonusamount">-30 Minutes Cooldown</div>
+                                <div class="cooldownbonusexpire">{{ itemExpire(itemTimeLeft[10]) }}</div>
+                            </div>
+                            {% set hasBonus = true %}
+                        {% endif %}
+
+                        {% if not hasBonus %}
+                            <div class="_center">
+                                You do not have any cooldown bonuses!<br />
+                                See <a href="/help/happybox/">this help article</a> for more info on how to get one!
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="sectionwrapper">
+                    <div class="sectionheading">My Recent Prizes</div>
+                    <div class="recentprizes">
+                        {% for p in myPrizes %}
+                            <div>
+                                [{{ p.win_time|date("n/d/y") }}] You won 
+                                {% if p.prize_id == -1 %}
+                                    {{ p.prize_data1 }}{% if p.prize_data2 > 0 %} ({{ (p.prize_data1 - p.prize_data2)|number_format }} + {{ p.prize_data2|number_format }} Bonus) {% endif %} Coins
+                                {% elseif p.prize_id == -2 %}
+                                    the JACKPOT with {{ p.prize_data1|number_format }} Coins
+                                {% else %}
+                                    a <span class="itemtiphotspot" data-itemtip="{{ itemList[p.prize_id].description }}">{{ itemList[p.prize_id].name|raw }}</span> 
+                                {% endif %}
+                            </div>
+                            {% else %}
+                            <div class="_center">You have not won any prizes in the last 7 days.</div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <div style="clear:both;"></div>
+        </div>
+    {% else %}
+        <div class="contentwrapperhalf">
+            <div class="float _center">
+                <div style="margin-bottom:10px;">
+                    Please <a href="/account/?thru=/community/happybox/">log in</a> to spin the Audifan Happy Box.
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    <div class="contentwrapper2col">
+        <div class="float">
+            <div class="sectionwrapper">
+                <div class="sectionheading">Recent Winners</div>
+                <div class="recentprizes">
+                    {% for p in recentWinners %}
+                        <div style="margin-bottom:5px;">
+                            <div class="winnerpiccontainer">
+                                <img class="winnerpic" src="{{ GLOBAL.staticUrl }}/img/profilepictures/{% if p.profile_pic_type %}{{ p.account_id }}.{{ p.profile_pic_type }}{% else %}default.png{% endif %}" />
+                            </div>
+                            
+                            <div style="padding-top:10px;">
+                                <a href="/community/profile/{{ p.account_id }}/">{{ p.display_name }}</a> won 
+
+                                {% if p.prize_id == -1 %}
+                                    {{ p.prize_data1 }}{% if p.prize_data2 > 0 %} ({{ (p.prize_data1 - p.prize_data2)|number_format }} + {{ p.prize_data2|number_format }} Bonus) {% endif %} Coins
+                                {% elseif p.prize_id == -2 %}
+                                    the JACKPOT with {{ p.prize_data1|number_format }} Coins
+                                {% else %}
+                                    a <span class="itemtiphotspot" data-itemtip="{{ itemList[p.prize_id].description }}">{{ itemList[p.prize_id].name|raw }}</span> 
+                                {% endif %}
+                            </div>
+
+                            <div style="margin-left: 25px;">({{ p.win_time|relativeTime }} ago)</div>
+                            
+                            <div style="clear:both;"></div>
+                        </div>
+                    {% else %}
+                        <div class="_center">No prizes have been won in the last 7 days.</div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="float">
+            <div class="sectionwrapper">
+                <div class="sectionheading" style="margin-bottom:5px;">Total Prizes Won in the Last 7 Days</div>
+                <table id="winnercounttable">
+                    <tr>
+                        <th>Prize</th>
+                        <th>Drop Rate</th>
+                        <th>Total Won</th>
+                    </tr>
+                    <tr>
+                        <td><img src="{{ GLOBAL.staticUrl }}/img/coins/coin19.png" style="vertical-align:middle; margin-right:5px;" />Coins</td>
+                        <td>Very High</td>
+                        <td>{{ totalCoins|number_format }}</td>
+                    </tr>
+                    {% for p in [5,11,12,15,31,32,33,37,34,35,36] %}
+                        <tr>
+                            <td><span class="itemtiphotspot" data-itemtip="{{ itemList[p].description }}">{{ itemList[p].name|raw }}</span></td>
+                            <td>{{ dropRates[p] }}</td>
+                            <td>{{ totalWinners[p]|number_format }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+
+    <div id="itemtip_container" style="display:none;"></div>
+{% endblock %}

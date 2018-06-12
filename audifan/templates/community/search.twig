@@ -1,0 +1,61 @@
+{% extends "base.twig" %}
+{% import "macros/forms.twig" as forms %}
+
+{% block title %}Audifan.net - Community - Member Search{% endblock %}
+
+{% block body %}
+<div class="pagetitle">Member Search</div>
+<div class="contentwrapperhalf">
+    <div class="float">
+        <div class="sectionwrapper">
+            <form method="get" action="/community/search/">
+                <div style="margin-bottom:5px;">Search For: <input type="text" name="query" class="prettyinputtext" value="{{ query }}" /></div>
+                <div style="margin-bottom:5px;">
+                    Search In: 
+                   {{ forms.selectFull("in", {"all":"All","nicknames":"Nicknames","igns":"Character IGNs","fams":"FAM Names"}, in) }}
+                </div>
+                <div style="margin-bottom:5px;"><input type="submit" value="Search" class="prettyinputbutton" /></div>
+            </form>
+        </div>
+        {% if query %}
+        <div class="sectionwrapper">
+            <div class="sectionheading">Results for "{{ query }}"</div>
+            
+            {% if nicknames %}
+            <div style="margin-bottom:5px;">
+            <b>Nicknames ({{ nicknames|length }} result{{ nicknames|length|pluralize }}):</b><br />
+            <ul>
+            {% for n in nicknames %}
+                <li><a href="/community/profile/{{ n.id }}/">{{ n.display_name }}</a></li>
+            {% endfor %}
+            </ul>
+            </div>
+            {% endif %}
+            
+            {% if characters %}
+            <div style="margin-bottom:5px;">
+            <b>Characters ({{ characters|length }} result{{ characters|length|pluralize }}):</b><br />
+            <ul>
+            {% for c in characters %}
+                <li>{{ c.ign }} [Lv. {% if c.level == 0 %}??{% else %}{{ c.level }}{% endif %}] - Belongs to <a href="/community/profile/{{ c.account }}/">{{ c.display_name }}</a></li>
+            {% endfor %}
+            </ul>
+            </div>
+            {% endif %}
+            
+            {% if fams %}
+            <div style="margin-bottom:5px;">
+            <b>FAMs ({{ fams|length }} result{{ fams|length|pluralize }}):</b><br />
+            <ul>
+            {% for f in fams %}
+                <li>{{ f.ign }} ({% if f.fam_member_type == 3 %}Master{% elseif f.fam_member_type == 2 %}Co{% else %}Member{% endif %}
+                    of {{ f.fam }}) - Belongs to <a href="/community/profile/{{ f.account }}/">{{ f.display_name }}</a></li>
+            {% endfor %}
+            </ul>
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

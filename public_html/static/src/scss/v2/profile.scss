@@ -1,0 +1,83 @@
+.profile {
+    .online-status {
+        .fa.fa-circle {
+            font-size: .5em;
+            vertical-align: middle;
+            
+            &.online-now {
+                color: #00ff00;
+            }
+            
+            &.invisible {
+                
+            }
+        }
+    }
+
+    .characterwrapper {
+        .characterlevel {
+            text-align: center;
+
+            span, img {
+                vertical-align: middle;
+            }
+
+            > img { // level title img
+                margin-left: 50px;
+            }
+        }
+
+        .characterfam {
+            text-align: center;
+
+            a {
+                color: #aaffaa;
+            }
+
+            &.characterfammaster a {
+                color: #ffaaaa;
+            }
+
+            &.characterfamco a {
+                color: #aaaaff;
+            }
+        }
+
+        .characterign {
+            text-align: center;
+        }
+
+        .charactermissions {
+            text-align: center;
+            font-size: 12px;
+        }
+    }
+
+    &.profile-edit-mode {
+        @media (max-width: $bootstrap-xs-max) {
+            .left-side-modules:before {
+                content: "UPPER GROUP";
+                text-align: center;
+                text-transform: uppercase;
+                letter-spacing: 2px;
+                font-size: 12px;
+                width: 100%;
+                display: block;
+                color: #444;
+                margin-top: 25px;
+            }
+
+            .right-side-modules:before {
+                content: "LOWER GROUP";
+                text-align: center;
+                text-transform: uppercase;
+                letter-spacing: 2px;
+                font-size: 12px;
+                width: 100%;
+                display: block;
+                color: #444;
+                margin-top: 25px;
+            }
+        }
+    }
+}

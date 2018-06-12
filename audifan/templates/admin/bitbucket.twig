@@ -1,0 +1,25 @@
+{% extends "base.twig" %}
+
+{% block title %}Audifan.net - Admin - Run Bitbucket Script{% endblock %}
+
+{% block pagetitle %}[ADMIN] Run Bitbucket Script{% endblock %}
+
+{% block body %}
+    <div class="contentwrapperhalf">
+        <div class="float">
+            <div class="_center">
+                This will run the bitbucket script to update the files on the live server from the repository (located at ~/bitbucket.sh).<br />
+                <form method="post" action="?">
+                    <input type="submit" value="Run" name="submit" />
+                </form>
+            </div>
+
+            <div style="text-align:left;">
+                <pre>
+{% for o in output %}{{ o }}
+{% endfor %}
+                </pre>
+            </div>
+        </div>
+    </div>
+{% endblock %}

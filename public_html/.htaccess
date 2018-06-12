@@ -1,0 +1,16 @@
+# Use PHP5.4 as default
+# KEEP THIS HERE... DONT KEEP REPLACING IT PLEASE.
+
+ErrorDocument 404 /404/
+
+RewriteEngine on
+
+# Disallow viewing of the error log.
+RewriteRule error_log$ / [R=403]
+
+# Disallow Chrome's weird obsession to find favicon.ico
+RewriteRule ^favicon.ico$ / [R=403]
+
+# Redirect all non-static requests to index.
+RewriteCond %{REQUEST_URI} !^/static/(.*)$
+RewriteRule ^(.*)$ index.php [NC]

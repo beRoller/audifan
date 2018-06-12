@@ -1,0 +1,81 @@
+{% extends "base.twig" %}
+
+{% block title %}Audifan.net - Friend Requests{% endblock %}
+
+{% block pagetitle %}My Friend Requests{% endblock %}
+
+{% block body %}
+	<div class="row">
+		<div class="col-md-6 col-sm-6">
+			{{ sectionStart("Incoming Requests") }}
+				{% if incoming|length %}
+					<table class="table table-hover">
+						<thead>
+							<tr>
+								<th>Sender</th>
+								<th>Time Received</th>
+								<th></th>
+							</tr>
+						</thead>
+
+						<tbody>
+							{% for r in incoming %}
+								<tr>
+									<td>
+										<a href="/community/profile/{{ r.fromid }}/">{{ r.display_name }}</a>
+									</td>
+									<td>
+										{{ r.time|relativeTime }} ago
+									</td>
+									<td>
+										<div>
+											<a href="?do=accept&id{{ r.fromid }}">Accept</a>
+										</div>
+										<div>
+											<a href="?do=decline&id={{ r.fromid }}">Decline</a>
+										</div>
+									</td>
+								</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				{% else %}
+					<div class="text-center">(None)</div>
+				{% endif %}
+			{{ sectionEnd() }}
+		</div>
+		<div class="col-md-6 col-sm-6">
+			{{ sectionStart("Sent Requests") }}
+				{% if sent|length > 0 %}
+					<table class="table table-hover">
+						<thead>
+							<tr>
+								<th>Recipient</th>
+								<th>Time Sent</th>
+								<th></th>
+							</tr>
+						</thead>
+
+						<tbody>
+							{% for r in sent %}
+								<tr>
+									<td>
+										<a href="/community/profile/{{ r.toid }}">{{ r.display_name }}</a>
+									</td>
+									<td>
+										{{ r.time|relativeTime }} ago
+									</td>
+									<td>
+										<a href="?do=unsend&id={{ r.toid }}">Unsend</a>
+									</td>
+								</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				{% else %}
+					<div class="text-center">(None)</div>
+				{% endif %}
+			{{ sectionEnd() }}
+		</div>
+	</div>
+{% endblock %}

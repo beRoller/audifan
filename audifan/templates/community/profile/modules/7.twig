@@ -1,0 +1,42 @@
+<!-- Quest Stats -->
+<div class="sectionheading"><a href="/quests/">Quest</a> Stats</div>
+<div class="_center">
+    <div id="questinfopoints">{{ basicInfo.qp|number_format }}</div>
+    <div>Total Quest Points</div>
+
+    <div>
+        <div style="float:left; margin-right:15px;">
+            <table class="questinfotable" style="width:250px; margin-top:15px;">
+                <tr>
+                    <th></th>
+                    <th>Total Completed</th>
+                    <th>Points</th>
+                </tr>
+                {% for t in ["easy","medium","hard","insane","group","battle"] %}
+                    <tr>
+                        <th>{{ t|capitalize }}</th>
+                        <td>{{ moduleData[7].questData["data_"~t~"_count"]|number_format }}</td>
+                        <td>{{ moduleData[7].questData["data_"~t~"_points"]|number_format }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+        <div style="float:left;">
+            <table class="questinfotable" style="width:200px;">
+                <tr>
+                    <th></th>
+                    <th><a href="/quests/ranking/">Rank</a></th>
+                </tr>
+                {% for r, name in {"overall":"Overall","overall_no_insane":"Overall w/o Insane","individual":"Individual Only","normal":"Normal Modes","beat_up":"Beat Up","one_two":"One Two Party","beat_rush":"Beat Rush","guitar":"Guitar Mode"} %}
+                    <tr>
+                        <th>{{ name }}</th>
+                        <td>
+                            {% if moduleData[7].questRanks["rank_"~r] > 0 %}{{ moduleData[7].questRanks["rank_"~r]|number_format }}{% else %}??{% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>

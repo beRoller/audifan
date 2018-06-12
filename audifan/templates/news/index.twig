@@ -1,0 +1,78 @@
+{% extends "base.twig" %}
+{% import "macros/forms.twig" as forms %}
+
+{% block title %}Audifan.net - News & Updates{% endblock %}
+
+{% block head %}
+    <style>
+        #newstable tr td.newsdate {
+            width: 75px;
+            text-align: center;
+        }
+
+        #newstable tr td.newscategory {
+            width: 125px;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        #bodytext {
+            width: 100%;
+            height: 100px;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="pagetitle">News &amp; Updates</div>
+    <div class="contentwrapperhalf">
+        <div class="float">
+            <div class="sectionwrapper">
+                <table id="newstable">
+                    {% for story in stories %}
+                        <tr>
+                            <td class="newsdate">{{ story.time|date("n/j/Y") }}</td>
+                            <td class="newscategory">[{{ story.type }}]</td>
+                            <td>
+                                {% if story.link %}
+                                    <a href="{{ story.link }}">{{ story.title }}</a>
+                                {% else %}
+                                    <a href="/news/view/{{ story.id }}/">{{ story.title }}</a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+                
+            <div style="margin-top:5px;">
+                <div>
+                    <b>Go to Page:</b>
+                    {% for i in 1..total %}
+                        <span style="margin-left: 5px;">
+                            {% if i == page %}
+                                {{ i }}
+                            {% else %}
+                                <a href="/news/{{ i }}/">{{ i }}</a>
+                            {% endif %}
+                        </span>
+                    {% endfor %}
+                </div>
+            </div>
+                {% if (GLOBAL.user.isAdmin()) %}
+                <div style="margin-top:15px;">
+                    <div class="sectionwrapper">
+                        <div class="sectionheading">[ADMIN] Add a News Story</div>
+                        {{ forms.start("/news/") }}
+                        <div>Title: {{ forms.textField("name") }}</div>
+                        <div>Type: {{ forms.textField("type") }}</div>
+                        <div>Link: {{ forms.textField("link") }}</div>
+                        {{ forms.textArea("body", "", "bodytext") }}
+                        <div class="_center">{{ forms.submit("submit_add", "Submit") }}</div>
+                        {{ forms.end() }}
+                    </div>
+                </div>
+                    {% endif %}
+        </div>
+    </div>
+{% endblock %}

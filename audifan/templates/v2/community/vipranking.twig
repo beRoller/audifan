@@ -1,0 +1,77 @@
+{% extends "base.twig" %}
+{% from "macros/pagination.twig" import pagination %}
+
+{% block pagetitle %}VIP Ranking{% endblock %}
+
+{% block head %}
+    <style>
+        tr.vipthisweek td {
+            background-color: #888800;
+            color: #fff;
+        }
+
+        tr.vipthisweek:hover td {
+            background-color: #999900;
+        }
+
+        tr.vipthisweek td a {
+            color: #ffff00;
+        }
+
+        tr.myrank td {
+            background-color: #954e9d;
+        }
+
+        tr.myrank:hover td {
+            background-color: #a65fae;
+        }
+
+        tr.myrank td a {
+            color: #ffaaff;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-offset-2 col-md-8 col-lg-offset-2 col-lg-8">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Name</th>
+                        <th>Total VIPs Earned</th>
+                    </tr>
+                </thead>
+                
+                <tbody>
+                    {% for v in vips %}
+                        <tr id="{% if v.account_id == GLOBAL.user.getId() %}myrank{% endif %}" class="{% if v.account_id == GLOBAL.user.getId() %}myrank{% elseif v.is_vip %}vipthisweek{% endif %}">
+                            <td>{{ v.rank|number_format }}</td>
+                            <td><a href="/community/profile/{{ v.account_id }}/">{{ v.display_name }}</a></td>
+                            <td>{{ v.vip_count|number_format }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <div class="text-center">
+                <div>Current VIPs are highlighted in <span style="background-color:#888800; color:#fff; padding:3px;">yellow</span>.</div>
+                {% if myRankPage %}
+                    <div style="margin-top:5px;">
+                        <a href="?page={{ myRankPage }}#myrank" style="background-color:#954e9d; color:#ffaaff; padding:3px;">Go to My Rank</a>
+                    </div>
+                {% endif %}
+            </div>
+                
+            {{ pagination("?page=", "", totalPages, page) }}
+        </div>
+    </div>
+{% endblock %}
+
+{% block endofpage %}
+    <div class="modal-test"></div>
+    <script>
+
+    </script>
+{% endblock %}

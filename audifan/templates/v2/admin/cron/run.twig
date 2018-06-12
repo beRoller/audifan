@@ -1,0 +1,26 @@
+{% extends "base.twig" %}
+
+{% block title %}{% endblock %}
+
+{% block body %}
+    <div class="contentwrapperhalf">
+        <div class="float">
+            {% if script %}
+                This will run the cron script: <b>{{ script }}</b><br />
+                {% if result %}
+                    <div>Script ran.  Here's the output:</div>
+<pre>
+{{ result|raw }}
+</pre>
+                {% else %}
+                    <form action="?script={{ script }}" method="post">
+                        <input type="submit" name="submit" value="Run Now" />
+                    </form>
+                {% endif %}
+            {% else %}
+                Script not set or does not exist.<br />
+                Set a script with query string ?script=
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

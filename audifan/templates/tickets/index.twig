@@ -1,0 +1,83 @@
+{% extends "base.twig" %}
+
+{% block title %}Audifan.net - Tickets{% endblock %}
+
+{% block pagetitle %}Tickets{% endblock %}
+
+{% block head %}
+    <style>
+        table.tickets {
+            border: 1px solid #ffffff;
+            border-collapse: collapse;
+            width: 100%;
+        }
+        
+        table.tickets tr td, table.tickets tr th {
+            text-align: center;
+            border: 1px solid #ffffff;
+            padding: 5px;
+        }
+        
+        table.tickets tr th {
+            font-weight: bold;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="contentwrapper2col">
+        <div class="float">
+            <div class="sectionwrapper">
+                <div class="sectionheading">My Tickets</div>
+                {% if GLOBAL.user.isLoggedIn() %}
+                    {% if myTickets|length > 0 %}
+                        <table class="tickets">
+                            <tr>
+                                <th>Status</th>
+                                <th>Title</th>
+                                <th>Submit Time</th>
+                                <th>Last Comment Time</th>
+                            </tr>
+                            
+                            {% for t in myTickets %}
+                                <tr>
+                                    <td>{% if t.ticket_open %}Open{% else %}Closed{% endif %}</td>
+                                    <td>
+                                        <div><a href="/tickets/view/{{ t.ticket_id }}-{{ t.ticket_hash }}/">{% if t.ticket_title != "" %}{{ t.ticket_title }}{% else %}(No Title){% endif %}</a></div>
+                                    </td>
+                                    <td>{{ t.ticket_time|date("m/d/Y \\a\\t g:ia") }}</td>
+                                    <td>
+                                        {% if t.latest_comment_time %}
+                                            {{ t.latest_comment_time|relativeTime }} ago
+                                        {% else %}
+                                            {{ t.ticket_time|relativeTime }} ago
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    {% else %}
+                        <div class="_center">You have no tickets.</div>
+                    {% endif %}
+                {% else %}
+                    <div class="_center">
+                        Tickets you created while logged in will appear here.  <a href="/account/?thru=/tickets/">Log in here</a>.<br />
+                        <br />
+                        If you were not logged in when you created your ticket,<br />
+                        please check your email for a link to it.
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        <div class="float">
+            <div class="sectionwrapper">
+                <div class="sectionheading"><a href="/tickets/new/">Create a New Ticket</a></div>
+                <div class="_center">
+                    Need to get in touch with us?  Please create a ticket.<br />
+                    You can create a ticket for anything, including account issues, site questions, Audition questions, site feedback, site suggestions, or just to say hello!
+                </div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+{% endblock %}

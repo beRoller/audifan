@@ -1,0 +1,243 @@
+{% extends "base.twig" %}
+{% import "macros/forms.twig" as forms %}
+
+{% block title %}Audifan.net - Signature Generator{% endblock %}
+
+{% block pagetitle %}Signature Generator{% endblock %}
+
+{% block head %}
+<script type="text/javascript">
+
+var characterInfo = { {% for id, json in characterInfoJson %}"{{ id }}": {{ json|raw }}, {% endfor %} };
+
+var updateCharacterFields = function() {
+    var character = $("#sigcharacterid").val();
+    
+    if (character !== "null" && characterInfo[character]) {
+        for (var i in characterInfo[character])
+            $("#" + i).val(characterInfo[character][i]);
+        $("#sigtitletype").val("1");
+    }
+    else {
+        $("#sigign, #sigfam, #sigcouple, #sigteammate1, #sigteammate2").val("");
+        $("#siglevel, #sigfamtype, #sigcouplelevel, #sigring, #sigstory1, #sigstory2, #sigtitle, #sigtournexpert, #sigtournbeatup, #sigtournbeatrush, #sigtournguitar, #sigtournteam, #sigtourncouple, #sigtournballroom").val("null");
+    }
+};
+
+$(function() {
+    $("#sigcharacterid").bind("change", updateCharacterFields);
+});
+
+var checkCustomRadio = function(value) {
+    if (value !== "")
+        $('#sigstrip_custom').attr('checked', 'checked');
+};
+</script>
+{% endblock %}
+
+{% block body %}
+    <div class="contentwrapperfull">
+        <div class="float">
+            <form method="post" action="/community/siggenerator/" style="margin:0px; padding:0px;">
+                {% if currentStep == 1 %}
+                    <div style="font-size:14pt; font-weight:bold;">Step 1 of 3: Choose a Background</div>
+                    <div style="overflow-y:scroll; height:700px;">
+                        {% for i in 1..NUMSIGBKGS %}
+                            <div style="margin:5px 0px;"><input type="radio" name="sigbkg" value="{{ i }}" id="bkg_{{ i }}" style="margin-right:10px; vertical-align:middle;" /><label for="bkg_{{ i }}"><img src="{{ GLOBAL.staticUrl }}/img/siggenerator/bkg/{{ i }}.png" style="vertical-align:middle;" /></label></div>
+                                {% endfor %}
+                    </div>
+                    <div style="text-align:center; margin-top:10px;"><input type="submit" class="prettyinputbutton" name="submit_step1" value="Continue to Step 2 >" style="font-size:12pt;" /></div>
+                    {% elseif currentStep == 2 %}
+                    <div style="font-size:14pt; font-weight:bold;">Step 2 of 3: Enter Character Information</div>
+                    <div>Enter the info that you want to appear on your signature below. Only an in-game name is required.</div>
+                    {% if GLOBAL.user.isLoggedIn() %}
+                        <div>
+                            <span style="margin-right:5px;">Or, select one of your characters:</span>
+                            <select id="sigcharacterid" name="sigcharacterid" class="prettyinputselect">
+                                <option value="null"></option>
+                                {% for c in characterInfo %}
+                                    <option value="{{ c.id }}">{{ c.ign }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div>These characters can be edited on the <a href="/community/profile/edit/character/">Edit Characters page</a>.</div>
+                    {% else %}
+                        By <a href="/account/?thru=/community/siggenerator/">logging in or registering</a>, you can save your character info to automatically fill this in every time.
+                    {% endif %}
+
+                    <table style="width:600px;">
+                        <tr>
+                            <td style="width:200px; font-weight:bold;">In-Game Name*:</td>
+                            <td style="width:400px;"><input class="prettyinputtext" type="text" id="sigign" name="sigign" style="width:200px;" maxlength="20" required="required" /></td>
+                        </tr>
+                        <tr>
+                            <td style="width:200px; font-weight:bold;">Your Level:</td>
+                            <td style="width:400px;">
+                                <select name="siglevel" id="siglevel" class="prettyinputselect">
+                                    <option value="null"></option>
+                                    <option value="0">(Hidden)</option>
+                                    {% for i in 1..98 %}
+                                        <option value="{{ i }}">{{ i }}</option>
+                                    {% endfor %}
+                                    <option value="99">MAX</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width:200px; font-weight:bold;">FAM:</td>
+                            <td style="width:400px;"><input class="prettyinputtext" type="text" name="sigfam" id="sigfam" style="width:200px;" /></td>
+                        </tr>
+                        <tr>
+                            <td style="width:200px; font-weight:bold;">FAM Member Type:</td>
+                            <td style="width:400px;">
+                                <select name="sigfamtype" id="sigfamtype" class="prettyinputselect">
+                                    <option value="null"></option>
+                                    <option value="1" style="color:#00FF00;">Member</option>
+                                    <option value="2" style="color:#0000FF;">Staff</option>
+                                    <option value="3" style="color:#FF0000;">Master</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width:200px; font-weight:bold;">Couple In-Game Name:</td>
+                            <td style="width:400px;"><input class="prettyinputtext" type="text" id="sigcouple" name="sigcouple" style="width:200px;" /></td>
+                        </tr>
+                        <tr>
+                            <td style="width:200px; font-weight:bold;">
+                                Couple Level:
+                            </td>
+                            <td style="width:400px;">
+                                <select name="sigcouplelevel" id="sigcouplelevel" class="prettyinputselect">
+                                    <option value="0">(Unmarried)</option>
+                                    {% for i in 1..60 %}
+                                        <option value="{{ i }}">{{ i }}</option>
+                                    {% endfor %}
+                                    <option value="61">MAX</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width:200px; font-weight:bold;">
+                                Ring:
+                            </td>
+                            <td style="width:400px;">
+                                <select name="sigring" id="sigring" class="prettyinputselect">
+                                {{ forms.selectOption(0, "(No Ring)") }}
+                        <optgroup label="Default Rings">
+                            {% for i in 1..12 %}
+                                {{ forms.selectOption(i, "Cpl Lv. "~((5*i)-4)~" - "~(5*i)~" Ring") }}
+                            {% endfor %}
+                            {{ forms.selectOption(13, "MAX Level Ring") }}
+                        </optgroup>
+                        <optgroup label="Selected Couple Shop Rings">
+                            {{ forms.selectOptions(
+                                            {"34":"All Beauty","16":"Black Cat Nero Ring","20":"Bluegreen Elephant","38":"Cream Pudding","25":"Cute Green Frogy Ring","26":"Cutie Panda","21":"Eternal Love Silver Ring","17":"Everlasting Love Silver Ring","36":"Flower Diamond","39":"Forever Heart","14":"Halloween Party Skull Ring","22":"Love Together Maple Leaf","23":"Lucky 4 Leaf Clover Ring","24":"Moon & Star Gold Ring","31":"My Destiny Lilac Ring","32":"My Jewel Heart Ring","27":"One Love Jewel Ring","28":"Pink Bunny","37":"Pink Rose Happiness","29":"Prettier Than Flower Ring","35":"Promise Love","18":"Pure Blue Heart Ring","30":"Shiny Cute","15":"Silver Wings Silver Love","40":"Soft-Sheep Head","19":"Sweet Lovers Donut Ring","33":"Unicorn & Stars Sky"}
+                                            ) }}
+                        </optgroup>
+                                </select>
+                        </td>
+                        </tr>
+                        <tr>
+                            <td style="width:200px; font-weight:bold; vertical-align:top;">Episode 1 Story Medal:</td>
+                            <td style="width:400px;">
+                                <select name="sigstory1" id="sigstory1" class="prettyinputselect">
+                                    <option value="null"></option>
+                                    <option value="1">Silver (1 ~ 20)</option>
+                                    <option value="2">Blue (1 ~ 40)</option>
+                                    <option value="3">Gold (1 ~ 60)</option>
+                                    <option value="4">Orange (1 ~ 80)</option>
+                                    <option value="5">Pink (1 ~ 100)</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width:200px; font-weight:bold; vertical-align:top;">Episode 2 Story Medal:</td>
+                            <td style="width:400px;">
+                                <select name="sigstory2" id="sigstory2" class="prettyinputselect">
+                                    <option value="null"></option>
+                                    <option value="1">Peach (1 ~ 20)</option>
+                                    <option value="2">Pink (1 ~ 40)</option>
+                                    <option value="3">Purple (1 ~ 60)</option>
+                                    <option value="4">Blue (1 ~ 80)</option>
+                                    <option value="5">Red (1 ~ 100)</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width:200px; font-weight:bold;">Teammates:</td>
+                            <td style="width:400px;"><input class="prettyinputtext" type="text" id="sigteammate1" name="sigteammate1" style="width:175px;" /> & <input class="prettyinputtext" type="text" id="sigteammate2" name="sigteammate2" style="width:175px;" /></td>
+                        </tr>
+                        <tr>
+                            <td style="width:200px; font-weight:bold; vertical-align:top;">Team Title:</td>
+                            <td style="width:400px;">
+                                <select name="sigtitle" id="sigtitle" class="prettyinputselect">
+                                    <option value="null"></option>
+                                    <option value="1">Choreography</option>
+                                    <option value="2">Crazy</option>
+                                    <option value="3">Crazy 9</option>
+                                    <option value="4">Beat Up</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width:200px; font-weight:bold;">Team Title Medal Type:</td>
+                            <td style="width:400px;">
+                                <select id="sigtitletype" name="sigtitletype" class="prettyinputselect">
+                                    <option value="null"></option>
+                                    <option value="1">Default</option>
+                                    <option value="2">3 wins, >50% win rate</option>
+                                    <option value="3">6 wins, >30% win rate</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width:200px; font-weight:bold; vertical-align:top;">Tournament Wins:</td>
+                            <td style="width:400px;">
+                                <table style="width:400px;">
+                                    {% for t, name in {"expert":"Expert","beatup":"Beat Up","beatrush":"Beat Rush","guitar":"Guitar","couple":"Couple","ballroom":"Ballroom","team":"Team"} %}
+                                        <tr>
+                                            <td style="width:150px;">{{ name }}</td>
+                                            <td style="width:250px;">
+                                                {{ forms.selectStart("sigtourn"~t, "sigtourn"~t) }}
+                                                {{ forms.selectOption("null", "") }}
+                                                {{ forms.selectOptions(0..99, "", true) }}
+                                                {{ forms.selectOption("100", "100+") }}
+                                                {{ forms.selectEnd() }}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                    <div style="text-align:center; margin-top:10px;">
+                        <input type="button" class="prettyinputbutton" value="< Start Over" onclick="(function (w) { w.location = '/community/siggenerator/';})(window);" style="font-size:12pt;" />
+                        <input type="submit" class="prettyinputbutton" name="submit_step2" value="Continue to Step 3 >" style="font-size:12pt; margin-left:5px;" />
+                    </div>
+                {% elseif currentStep == 3 %}
+                    <div style="font-size:14pt; font-weight:bold;">Step 3 of 3: Choose Options</div>
+                            <div>
+                                <div style="font-size:12pt; font-weight:bold;">Icons</div>
+                                <div style="font-size:9pt;">
+                                    <div><input type="checkbox" name="sigshowdiary" style="vertical-align:middle;" /><span class="goawayleft" style="vertical-align:middle;">Show Diary Candle</span></div>
+                                    <div><input type="checkbox" name="sigshowguitar" style="vertical-align:middle;" /><span class="goawayleft" style="vertical-align:middle;">Show Guitar Controller</span></div>
+                                </div>
+                                
+                                <div style="font-size:12pt; font-weight:bold; margin-top:10px;">Info Bar</div>
+                                <div style="font-size:9pt; font-weight:bold;">What should be displayed on the strip at the bottom of the sig?</div>
+                                <div style="font-size:9pt;">
+                                    <div><input checked type="radio" name="sigstrip" value="coupleteam" style="vertical-align:middle;" /><span class="goawayleft" style="vertical-align:middle;">Couple & Teammates</span></div>
+                                    <div><input type="radio" name="sigstrip" value="tournament" style="vertical-align:middle;" /><span class="goawayleft" style="vertical-align:middle;">Tournament Wins</span></div>
+                                    <div><input type="radio" id="sigstrip_custom" name="sigstrip" value="custom" style="vertical-align:middle;" /><span class="goawayleft" style="vertical-align:middle;">Custom Text (max 50 characters): <input type="text" class="prettyinputtext" maxlength="50" name="sigcustomtext" style="width:200px;" onkeyup="checkCustomRadio(this.value);" onchange="checkCustomRadio(this.value);" /></span></div>
+                                </div>
+                            </div>
+                            <div style="text-align:center; margin-top:10px;">
+                                <input type="button" class="prettyinputbutton" value="< Start Over" onclick="(function(w){w.location='/community/siggenerator/';})(window);" style="font-size:12pt;" />
+                                <input type="submit" class="prettyinputbutton" name="submit_step3" value="Create Sig" style="font-size:12pt; margin-left:5px;" />
+                                <div style="font-size:9pt; text-align:center; font-style:italic; margin-top:5px;">Your sig should start downloading automatically after clicking Create Sig.</div>
+                            </div>
+                {% endif %}
+            </form>
+        </div>
+    </div>
+{% endblock %}

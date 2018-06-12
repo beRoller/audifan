@@ -1,0 +1,104 @@
+/**
+    Header & Menu
+*/
+
+// Utility to pull the menu right on non-mobile devices only.
+@media (min-width: $bootstrap-sm-min) {
+    .dropdown-menu.pull-right-non-xs {
+        right: 0;
+        left: auto;
+    }
+}
+
+.maincontent {
+    .header {
+        #dashboardlink {
+            font-size: 17px;
+            margin: 5px;
+        }
+        
+        #coindisplaystorelink {
+            img {
+                margin-right: 5px;
+                vertical-align: middle;
+            }
+            
+            span {
+                vertical-align: middle;
+            }
+        }
+        
+        .logo {
+            text-align: center;
+        }
+        
+        .main-nav-container {
+            margin-top: 5px;
+            
+            .navbar {
+                background-color: $menu-background-color;
+                box-shadow: 0px 0px 3px 3px $menu-background-color;
+                
+                .navbar-header {
+                    .navbar-toggle {
+                        border-color: $text-color;
+
+                        .icon-bar {
+                            background-color: $text-color;
+                        }
+                    }
+                    
+                    .navbar-brand {
+                        img {
+                            max-height: 100%;
+                        }
+                    }
+                }
+                
+                // Make the menu centered on non-mobile screens.
+                @media (min-width: $bootstrap-sm-min) {
+                    .navbar-collapse {
+                        text-align: center;
+
+                        .navbar-nav {
+                            display: inline-block;
+                            float: none;
+                            vertical-align: top;
+                        }
+                    }
+                }
+                
+                .navbar-collapse {
+                    .navbar-nav {
+                        // Top level menu
+                        li {
+                            font-weight: bold;
+                            font-size: 17px;
+                            
+                            a {
+                                color: $text-color;
+                            }
+                            
+                            // When a menu item is open.
+                            &.open {
+                                a {
+                                    background-color: $menu-background-color-hover;
+                                }
+                            }
+
+                            a:hover, a:focus {
+                                background-color: $menu-background-color-hover;
+                            }
+                        }
+
+                        // Submenus
+                        ul.dropdown-menu {
+                            background-color: $menu-background-color-hover;
+                            color: $text-color;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

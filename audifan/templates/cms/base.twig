@@ -1,0 +1,93 @@
+{% extends "base.twig" %}
+
+{% block title %}Audifan.net - CMS{% endblock %}
+
+{% block pagetitle %} Audifan.net Content Management System{% endblock %}
+
+{% block head %}
+    <style>
+        .cms_container {
+            margin-top: 20px;
+        }
+
+        .cms_menu_container {
+            float: left;
+            width: 20%;
+            text-align: center;
+        }
+
+        .cms_content_container {
+            float: left;
+            width: 80%;
+        }
+
+        ul.cms_menu {
+            list-style: none;
+            margin: 0px;
+            padding: 0px;
+        }
+
+        ul.cms_menu li {
+            margin: 0px;
+            padding: 0px;
+            font-size: 16px;
+        }
+
+        ul.cms_menu li.menu_toggle_container {
+            margin-top: 20px;
+        }
+
+        ul.cms_menu li a {
+            width: 100%;
+            display: block;
+        }
+
+        table.cms_table {
+            width: 100%;
+            border-collapse: collapse;
+            border: 1px solid #fff;
+        }
+
+        table.cms_table thead tr th, table.cms_table tbody tr td {
+            border: 1px solid #fff;
+            text-align: center;
+            padding: 1px;
+        }
+
+        table.cms_table thead tr th {
+
+        }
+
+        table.cms_table tbody tr td {
+
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class='cms_container'>
+        <div class='cms_menu_container'>
+            <ul class='cms_menu'>
+                {% if permissions.update_quest_points %}
+                    <li><a href="/cms/questpoints/">Quest Points</a></li>
+                {% endif %}
+
+                {% if permissions.edit_song_list %}
+                    <li><a href="/cms/songlist/">Song List</a></li>
+                {% endif %}
+
+                {% if permissions.edit_song_list %}
+                    <li><a href="/cms/patches/">Patch Info</a></li>
+                {% endif %}
+
+                <!--<li class="menu_toggle_container"><a href="#"><i class="fa fa-chevron-left"></i> Toggle Menu</a></li>-->
+            </ul>
+        </div>
+        
+        <div class="cms_content_container">
+            {% block cmscontent %}{% endblock %}
+        </div>
+        
+        <div style="clear:both;"></div>
+    </div>
+{% endblock %}

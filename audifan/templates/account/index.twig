@@ -1,0 +1,266 @@
+{% extends "base.twig" %}
+
+{% block title %}Audifan.net - Login or Register{% endblock %}
+
+{% block head %}
+<style>
+    .fieldwrapper {
+        margin: 8px;
+    }
+    
+    .fieldlabel {
+        float: left;
+        width: 150px;
+        min-height: 5px;
+        font-size: 1.2em;
+    }
+    
+    .fieldinput {
+        float: left;
+        width: 300px;
+    }
+    
+    .fieldinfo {
+        margin-bottom: 5px;
+    }
+    
+    .g-recaptcha > div > div {
+        margin: auto;
+    }
+</style>
+
+<script src="https://www.google.com/recaptcha/api.js"></script>
+
+<script type="text/javascript">
+
+$(function() {
+    $("#email").bind("blur", function() {
+        var val = $("#email").val();
+        
+        if (val !== "") {
+            $("#fieldinfo_email").show();
+            $.ajax({
+                "beforeSend": function() {
+                    $("#fieldinfo_email").html("Checking...");
+                },
+                "data": {
+                    "lookupEmail": val
+                },
+                "dataType": "json",
+                "error": function(x, s, e) {
+                    console.log("Ajax Error: " + s + "/" + e);
+                },
+                "method": "POST",
+                "success": function(d) {
+                    if (d.ok)
+                        $("#fieldinfo_email").html('<span style="color:#aaffaa;">This email is valid and not in use.</span>');
+                    else if (d.invalid)
+                        $("#fieldinfo_email").html('<span style="color:#ffaaaa;">This email is invalid.</span>');
+                    else if (d.inuse)
+                        $("#fieldinfo_email").html('<span style="color:#ffaaaa;">This email is already in use.</span>');
+                }
+            });
+        }
+    });
+    $("#email2").bind("blur", function() {
+        var val1 = $("#email").val();
+        var val2 = $("#email2").val();
+        
+        if (val1 !== val2) {
+            $("#fieldinfo_email2").show();
+            $("#fieldinfo_email2").html('<span style="color:#ffaaaa;">These emails do not match.</span>');
+        } else {
+            $("#fieldinfo_email2").hide();
+        }
+    });
+    $("#nickname").bind("blur", function() {
+        var val = $("#nickname").val();
+        var invalidMessage = '<span style="color:#ffaaaa;">Your nickname must be between 2 and 20 characters, and it may only contain letters, numbers, underscores (_), dashes (-), and tildes (~).</span>';
+        
+        if (val !== "") {
+            $("#fieldinfo_nickname").show();
+            
+            if (val.match(/^[A-Za-z0-9\-\~\_]{2,20}$/)) {
+                $.ajax({
+                    "beforeSend": function() {
+                        $("#fieldinfo_nickname").html("Checking...");
+                    },
+                    "data": {
+                        "lookupNickname": val
+                    },
+                    "dataType": "json",
+                    "error": function(x, s, e) {
+                        console.log("Ajax Error: " + s + "/" + e);
+                    },
+                    "method": "POST",
+                    "success": function(d) {
+                        if (d.ok)
+                            $("#fieldinfo_nickname").html('<span style="color:#aaffaa;">This nickname is valid and not in use.</span>');
+                        else if (d.invalid)
+                            $("#fieldinfo_nickname").html(invalidMessage);
+                        else if (d.inuse)
+                            $("#fieldinfo_nickname").html('<span style="color:#ffaaaa;">This nickname is already in use.</span>');
+                    }
+                });
+            } else {
+                $("#fieldinfo_nickname").html(invalidMessage);
+            }
+        }
+    });
+    $("#password").bind("blur", function() {
+        var val = $("#password").val();
+        
+        if (!val.match(/^.{6,}$/)) {
+            $("#fieldinfo_password").show();
+            $("#fieldinfo_password").html('<span style="color:#ffaaaa;">Your password must have at least 6 characters.</span>');
+        } else {
+            $("#fieldinfo_password").hide();
+        }
+    });
+    $("#password2").bind("blur", function() {
+        var val1 = $("#password").val();
+        var val2 = $("#password2").val();
+        
+        if (val1 !== val2) {
+            $("#fieldinfo_password2").show();
+            $("#fieldinfo_password2").html('<span style="color:#ffaaaa;">These passwords do not match.</span>');
+        } else {
+            $("#fieldinfo_password2").hide();
+        }
+    });
+});
+
+</script>
+{% endblock %}
+
+{% block body %}
+{% if not GLOBAL.user.isLoggedIn() %}
+    <div class="contentwrapper2col">
+        <div class="float">
+            <div class="sectionheading">Login</div>
+            <div class="_center">
+                Already have an account?  Welcome back!
+            </div>
+            {% if loginErrors %}
+            <div class="_center" style="color:#ffaaaa;">
+                {% for e in loginErrors %}
+                <div style="margin:5px;">{{ e|raw }}</div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            <form method="post" action="/account/">
+                <div class="fieldwrapper">
+                    <div class="fieldlabel">Email:</div>
+                    <div class="fieldinput">
+                        <input type="email" name="email" class="prettyinputtext" />
+                    </div>
+                    <div style="clear:both;"></div>
+                </div>
+                <div class="fieldwrapper">
+                    <div class="fieldlabel">Password:</div>
+                    <div class="fieldinput">
+                        <input type="password" name="password" class="prettyinputtext" />
+                    </div>
+                    <div style="clear:both;"></div>
+                </div>
+                <div class="fieldwrapper">
+                    <div class="fieldlabel"></div>
+                    <div class="fieldinput">
+                        <input type="checkbox" name="rememberme" class="_vmiddle" style="margin-right:5px;" />Remember Me
+                    </div>
+                    <div style="clear:both;"></div>
+                </div>
+                <div class="_center">
+                    <div>
+                        <input type="submit" name="submit_login" value="Log In" class="prettyinputbutton" />
+                        <span style="margin-left:10px; margin-right:10px;">or</span>
+                        <a href="javascript:;" onclick="_.logInWithFacebook()" style="vertical-align:middle;"><img src="{{ GLOBAL.staticUrl }}/img/loginwithfacebook.png" alt="Login with Facebook" /></a></div>
+                </div>
+                <div class="_center" style="margin-top:5px;">
+                    <a href="/account/forgot/">Forget your password?</a>
+                </div>
+            </form>
+        </div>
+        <div class="float">
+            <div class="sectionheading">Register</div>
+            {% if registrationSuccess %}
+            <div class="_center">
+                You have been registered!<br />
+                Please check your email for a verification code.
+            </div>
+            {% elseif not allowRegistration %}
+            <div class="_center">
+                Sorry.  New account registration is currently disabled.
+            </div>
+            {% else %}
+            <form method="post" action="/account/">
+                <div class="_center">
+                    Don't have an account?  Welcome to Audifan!<br />
+                    We just need a little info from you.
+                </div>
+                {% if registrationErrors %}
+                <div class="_center" style="color:#ffaaaa;">
+                {% for e in registrationErrors %}
+                    <div style="margin:5px;">{{ e }}</div>
+                {% endfor %}
+                </div>
+            {% endif %}
+                <div class="fieldwrapper">
+                    <div class="fieldlabel">Email:</div>
+                    <div class="fieldinput">
+                        <div class="fieldinfo" id="fieldinfo_email" style="display:none;"></div>
+                        <input required type="email" name="email" id="email" class="prettyinputtext" />
+                    </div>
+                    <div style="clear:both;"></div>
+                </div>
+                <div class="fieldwrapper">
+                    <div class="fieldlabel">Confirm Email:</div>
+                    <div class="fieldinput">
+                        <div class="fieldinfo" id="fieldinfo_email2" style="display:none;"></div>
+                        <input required type="email" name="email2" id="email2" class="prettyinputtext" />
+                    </div>
+                    <div style="clear:both;"></div>
+                </div>
+                <div class="fieldwrapper">
+                    <div class="fieldlabel">Choose a Nickname:</div>
+                    <div class="fieldinput">
+                        <div class="fieldinfo" id="fieldinfo_nickname" style="display:none;"></div>
+                        <input required type="text" name="nickname" id="nickname" class="prettyinputtext" />
+                    </div>
+                    <div style="clear:both;"></div>
+                </div>
+                <div class="fieldwrapper">
+                    <div class="fieldlabel">Create a Password:</div>
+                    <div class="fieldinput">
+                        <div class="fieldinfo" id="fieldinfo_password" style="display:none;"></div>
+                        <input required type="password" name="password" id="password" class="prettyinputtext" />
+                    </div>
+                    <div style="clear:both;"></div>
+                </div>
+                <div class="fieldwrapper">
+                    <div class="fieldlabel">Confirm Password:</div>
+                    <div class="fieldinput">
+                        <div class="fieldinfo" id="fieldinfo_password2" style="display:none;"></div>
+                        <input required type="password" name="password2" id="password2" class="prettyinputtext" />
+                    </div>
+                    <div style="clear:both;"></div>
+                </div>
+                <div class="_center">
+                    <div class="g-recaptcha" data-sitekey="6LeKtv8SAAAAALdlzFzrCggUh-1W0g1lpogQHFHn"></div>
+                    <div style="vertical-align:middle; margin:5px;">
+                        <input required type="checkbox" name="agree" style="vertical-align:middle;" />
+                        <span style="margin-left:5px; vertical-align:middle;">I agree to the Audifan <a href="/terms/" target="_blank">Terms of Use</a>.</span>
+                    </div>
+                    <input type="submit" name="submit_register" value="Register" class="prettyinputbutton" />
+                </div>
+            </form>
+            {% endif %}
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+{% else %}
+    <div class="contentwrapperfull" style="text-align:center;">
+        Hey {{ GLOBAL.user.getNickname() }}, you're already logged in!
+    </div>
+{% endif %}
+{% endblock %}

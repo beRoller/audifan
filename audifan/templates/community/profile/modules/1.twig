@@ -1,0 +1,43 @@
+<!-- Favorite Songs -->
+<div class="sectionheading">Favorite Songs</div>
+{% if editMode %}
+    <div class="_center" style="margin-bottom:5px;">Add favorite songs from any <a href="/music/list/">Song List</a>.</div>
+<form method="post" action="?edit">
+    <div style="max-height:250px; overflow-y:auto;">
+        <table id="songtableedit">
+            {% spaceless %}
+            {% for song in moduleData[1].songs %}
+            <tr>
+                <td class="{{ cycle(["songrow1","songrow2"], loop.index0) }} songcheckbox"><input type="checkbox" name="song_{{ song.id }}" /></td>
+                <td class="{{ cycle(["songrow1","songrow2"], loop.index0) }}">{{ song.artist }}</td>
+                <td class="{{ cycle(["songrow1","songrow2"], loop.index0) }}">{{ song.title }}</td>
+            </tr>
+            {% endfor %}
+            {% endspaceless %}
+        </table>
+    </div>
+    <div class="_center" style="margin-top:5px;">
+        <input type="submit" name="submit_songs" value="Delete Selected Favorite Songs" class="prettyinputbutton" />
+    </div>
+</form>
+{% else %}
+<div style="max-height:250px; overflow-y:auto;">
+    <table id="songtable">
+        {% for song in moduleData[1].songs %}
+        <tr>
+            <td class="{{ cycle(["songrow1","songrow2"], loop.index0) }}">{{ song.artist }}</td>
+            <td class="{{ cycle(["songrow1","songrow2"], loop.index0) }}">{{ song.title }}</td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="2" style="text-align:center;">
+                No favorite songs added.
+                {% if ownProfile %}
+                <br />Add songs to your profile from the <a href="/music/list/">song list</a>.
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endif %}

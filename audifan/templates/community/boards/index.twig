@@ -1,0 +1,55 @@
+{% extends "base.twig" %}
+
+{% block title %}Audifan.net - Message Boards{% endblock %}
+
+{% block pagetitle %}Message Boards{% endblock %}
+
+{% block head %}
+    <style>
+        .board {
+            padding: 5px;
+            margin-bottom: 15px;
+        }
+        
+        .board:last-child {
+            margin-bottom: 0px;
+        }
+        
+        .boardtitle {
+            font-size: 14pt;
+        }
+        
+        .boardlatestpost {
+            font-size: 8pt;
+            font-style: italic;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="contentwrapper2col">
+        <div class="float">
+            <div class="sectionwrapper">
+                {% for b in boards %}
+                    <div class="board">
+                        <div class="boardtitle"><a href="/community/boards/{{ b.board_id }}-{{ b.board_name|urlizeText }}/">{{ b.board_name }}</a></div>
+                        <div class="boarddescription">{{ b.board_description }}</div>
+                        {% if b.post_id %}
+                            <div class="boardlatestpost">Latest post was {{ b.post_time|relativeTime }} ago in <a href="/community/boards/topic/{{ b.topic_id }}-{{ b.topic_name|urlizeText }}/">{{ b.topic_name }}</a> by <a href="/community/profile/{{ b.post_account }}/">{{ b.display_name }}</a>.</div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="float">
+            <div class="sectionwrapper">
+                <div class="sectionheading">Latest Posts</div>
+            </div>
+            
+            <div class="sectionwrapper">
+                <div class="sectionheading">Latest Topics</div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+{% endblock %}

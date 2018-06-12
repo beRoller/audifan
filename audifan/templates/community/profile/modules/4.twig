@@ -1,0 +1,13 @@
+<!-- About Me -->
+<div class="sectionheading">About Me</div>
+{% if editMode %}
+<form method="post" action="?edit">
+    <div class="_center">
+        <textarea name="aboutme" class="prettyinputtext" style="width:450px; height:150px; resize:vertical;">{{ moduleData[4].aboutMe }}</textarea>
+        <div style="margin-top:3px; margin-bottom:5px;">A list of formatting codes is available <a href="/help/commentsyntax/" target="_blank">here</a>.</div>
+        <input type="submit" value="Save About Me" name="submit_aboutme" class="prettyinputbutton" />
+    </div>
+</form>
+{% else %}
+{{ moduleData[4].aboutMe|bbcode }}
+{% endif %}

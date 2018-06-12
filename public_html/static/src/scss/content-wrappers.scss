@@ -1,0 +1,41 @@
+/**
+ * Main content wrappers.
+ */
+
+.contentwrapper2col {
+	div.float {
+		float: left;
+	    width: 490px;
+	    margin-left: 5px;
+	}
+
+	&:after {
+		content: " ";
+		display: block;
+	}
+}
+
+.contentwrapperhalf {
+	div {
+		width: 500px;
+		margin: auto;
+	}
+}
+
+.contentwrapperfull {
+	width: 990px;
+	padding: 5px;
+}
+
+.sectionwrapper {
+    box-shadow: 1px 1px 1px 1px $shadow-color;
+    padding: 5px;
+    margin-bottom: 10px;
+}
+
+.sectionheading {
+    font-size: 1.35em;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 5px;
+}

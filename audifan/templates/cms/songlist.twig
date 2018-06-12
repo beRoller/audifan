@@ -1,0 +1,74 @@
+{% extends "cms/base.twig" %}
+
+{% block title %}Audifan.net - CMS - Song List{% endblock %}
+
+{% block pagetitle %}<a href="/cms/">Audifan.net CMS</a> &gt; Song List{% endblock %}
+
+{% block cmscontent %}
+    <div style="border: 1px solid #{{ GLOBAL.theme.colors.lighter }}; padding:10px; border-radius:10px; display:inline-block;">
+        <div><input type="button" class="prettyinputbutton" id="newsongbtn" value="Add a New Song" /></div>
+        <div id="newsong" style="display:none; margin-top:10px;">
+            <div>Artist: <input type="text" class="prettyinputtext" /></div>
+            <div>Title: <input type="text" class="prettyinputtext" /></div>
+            <div>BPM: <input type="number" class="prettyinputtext" /></div>
+        </div>
+    </div>
+
+    <div style="margin-top:10px;">
+        <div style="margin-bottom:5px; text-align:right;">
+            <span style="color:#aaffaa;">Green</span> indicates the song is marked as NEW to that mode.
+        </div>
+
+        <table class="cms_table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th style="width:160px;">Artist</th>
+                    <th style="width:160px;">Title</th>
+                    <th>BPM</th>
+                    <th>Length</th>
+                    <th>BGM<br />Master</th>
+                    <th>Normal/<br />Night/<br />BR/<br />SPP</th>
+                    <th>BU/<br />One Two/<br />BB</th>
+                    <th>Holic<br />Notes</th>
+                    <th>Guitar</th>
+                    <th>Edit/<br />Delete</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for s in songlist %}
+                    <tr>
+                        <td>{{ s.id }}</td>
+                        <td>{{ s.artist }}</td>
+                        <td>{{ s.title }}</td>
+                        <td>{{ s.bpm }}</td>
+                        <td>{{ s.length // 60 }}:{{ "%02d"|format(s.length % 60) }}</td>
+                        <td>{% if s.master %}<img src="{{ GLOBAL.staticUrl }}/img/m.png" />{% else %}--{% endif %}</td>
+                        <td>
+                            {% if s.normal %}<i class="fa fa-check"></i>{% else %}<i class="fa fa-close"></i>{% endif %}
+                            {% if s.night %}<i class="fa fa-check"></i>{% else %}<i class="fa fa-close"></i>{% endif %}
+                            <br />
+                            {% if s.ballroom %}<i class="fa fa-check"></i>{% else %}<i class="fa fa-close"></i>{% endif %}
+                            {% if s.spacepangpang %}<i class="fa fa-check"></i>{% else %}<i class="fa fa-close"></i>{% endif %}
+                        </td>
+                        <td>{{ s.beatup }}/{{ s.onetwo }}/{{ s.blockbeat }}</td>
+                        <td>{% if s.rhythmholic %}{{ s.rhythmholic }}{% else %}--{% endif %}</td>
+                        <td>{% if s.guitar %}{{ s.guitar }}{% else %}--{% endif %}</td>
+                        <td><i class="fa fa-pencil"></i> <i class="fa fa-trash"></i></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
+
+{% block endofpage %}
+    <script>
+        (function($) {
+            $("#newsongbtn").click(function() {
+                $("#newsong").slideToggle();
+            });
+        })(jQuery);
+    </script>
+{% endblock %}

@@ -1,0 +1,61 @@
+{% extends "base.twig" %}
+{% import "macros/forms.twig" as form %}
+
+{% block title %}{% endblock %}
+
+{% block head %}
+    <style>
+        .list {
+            border: 1px solid #fff;
+            border-collapse: collapse;
+        }
+        
+        .list tr th, .list tr td {
+            text-align: center;
+            border: 1px solid #fff;
+            padding: 3px;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="contentwrapperfull">
+        <div class="float">
+            <div>ID: {{ account.id }}</div>
+            <div>Email: {{ form.textField("email", account.email) }}</div>
+            <div>Verification Code: {{ form.textField("verification_code", account.verification_code) }}</div>
+            <div>Facebook Profile: {% if account.fbid != "" %}<a href="http://www.facebook.com/profile.php?id={{ account.fbid }}" target="_blank">Click!</a> (FBID: {{ account.fbid }}){% else %}(Not Connected){% endif %}</div>
+            <div>Account Type: {{ form.selectFull("account_type", {"-1":"Unverified (-1)","0":"Banned (0)","1":"Member (1)","2":"Moderator (2)","3":"Administrator (3)"}, account.account_type) }} ({{ account.account_type }})</div>
+            <div>Join Time: {{ account.join_time|date("c") }} / {{ account.join_time|relativeTime }} ago / {{ form.textField("join_time", account.join_time) }}</div>
+            <div>Unban Time: {{ account.unban_time|date("c") }} / {{ account.unban_time|relativeTime }} from now / {{ form.textField("unban_time", account.unban_time) }}</div>
+            <div>Display Name: {{ form.textField("display_name", account.display_name) }}</div>
+            <div>Last Name Change: {{ account.last_name_change|date("c") }} / {{ account.last_name_change|relativeTime }} ago | {{ form.checkbox("resetnamechangetime") }} Reset on save</div>
+            <div>Profile Modules: {{ form.textField("profile_modules", account.profile_modules) }}</div>
+            <div>Profile Pic Type: {{ form.textField("profile_pic_type", account.profile_pic_type) }}</div>
+            
+            <div style="margin-top:15px;">
+                <div><b>Active Sessions</b>:</div>
+                <table class="list">
+                    <tr>
+                        <th>Key</th>
+                        <th>Create Time</th>
+                        <th>Expire Time</th>
+                        <th>Last Activity Time</th>
+                        <th>IP Addresses</th>
+                        <th></th>
+                    </tr>
+                    {% for s in sessions %}
+                        <tr>
+                            <td>{{ s.session_key }}</td>
+                            <td>{{ s.session_create_time|relativeTime }} ago<br />({{ s.session_create_time }})</td>
+                            <td>{{ s.session_expire_time|date("c") }}<br />({{ s.session_expire_time }})</td>
+                            <td>{{ s.session_last_activity_time|relativeTime }}<br />({{ s.session_last_activity_time }})</td>
+                            <td>{{ s.ip_list|raw }}</td>
+                            <td>Delete</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

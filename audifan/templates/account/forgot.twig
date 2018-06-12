@@ -1,0 +1,24 @@
+{% extends "base.twig" %}
+{% import "macros/forms.twig" as forms %}
+
+{% block title %}Audifan.net - Account - Forgot Password{% endblock %}
+
+{% block pagetitle %}Forgot Password{% endblock %}
+
+{% block body %}
+    <div class="contentwrapperhalf">
+        <div class="_center">
+            {% if sent %}
+                <div class="_center">An email was sent with more info on how to reset your password.</div>
+            {% else %}
+            <div>Forgot your password?  No problem!</div>
+            <div style="margin-top: 5px;">
+                {{ forms.start("/account/forgot/") }}
+                Email: {{ forms.textField("email") }}
+                <span style="margin-left:5px;">{{ forms.submit("submit", "Submit") }}</span>
+                {{ forms.end() }}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,17 @@
+{{ sectionStart("About Me") }}
+	{% if editMode %}
+		<form action="?edit" method="post">
+			<div class="text-center">
+				<textarea name="aboutme" class="form-control" style="width:95%; height:150px; min-height:150px; resize:vertical;">{{ moduleData[4].aboutMe }}</textarea>
+
+				<div style="margin-top:3px; margin-bottom:5px;">
+					A list of formatting codes is available <a href="/help/commentsyntax/" target="_blank">here</a>.
+				</div>
+
+				<input type="submit" value="Save About Me" name="submit_aboutme" class="btn" />
+			</div>
+		</form>
+	{% else %}
+		{{ moduleData[4].aboutMe|bbcode }}
+	{% endif %}
+{{ sectionEnd() }}

@@ -1,0 +1,133 @@
+{% extends "base.twig" %}
+
+{% block title %}Audifan.net - Quests - Grader Hub{% endblock %}
+
+{% block head %}
+    <style>
+
+        #rejecttable {
+            border: 1px solid #FFF;
+            border-spacing: 0px;
+            margin-top: 5px;
+        }
+
+        #rejecttable tr th, #rejecttable tr td {
+            padding: 2px;
+            border: 1px solid #FFF;
+        }
+
+        #rejecttable tr th {
+            font-size: 9pt;
+            font-weight: bold;
+        }
+
+        #rejecttable tr td {
+            font-size: 8pt;
+        }
+
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="pagetitle"><a href="/quests/">Quests</a>: Grader Hub</div>
+    <div class="contentwrapper2col">
+        <div class="float">
+            <div class="sectionwrapper">
+                <div class="sectionheading">How Grading Works</div>
+                <div>
+                    <ul>
+                        <li>Click the Start Grading link on the right to receive a random submission that is available for you to grade.</li>
+                        <li>Under the screenshot is the quest requirement and a list of what to check in the screenshot.</li>
+                        <li>You can click each item in the checklist to mark it off while grading the screenshot.</li>
+                        <li>Finally, grade the screenshot by clicking "Yes" or "No."  If you are not absolutely 100% sure that a screenshot passes or fails the quest requirement, please click the "I'm Not Sure" button.  The screenshot will be given to someone else to grade.</li>
+                        <li>If you have submitted a screenshot, you will not receive your own submission.</li>
+                    </ul>
+                </div>
+
+                <div style="margin-top:25px;">
+                    <b>Battle Quest Update:</b><br />
+                    When you grade a battle quest, the grading screen will look like this:<br />
+                    <img src="http://i.imgur.com/RXFKPgq.png" style="width:400px; border:1px solid #fff; padding:3px; margin:3px;" /><br />
+                    In addition to checking everything else like the other quest categories, just enter what the person got for whatever was being judged in the text box. So, for this quest ^ you'd enter the number of greats they got.<br />
+                    As of 12/31, you will not be able to grade this week's battle quest until you complete it.
+                </div>
+            </div>
+
+            <div class="sectionwrapper">
+                <div class="sectionheading">Recently Rejected</div>
+                <div class="_center">
+                    These screenshots were recently rejected.<br />
+                    If you think one of them should not have been rejected, click "Ungrade".<br />
+                    When you do this, the screenshot will go to a<br />
+                    grader other than the original grader and you.
+                </div>
+                <table id="rejecttable">
+                    <tr>
+                        <th>Quest</th>
+                        <th>Rejection Time &amp; Reason</th>
+                        <th>Screenshot</th>
+                        <th></th>
+                    </tr>
+
+                    {% for r in rejected %}
+                        <tr>
+                            <td><b>{{ diffs[ r.req_difficulty - 1 ] }}:</b> {{ r.req_text }}</td>
+                            <td>
+                                <b>Time:</b>
+                                {% if r.submit_last_grade_time == 0 %}
+                                    (No Timestamp)
+                                {% else %}
+                                    {{ r.submit_last_grade_time|date("n/j/y @ g:ia") }}
+                                {% endif %}<br />
+                                <b>Reason:</b>
+                                {% if r.submit_grade_message == "" %}
+                                    (No Reason Given)
+                                {% else %}
+                                    {{ r.submit_grade_message }}
+                                {% endif %}
+                            </td>
+                            <td>
+                                <b>ID:</b> {{ r.submit_id }}<br />
+                                {% if r.imgData[0] == "shack" %}
+                                    <a href="http://imagizer.imageshack.com/img{{ r.imgData[1] }}/{{ r.imgData[2] }}/{{ r.imgData[3] }}.jpg" target="_blank">View</a>
+                                {% elseif r.imgData[0] == "local" %}
+                                    <a href="{{ GLOBAL.staticUrl }}/img/questsubmissions/{{ r.imgData[1] }}.jpg" target="_blank">View</a>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a href="?do=ungrade&id={{ r.submit_id }}" onclick="return confirm('Are you sure you want to ungrade this screenshot?');">Ungrade</a>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="4">
+                                <div class="_center">
+                                    No screenshots have been rejected in the past month.
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+        <div class="float">
+            {% if GLOBAL.user.isAdmin() %}
+                <div class="sectionwrapper">
+                    <div class="sectionheading"><a href="/quests/grader/admin/">Admin Functions</a></div>
+                </div>
+                <div class="sectionwrapper">
+                    <div class="sectionheading"><a href="/quests/grader/archiver/">Archiver</a></div>
+                </div>
+            {% endif %}
+
+            <div class="sectionwrapper">
+                <div class="sectionheading">Hello Grader {{ GLOBAL.user.getNickname() }}!</div>
+            </div>
+            <div class="sectionwrapper">
+                <div class="sectionheading"><a href="/quests/grader/grade/">Start Grading</a></div>
+                <div class="_center"><b>Total Ungraded Screenshots:</b> {{ ungradedCount|number_format }}</div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+{% endblock %}

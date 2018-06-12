@@ -1,0 +1,138 @@
+{% extends "base.twig" %}
+{% import "macros/forms.twig" as forms %}
+
+{% block title %}Audifan.net - Community{% endblock %}
+
+{% block pagetitle %}Community{% endblock %}
+
+{% block head %}
+    <style>
+        .deletemegaconfirmyes, .deletemegaconfirmno {
+            margin-left: 7px;
+        }
+    </style>
+{% endblock %}
+
+{% block endofpage %}
+    <script>
+        $(".deletemega").click(function() {
+            var id = $(this).data("id");
+            $("#deletemega_" + id).fadeOut("fast", function() {
+                $("#deletemegaconfirm_" + id).fadeIn("fast");
+            });
+        });
+        
+        $(".deletemegaconfirmno").click(function() {
+            var id = $(this).data("id");
+            $("#deletemegaconfirm_" + id).fadeOut("fast", function() {
+                $("#deletemega_" + id).fadeIn("fast");
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block body %}
+    <div class="contentwrapper2col">
+        <div class="float">
+            <div class="sectionwrapper">
+                <div class="sectionheading">Megaphones</div>
+
+                <div>
+                    {% for m in allmegas %}
+                        <div style="margin-bottom:7px; height:25px;">{% if m.is_vip %}<img src="{{ GLOBAL.staticUrl }}/img/badges/vip.gif" style="margin-right:5px; vertical-align:middle;" />{% endif %}<b><a href="/community/profile/{{ m.mega_account }}/"{% if m.is_vip %} style="color:#ffff00;"{% endif %}>{{ m.display_name }}</a>:</b> <span style="color:#{{ m.mega_color }};">{{ m.mega_text|megaphone }}</span></div>
+                    {% else %}
+                        <div style="text-align:center;">(There are currently no megaphones)</div>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            
+            {% if GLOBAL.user.isLoggedIn() %}
+                <div class="sectionwrapper">
+                    <div class="sectionheading">My Megaphones</div>
+
+                    <div>
+                        You have <b>{{ megatickets }}</b> megaphone ticket{{ megatickets|pluralize }}.<br />
+                        You can get these from the <a href="/community/happybox/">Happy Box</a> or the <a href="/store/">Coin Store</a>.
+                    </div>
+                        
+                    {% if megatickets > 0 %}
+                        <div style="margin-top:25px;">
+                            {{ forms.start("/community/") }}
+                            <div style="font-size:1.1em; font-weight:bold;">Post a New Megaphone</div>
+                            <div>
+                                <div style="margin-top:3px;"><b>Text:</b> {{ forms.textField("text", "", "", "", 75) }}</div>
+                                <div style="margin-top:3px;"><b>Color:</b> {{ forms.selectFull("color", {"ffffff":"White","ff0000":"Red","00ff00":"Green"}) }}</div>
+                                <div style="margin-top:3px;">{{ forms.submit("submit", "Post") }}</div>
+                            </div>
+                            {{ forms.end() }}
+                        </div>
+                    {% endif %}
+                    <div style="margin-top:25px;">
+                        {% for m in mymegas %}
+                            <div style="margin-bottom:10px;">
+                                <div style="font-size:1.1em; color:#{{ m.mega_color }};"><b>{{ m.mega_text|megaphone }}</b></div>
+                                <div>
+                                    Expires in {{ m.mega_expiretime|relativeTime }} - 
+                                    <a href="javascript:;" class="deletemega" id="deletemega_{{ m.mega_id }}" data-id="{{ m.mega_id }}">Delete</a>
+                                    <span class="deletemegaconfirm" id="deletemegaconfirm_{{ m.mega_id }}" style="display:none;">
+                                        Are you sure? 
+                                        <a class="deletemegaconfirmyes" href="?deletemega={{ m.mega_id }}">Yes</a>
+                                        <a href="javascript:;" class="deletemegaconfirmno" data-id="{{ m.mega_id }}">Never Mind</a>
+                                    </span>
+                                </div>
+                            </div>
+                        {% else %}
+                            You have no active megaphones.
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+        <div class="float">
+            <div class="sectionwrapper">
+                <div class="sectionheading">Member Search</div>
+                <form method="get" action="/community/search/">
+                    <div style="margin-bottom:5px;">Search For: <input type="text" name="query" class="prettyinputtext" value="" /></div>
+                    <div style="margin-bottom:5px;">
+                        Search In: 
+                        <select class="prettyinputselect" name="in">
+                            <option value="all">All</option>
+                            <option value="nicknames">Nicknames</option>
+                            <option value="igns">Character IGNs</option>
+                            <option value="fams">FAM Names</option>
+                        </select>
+                    </div>
+                    <div style="margin-bottom:5px;"><input type="submit" value="Search" class="prettyinputbutton" /> or browse the <a href="/community/memberlist/">member list</a>.</div>
+                </form>
+            </div>
+
+            <div class="sectionwrapper">
+                <div class="sectionheading">Newest Member</div>
+                <div class="_center">
+                    <a href="/community/profile/{{ newestMember.id }}/">
+                        {% if newestMember.profile_pic_type == "" %}
+                            <img src="{{ GLOBAL.staticUrl }}/img/profilepictures/default.png" />
+                        {% else %}
+                            <img src="{{ GLOBAL.staticUrl }}/img/profilepictures/{{ newestMember.id }}.{{ newestMember.profile_pic_type }}" />
+                        {% endif %}
+                        <br />{{ newestMember.display_name }}</a>
+                </div>
+            </div>
+
+            <div class="sectionwrapper">
+                <div class="sectionheading">Random Member</div>
+                <div class="_center">
+                    <a href="/community/profile/{{ randomMember.id }}/">
+                        {% if randomMember.profile_pic_type == "" %}
+                            <img src="{{ GLOBAL.staticUrl }}/img/profilepictures/default.png" />
+                        {% else %}
+                            <img src="{{ GLOBAL.staticUrl }}/img/profilepictures/{{ randomMember.id }}.{{ randomMember.profile_pic_type }}" />
+                        {% endif %}
+                        <br />{{ randomMember.display_name }}</a>
+                </div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+{% endblock %}

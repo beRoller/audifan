@@ -1,0 +1,158 @@
+{% extends "base.twig" %}
+
+{% block title %}Audifan.net - Help - Comment Syntax{% endblock %}
+
+{% block pagetitle %}<a href="/help/">Help</a>: Comment Syntax{% endblock %}
+
+{% block head %}
+    <style>
+        .emotetable {
+            border: 0px;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        .emotetable tr td {
+            text-align: center;
+            border: 0px;
+            padding-top: 7px;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="contentwrapperhalf">
+        <div class="float">
+            <div class="sectionwrapper">
+                <div class="sectionheading">Formatting Syntax</div>
+                There are many formatting codes that you can add to comments.  These also work in your "About Me" on your profile.<br />
+                <br />
+                <ul>
+                    <li>[b]Make text bold.[/b] = <b>Make text bold.</b></li>
+                    <li>[i]Italicize text.[/i] = <i>Italicize text.</i></li>
+                    <li>[u]Underline text.[/u] = <span style="text-decoration: underline;">Underline text.</span></li>
+                    <li>[s]Strikethrough text.[/s] = <span style="text-decoration: line-through;">Strikethrough text.</span></li>
+                    <li>Create a link: [url]http://www.audifan.net/[/url] = <a href="http://www.audifan.net/" target="_blank">http://www.audifan.net/</a></li>
+                    <li>You can also use emoticon shortcuts from Audition.
+                        <ul>
+                            <li>;Grin = <img src="{{ GLOBAL.staticUrl }}/img/emotes/Grin.gif" class="_vmiddle" /></li>
+                            <li>;haha = <img src="{{ GLOBAL.staticUrl }}/img/emotes/haha.gif" class="_vmiddle" /></li>
+                            <li>If a peach emote has the same shorcut as a default shortcut, put a 2 after it for the peach one.<br />;Grin2 = <img src="{{ GLOBAL.staticUrl }}/img/emotes/Grin2.gif" class="_vmiddle" /></li>
+                            <li>See the full list of emotes below.</li>
+                        </ul>
+                    </li>
+                    <li>
+                        Multiple codes applied to the same text must be properly "nested" or they will not work.<br />
+                        For example, [b][i]This is correct[/i][/b] = <b><i>This is correct.</i></b><br />
+                        [b][i]This is incorrect.[/b][/i] = <b>[i]This is incorrect.</b>[/i]
+                </ul>
+            </div>
+
+            <div class="sectionwrapper">
+                <div class="sectionheading">Emote List</div>
+                <table class="emotetable">
+                    <tr>
+                        <td><img src="{{ GLOBAL.staticUrl }}/img/emotes/Angl.gif" /><div>;Angl</div></td>
+                        <td><img src="{{ GLOBAL.staticUrl }}/img/emotes/Bawl.gif" /><div>;Bawl</div></td>
+                        <td><img src="{{ GLOBAL.staticUrl }}/img/emotes/Bday.gif" /><div>;Bday</div></td>
+                        <td><img src="{{ GLOBAL.staticUrl }}/img/emotes/Blln.gif" /><div>;Blln</div></td>
+                        <td><img src="{{ GLOBAL.staticUrl }}/img/emotes/Boat.gif" /><div>;Boat</div></td>
+                        <td><img src="{{ GLOBAL.staticUrl }}/img/emotes/Bulb.gif" /><div>;Bulb</div></td>
+                        <td><img src="{{ GLOBAL.staticUrl }}/img/emotes/Cam.gif" /><div>;Cam</div></td>
+                        <td><img src="{{ GLOBAL.staticUrl }}/img/emotes/Cell.gif" /><div>;Cell</div></td>
+                    </tr>
+                    <tr>
+                        <td><img src="{{ GLOBAL.staticUrl }}/img/emotes/Cess.gif" /><div>;Cess</div></td>
+                        <td><img src="{{ GLOBAL.staticUrl }}/img/emotes/Chr.gif" /><div>;Chr</div></td>
+                        <td><img src="{{ GLOBAL.staticUrl }}/img/emotes/Cold.gif" /><div>;Cold</div></td>
+                        <td><img src="{{ GLOBAL.staticUrl }}/img/emotes/Com.gif" /><div>;Com</div></td>
+                        <td><img src="{{ GLOBAL.staticUrl }}/img/emotes/Cpd.gif" /><div>;Cpd</div></td>
+                        <td><img src="{{ GLOBAL.staticUrl }}/img/emotes/Crkr.gif" /><div>;Crkr</div></td>
+                        <td><img src="{{ GLOBAL.staticUrl }}/img/emotes/Cry.gif" /><div>;Cry</div></td>
+                        <td><img src="{{ GLOBAL.staticUrl }}/img/emotes/Cry2.gif" /><div>;Cry2</div></td>
+                    </tr>
+                    <tr>
+                        <td><img src="{{ GLOBAL.staticUrl }}/img/emotes/Cute.gif" /><div>;Cute</div></td>
+                        <td><img src="{{ GLOBAL.staticUrl }}/img/emotes/Cute2.gif" /><div>;Cute2</div></td>
+                        <td><img src="{{ GLOBAL.staticUrl }}/img/emotes/Dog.gif" /><div>;Dog</div></td>
+                        <td><img src="{{ GLOBAL.staticUrl }}/img/emotes/Dork.gif" /><div>;Dork</div></td>
+                        <td><img src="{{ GLOBAL.staticUrl }}/img/emotes/Drnk.gif" /><div>;Drnk</div></td>
+                        <td><img src="{{ GLOBAL.staticUrl }}/img/emotes/Dvl.gif" /><div>;Dvl</div></td>
+                        <td><img src="{{ GLOBAL.staticUrl }}/img/emotes/Dzzy.gif" /><div>;Dzzy</div></td>
+                        <td><img src="{{ GLOBAL.staticUrl }}/img/emotes/Etc.gif" /><div>;Etc</div></td>
+                    </tr>
+                    <tr>
+                        <td><img src="{{ GLOBAL.staticUrl }}/img/emotes/Flu.gif" /><div>;Flu</div></td>
+                        <td><img src="{{ GLOBAL.staticUrl }}/img/emotes/Flwr.gif" /><div>;Flwr</div></td>
+                        <td><img src="{{ GLOBAL.staticUrl }}/img/emotes/Fury.gif" /><div>;Fury</div></td>
+                        <td><img src="{{ GLOBAL.staticUrl }}/img/emotes/Ghst.gif" /><div>;Ghst</div></td>
+                        <td><img src="{{ GLOBAL.staticUrl }}/img/emotes/Gift.gif" /><div>;Gift</div></td>
+                        <td><img src="{{ GLOBAL.staticUrl }}/img/emotes/Grin.gif" /><div>;Grin</div></td>
+                        <td><img src="{{ GLOBAL.staticUrl }}/img/emotes/Grin2.gif" /><div>;Grin2</div></td>
+                        <td><img src="{{ GLOBAL.staticUrl }}/img/emotes/Heat.gif" /><div>;Heat</div></td>
+                    </tr>
+                    <tr>
+                        <td><img src="{{ GLOBAL.staticUrl }}/img/emotes/Hi.gif" /><div>;Hi</div></td>
+                        <td><img src="{{ GLOBAL.staticUrl }}/img/emotes/Hmph.gif" /><div>;Hmph</div></td>
+                        <td><img src="{{ GLOBAL.staticUrl }}/img/emotes/Hot.gif" /><div>;Hot</div></td>
+                        <td><img src="{{ GLOBAL.staticUrl }}/img/emotes/Hset.gif" /><div>;Hset</div></td>
+                        <td><img src="{{ GLOBAL.staticUrl }}/img/emotes/Hum.gif" /><div>;Hum</div></td>
+                        <td><img src="{{ GLOBAL.staticUrl }}/img/emotes/Kiss.gif" /><div>;Kiss</div></td>
+                        <td><img src="{{ GLOBAL.staticUrl }}/img/emotes/Kiss2.gif" /><div>;Kiss2</div></td>
+                        <td><img src="{{ GLOBAL.staticUrl }}/img/emotes/Lol.gif" /><div>;Lol</div></td>
+                    </tr>
+                    <tr>
+                        <td><img src="{{ GLOBAL.staticUrl }}/img/emotes/Look.gif" /><div>;Look</div></td>
+                        <td><img src="{{ GLOBAL.staticUrl }}/img/emotes/Losr.gif" /><div>;Losr</div></td>
+                        <td><img src="{{ GLOBAL.staticUrl }}/img/emotes/Love.gif" /><div>;Love</div></td>
+                        <td><img src="{{ GLOBAL.staticUrl }}/img/emotes/Lttr.gif" /><div>;Lttr</div></td>
+                        <td><img src="{{ GLOBAL.staticUrl }}/img/emotes/Lush.gif" /><div>;Lush</div></td>
+                        <td><img src="{{ GLOBAL.staticUrl }}/img/emotes/LuvU.gif" /><div>;LuvU</div></td>
+                        <td><img src="{{ GLOBAL.staticUrl }}/img/emotes/LuvU2.gif" /><div>;LuvU2</div></td>
+                        <td><img src="{{ GLOBAL.staticUrl }}/img/emotes/Mad.gif" /><div>;Mad</div></td>
+                    </tr>
+                    <tr>
+                        <td><img src="{{ GLOBAL.staticUrl }}/img/emotes/Mad2.gif" /><div>;Mad2</div></td>
+                        <td><img src="{{ GLOBAL.staticUrl }}/img/emotes/Meh.gif" /><div>;Meh</div></td>
+                        <td><img src="{{ GLOBAL.staticUrl }}/img/emotes/Mkup.gif" /><div>;Mkup</div></td>
+                        <td><img src="{{ GLOBAL.staticUrl }}/img/emotes/Nml.gif" /><div>;Nml</div></td>
+                        <td><img src="{{ GLOBAL.staticUrl }}/img/emotes/No.gif" /><div>;No</div></td>
+                        <td><img src="{{ GLOBAL.staticUrl }}/img/emotes/Ouch.gif" /><div>;Ouch</div></td>
+                        <td><img src="{{ GLOBAL.staticUrl }}/img/emotes/Ouch2.gif" /><div>;Ouch2</div></td>
+                        <td><img src="{{ GLOBAL.staticUrl }}/img/emotes/Pray.gif" /><div>;Pray</div></td>
+                    </tr>
+                    <tr>
+                        <td><img src="{{ GLOBAL.staticUrl }}/img/emotes/Prc.gif" /><div>;Prc</div></td>
+                        <td><img src="{{ GLOBAL.staticUrl }}/img/emotes/SLK.gif" /><div>;SLK</div></td>
+                        <td><img src="{{ GLOBAL.staticUrl }}/img/emotes/Sad.gif" /><div>;Sad</div></td>
+                        <td><img src="{{ GLOBAL.staticUrl }}/img/emotes/Shy.gif" /><div>;Shy</div></td>
+                        <td><img src="{{ GLOBAL.staticUrl }}/img/emotes/Sigh.gif" /><div>;Sigh</div></td>
+                        <td><img src="{{ GLOBAL.staticUrl }}/img/emotes/Sigh2.gif" /><div>;Sigh2</div></td>
+                        <td><img src="{{ GLOBAL.staticUrl }}/img/emotes/Sly.gif" /><div>;Sly</div></td>
+                        <td><img src="{{ GLOBAL.staticUrl }}/img/emotes/Sng.gif" /><div>;Sng</div></td>
+                    </tr>
+                    <tr>
+                        <td><img src="{{ GLOBAL.staticUrl }}/img/emotes/Spit.gif" /><div>;Spit</div></td>
+                        <td><img src="{{ GLOBAL.staticUrl }}/img/emotes/Sprs.gif" /><div>;Sprs</div></td>
+                        <td><img src="{{ GLOBAL.staticUrl }}/img/emotes/Spy.gif" /><div>;Spy</div></td>
+                        <td><img src="{{ GLOBAL.staticUrl }}/img/emotes/Star.gif" /><div>;Star</div></td>
+                        <td><img src="{{ GLOBAL.staticUrl }}/img/emotes/Sun.gif" /><div>;Sun</div></td>
+                        <td><img src="{{ GLOBAL.staticUrl }}/img/emotes/VV.gif" /><div>;VV</div></td>
+                        <td><img src="{{ GLOBAL.staticUrl }}/img/emotes/VV2.gif" /><div>;VV2</div></td>
+                        <td><img src="{{ GLOBAL.staticUrl }}/img/emotes/Wave.gif" /><div>;Wave</div></td>
+                    </tr>
+                    <tr>
+                        <td><img src="{{ GLOBAL.staticUrl }}/img/emotes/What.gif" /><div>;What</div></td>
+                        <td><img src="{{ GLOBAL.staticUrl }}/img/emotes/Whn.gif" /><div>;Whn</div></td>
+                        <td><img src="{{ GLOBAL.staticUrl }}/img/emotes/Wink.gif" /><div>;Wink</div></td>
+                        <td><img src="{{ GLOBAL.staticUrl }}/img/emotes/Yawn.gif" /><div>;Yawn</div></td>
+                        <td><img src="{{ GLOBAL.staticUrl }}/img/emotes/Yawn2.gif" /><div>;Yawn2</div></td>
+                        <td><img src="{{ GLOBAL.staticUrl }}/img/emotes/Yay.gif" /><div>;Yay</div></td>
+                        <td><img src="{{ GLOBAL.staticUrl }}/img/emotes/haha.gif" /><div>;haha</div></td>
+                        <td><img src="{{ GLOBAL.staticUrl }}/img/emotes/Q.gif" /><div>;???</div></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

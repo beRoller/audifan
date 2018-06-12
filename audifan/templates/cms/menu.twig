@@ -1,0 +1,15 @@
+<ul class='cms_menu'>
+    {% if permissions.update_quest_points %}
+        <li><a href="/cms/questpoints/">Quest Points</a></li>
+    {% endif %}
+
+    {% if permissions.edit_song_list %}
+        <li><a href="/cms/songlist/">Song List</a></li>
+    {% endif %}
+
+    {% if permissions.update_patch_info %}
+    	<li><a href="/cms/patches/">Patch Info</a></li>
+    {% endif %}
+    
+    <!--<li class="menu_toggle_container"><a href="#"><i class="fa fa-chevron-left"></i> Toggle Menu</a></li>-->
+</ul>

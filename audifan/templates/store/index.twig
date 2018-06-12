@@ -1,0 +1,316 @@
+{% extends "base.twig" %}
+
+{% block title %}Audifan.net - Coin Store{% endblock %}
+
+{% block pagetitle %}Coin Store{% endblock %}
+
+{% block head %}
+    <style>
+        .storewrapper {
+
+        }
+
+        .storecatwrapper {
+            text-align: center;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+        .storecat {
+            background-color: #{{ GLOBAL.theme.colors.middle }};
+            border-radius: 5px;
+            cursor: pointer;
+            padding: 5px;
+            font-weight: bold;
+            margin: 0px 5px;
+        }
+
+        .storecat:hover {
+            background-color: #{{ GLOBAL.theme.colors.lighter }};
+            color: #{{ GLOBAL.theme.colors.darker }};
+        }
+
+        .storecatactive {
+            background-color: #{{ GLOBAL.theme.colors.lighter }};
+            color: #{{ GLOBAL.theme.colors.darker }};
+        }
+
+        .storeitemwrapper {
+
+        }
+
+        .storeitem {
+            width: 365px;
+            float: left;
+            padding: 5px;
+        }
+
+        .storenavigation {
+            width: 235px;
+            float: left;
+            text-align: center;
+        }
+
+        .storebuywrapper {
+            width: 750px;
+            border: 1px solid #{{ GLOBAL.theme.colors.middle }};
+            border-radius: 5px;
+            float: left;
+        }
+
+        #mycoinswrapper {
+            margin-bottom: 25px;
+        }
+
+        .storeitem {
+            
+        }
+
+        .itemname {
+            font-size: 1.25em;
+            font-weight: bold;
+        }
+
+        .iteminfo {
+            padding: 10px;
+        }
+
+        .itemoptions {
+            margin-top: 15px;
+        }
+
+        .itemimage {
+            width: 100px;
+            height: 100px;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .itemprice {
+            font-size: 14pt;
+        }
+
+        #buyconfirmationpopupwrapper {
+            position: absolute;
+            left: inherit;
+            top: inherit;
+            width: 750px;
+            background-color: #000000;
+            opacity: .95;
+            padding-bottom: 25px;
+        }
+
+        #buyconfirmationpopup {
+            width: 500px;
+            margin: auto;
+            padding: 5px;
+            opacity: 1;
+        }
+    </style>
+
+    <script>
+        var currentlyBuying = -1;
+        var processing = false;
+
+        function buy(id, name, duration, price) {
+            if (processing)
+                return;
+            
+            currentlyBuying = id;
+            $("#buyconfirmationname").html(name);
+            $("#buyconfirmationduration").html("");
+            if (duration !== "")
+                $("#buyconfirmationduration").html("(" + duration + ")");
+            $("#buyconfirmationprice").html(price);
+            $("#buyconfirmationpopupwrapper, #buyconfirmationpopup").show();
+
+            $("body, html").animate({
+                "scrollTop": $("#buyconfirmationpopupwrapper").offset().top
+            }, "fast");
+        }
+        
+        function hideProcessing() {
+            $("#buyconfirmationprocessing, #buyconfirmationpopupwrapper").hide();
+            processing = false;
+        }
+
+        function cancelBuy() {
+            currentlyBuying = -1;
+            $("#buyconfirmationpopupwrapper").hide();
+        }
+        
+        function confirmBuy() {
+            $("#processingstatus").html("Buying");
+            $("#processingmessage").html("One moment please...");
+            $("#buyconfirmationpopup, #processingok").hide();
+            $("#buyconfirmationprocessing").show();
+            processing = true;
+            
+            _.ajax({"buy":currentlyBuying}, null, function(d) {
+                currentlyBuying = -1;
+                
+                if (d.error === "") {
+                    hideProcessing();
+                } else {
+                    $("#processingstatus").html("Purchase Failed");
+                    $("#processingmessage").html(d.error);
+                    $("#processingok").show();
+                }
+                
+                $(".coinbalancedisplay").html(d.newbalance);
+            });
+        }
+
+        function switchToTab(tab) {
+            $(".storeitemwrapper").hide();
+            $("#storeitemwrapper_" + tab).show();
+            $(".storecat").removeClass("storecatactive");
+            $("#storecat_" + tab).addClass("storecatactive");
+        }
+
+        $(function () {
+            $(".storecat").click(function () {
+                switchToTab($(this).data("cat"));
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block body %}
+    <div class="contentwrapperfull">
+        <div class="float">
+            <div class="storewrapper">
+                <div class="storenavigation">
+                    {% if GLOBAL.user.isLoggedIn() %}
+                        <div id="mycoinswrapper">
+                            <div style="font-size:17pt;" class="coinbalancedisplay">{{ GLOBAL.status.coins|number_format }}</div>
+                            My Coins
+                        </div>
+                        <div style="font-size:13pt;">
+                            <a href="/account/stuff/"><img src="{{ GLOBAL.staticUrl }}/img/fff/briefcase.png" style="margin-right:10px; vertical-align:middle;" />Go to My Stuff</a>
+                        </div>
+                    {% else %}
+                        <div style="font-size:12pt;">
+                            <a href="/account/?thru=/store/">Log In</a> to Buy Something
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="storebuywrapper">
+
+                    <div id="buyconfirmationpopupwrapper" style="display:none;">
+                        <div id="buyconfirmationpopup" style="display:none;">
+                            <div style="text-align:center; font-size:14pt;">Confirm Purchase</div>
+                            <div style="margin-top:10px; text-align:center;">
+                                <div>Are you sure you want to buy a <span id="buyconfirmationname"></span> <span id="buyconfirmationduration"></span> for <span id="buyconfirmationprice"></span><img src="{{ GLOBAL.staticUrl }}/img/coins/coin19.png" class="_vmiddle" style="margin:5px;" />?</div>
+                                <div style="margin-top:5px; font-size:18pt;">
+                                    <span><a href="javascript:;" onclick="confirmBuy();">YES</a></span>
+                                    <span style="margin-left:50px;"><a href="javascript:;" onclick="cancelBuy();">CANCEL</a></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="buyconfirmationprocessing" style="display:none;">
+                            <div style="text-align:center; font-size:18pt;" id="processingstatus"></div>
+                            <div style="text-align:center; font-size:12pt; margin-top:10px;" id="processingmessage"></div>
+                            <div style="text-align:center; font-size:18pt; margin-top:5px; display:none;" id="processingok"><span><a href="javascript:;" onclick="hideProcessing();">OK</a></span></div>
+                        </div>
+                    </div>
+
+                    <div class="storecatwrapper">
+                        <span class="storecat storecatactive" id="storecat_0" data-cat="0">Badges</span>
+                        <span class="storecat" id="storecat_1" data-cat="1">Items</span>
+                        <!--<span class="storecat" id="storecat_2" data-cat="2">Portraits</span>-->
+                    </div>
+
+                    <div class="storeitemwrapper" id="storeitemwrapper_0">
+                        {% for i in badgeListings %}
+                            <div class="storeitem">
+                                <table class="itemtable">
+                                    <tr>
+                                        <td class="itemimage"><img src="{{ GLOBAL.staticUrl }}/img/badges/{{ i }}.png" /></td>
+                                        <td class="iteminfo">
+                                            <div class="itemname">{{ itemInfo[i][2] }}</div>
+                                            <div class="itemdescription">This badge lasts for 7 days.</div>
+                                            <div class="itemprice">{{ prices[i]|number_format }}<img src="{{ GLOBAL.staticUrl }}/img/coins/coin19.png" class="_vmiddle" style="margin-left:5px;" /></div>
+                                            <div class="itemoptions">
+                                                {% if GLOBAL.user.isLoggedIn() %}
+                                                    <span><a href="javascript:;" onclick="buy({{ i }}, '{{ itemInfo[i][2] }}', '7 days', '{{ prices[i]|number_format }}');">Buy</a></span>
+                                                {% endif %}
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        {% endfor %}
+                        <div style="clear:both;"></div>
+                    </div>
+
+                    <div class="storeitemwrapper" id="storeitemwrapper_1" style="display:none;">
+                        <div class="storeitem">
+                            <table class="itemtable">
+                                <tr>
+                                    <td class="itemimage"><img src="{{ GLOBAL.staticUrl }}/img/store/10hbcooldown.png" /></td>
+                                    <td class="iteminfo">
+                                        <div class="itemname">-10% Happy Box Cooldown</div>
+                                        <div class="itemdescription">Reduces the time between Happy Box spins by 10% for 7 days.  If you win a -40% Cooldown Item from the Happy Box, this item will be replaced.</div>
+                                        <div class="itemprice">{{ prices[3]|number_format }}<img src="{{ GLOBAL.staticUrl }}/img/coins/coin19.png" class="_vmiddle" style="margin-left:5px;" /></div>
+                                        <div class="itemoptions">
+                                            {% if GLOBAL.user.isLoggedIn() %}
+                                                <span><a href="javascript:;" onclick="buy(3, '-10% Happy Box Cooldown', '7 days', '{{ prices[3]|number_format }}');">Buy</a></span>
+                                            {% endif %}
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                                        
+                        <div class="storeitem">
+                            <table class="itemtable">
+                                <tr>
+                                    <td class="itemimage"><img src="{{ GLOBAL.staticUrl }}/img/store/megaticket.png" /></td>
+                                    <td class="iteminfo">
+                                        <div class="itemname">Megaphone Ticket</div>
+                                        <div class="itemdescription">Broadcast a message to everyone on Audifan!  Click the Megaphone link at the top of any page to use it.</div>
+                                        <div class="itemprice">{{ prices[11]|number_format }}<img src="{{ GLOBAL.staticUrl }}/img/coins/coin19.png" class="_vmiddle" style="margin-left:5px;" /></div>
+                                        <div class="itemoptions">
+                                            {% if GLOBAL.user.isLoggedIn() %}
+                                                <span><a href="javascript:;" onclick="buy(11, 'Megaphone Ticket', '', '{{ prices[11]|number_format }}');">Buy</a></span>
+                                            {% endif %}
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <div class="storeitem" style="clear:both;">
+                            <table class="itemtable">
+                                <tr>
+                                    <td class="itemimage"><img src="{{ GLOBAL.staticUrl }}/img/store/noads.png" /></td>
+                                    <td class="iteminfo">
+                                        <div class="itemname">No Ads</div>
+                                        <div class="itemdescription">Remove advertisements on Audifan for one week.</div>
+                                        <div class="itemprice">{{ prices[41]|number_format }}<img src="{{ GLOBAL.staticUrl }}/img/coins/coin19.png" class="_vmiddle" style="margin-left:5px;" /></div>
+                                        <div class="itemoptions">
+                                            {% if GLOBAL.user.isLoggedIn() %}
+                                                <span><a href="javascript:;" onclick="buy(41, 'No Ads item', '', '{{ prices[41]|number_format }}');">Buy</a></span>
+                                            {% endif %}
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                                        
+                        <div style="clear:both;"></div>
+                    </div>
+
+                    <div class="storeitemwrapper" id="storeitemwrapper_2" style="display:none;">
+                        <div class="storeitem">
+
+                        </div>
+                        <div style="clear:both;"></div>
+                    </div>      
+                </div>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

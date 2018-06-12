@@ -1,0 +1,39 @@
+{% extends "base.twig" %}
+
+{% block title %}Audifan.net - {{ name }} - Friends{% endblock %}
+
+{% block head %}
+    <style type="text/css">
+        .friend {
+            text-align: center;
+            margin-bottom: 25px;
+            font-size: 1.25em;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="pagetitle"><a href="/community/profile/{{ id }}/">{{ name }}</a>'s Friends ({{ friendCount }})</div>
+    {% if friendCount > 0 %}
+        <div class="contentwrapper2col">
+            {% for f in friends %}
+                <div class="float" style="height:250px;">
+                    <div class="friend">
+                        <div>
+                            <a href="/community/profile/{{ f.id }}/">
+                                <img src="{{ GLOBAL.staticUrl }}/img/profilepictures/{% if f.profile_pic_type != "" %}{{ f.id }}.{{ f.profile_pic_type }}{% else %}default.png{% endif %}" alt="{{ f.display_name }}'s Profile Picture" /><br />
+                                {{ f.display_name }}
+                            </a>
+                        </div>
+                        {% if ownFriends %}
+                            <div style="font-size:.8em;"><a href="?do=remove&id={{ f.id }}" class="_vmiddle" onclick="return confirm('Are you sure you want to remove {{ f.display_name }}?');"><img class="_vmiddle" src="{{ GLOBAL.staticUrl }}/img/fff/group_delete.png" style="margin-right:5px;" />Unfriend {{ f.display_name }}</a></div>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+            <div style="clear:both;"></div>
+        </div>
+    {% else %}
+        <div class="_center">{{ name }} hasn't added any friends yet!</div>
+    {% endif %}
+{% endblock %}

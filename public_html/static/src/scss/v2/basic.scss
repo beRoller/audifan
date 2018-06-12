@@ -1,0 +1,23 @@
+body {
+    background-color: $page-background-color;
+    color: $text-color;
+    
+    // Add an extra 40px to the bottom of the page when not on a large screen to account for the Jump to Top link.
+    @media (max-width: $bootstrap-md-max) {
+        margin-bottom: 40px;
+    }
+}
+
+a, a:visited, a:focus {
+    color: $link-color;
+    text-decoration: none;
+    
+    &:hover {
+        color: $text-color;
+        text-decoration: none;
+    }
+}
+
+img {
+    max-width: 100%;
+}

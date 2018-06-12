@@ -1,0 +1,82 @@
+{#
+
+data is an object with these keys:
+- staticUrl
+- nickname
+- id
+- profile_pic_type
+- inventory = array of item ids in inventory
+- vip_rank
+- vip_count
+- quest_points
+- quest_rank
+- character = object with keys ign, level, fam, fam_member_type
+
+#}
+
+{% macro userCard(data) %}
+    {% from "macros/badges.twig" import badges %}
+    
+    {% spaceless %}
+    <div class="usercardcontainer">
+        <div class="usercard">
+            <div class="usercardpicturecontainer">
+                <img class="usercardpicture" src="{{ data.staticUrl }}/img/profilepictures/{% if data.profile_pic_type %}{{ data.id }}.{{ data.profile_pic_type }}{% else %}default.png{% endif %}" />
+            </div>
+            <div class="usercardnamecontainer">
+                {% if data.id %}
+                    <div class="usercardname"><a href="/community/profile/{{ data.id }}/">{{ data.nickname }}</a></div>
+                {% else %}
+                    <div class="usercardname">{{ data.nickname }}</div>
+                {% endif %}
+                <div class="usercardbadges">
+                    {{ badges(data.staticUrl, data.inventory, 0, 0, 0) }}
+                </div>
+            </div>
+        </div>
+        <div class="usercardmoreinfo">
+            <div class="usercardstatscontainer">
+                <div class="usercardstatssection">
+                    {% if data.vip_count %}
+                        <div class="usercardstatsfield"><b>Total VIPs:</b>{{ data.vip_count|number_format }}</div>
+                    {% endif %}
+                    
+                    {% if data.vip_rank %}
+                        <div class="usercardstatsfield"><b><a href="/community/vipranking/">VIP Rank</a>:</b>{{ data.vip_rank|number_format }}</div>
+                    {% endif %}
+                    
+                    {% if data.quest_points %}
+                        <div class="usercardstatsfield"><b>Total <a href="/quests/">Quest</a> Points:</b>{{ data.quest_points|number_format }}</div>
+                    {% endif %}
+                    
+                    {% if data.quest_rank %}
+                        <div class="usercardstatsfield"><b><a href="/quests/ranking/">Quest Rank</a>:</b> {{ data.quest_rank|number_format }}</div>
+                    {% endif %}
+                </div>
+                <div class="usercardstatssection">
+                    {% if data.character %}
+                        {% if data.character.level or data.character.level is sameas(0) %}
+                            <div class="usercardcharlevel">
+                                Lv. {{ data.character.level is sameas(0) ? '??' : data.character.level }}
+                                <img src="{{ data.staticUrl }}/img/leveltitles/{{ data.character.level is sameas(0) ? 'hidden' : (data.character.level / 5)|round(0, 'ceil') }}.png" />
+                            </div>
+                        {% endif %}
+                        
+                        {% if data.character.fam %}
+                            <div class="usercardcharfam {% if data.character.fam_member_type == 3 %}usercardcharfammaster{% elseif data.character.fam_member_type == 2 %}usercardcharfamco{% else %}usercardcharfammember{% endif %}">
+                                <a href="/community/search/?query={{ data.character.fam }}&in=fams">&lt;{{ data.character.fam }}&gt;</a>
+                            </div>
+                        {% endif %}
+                        
+                        {% if data.character.ign %}
+                            <div class="usercardcharign">{{ data.character.ign }}</div>
+                        {% endif %}
+                    {% endif %}
+                </div>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div class="usercardexpand" title="View more info about {{ data.nickname }}"><i class="fa fa-sort-down"></i></div>
+    </div>
+    {% endspaceless %}
+{% endmacro %}

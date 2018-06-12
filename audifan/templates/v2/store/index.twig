@@ -1,0 +1,159 @@
+{% extends "base.twig" %}
+
+{% block title %}Audifan.net - Coin Store{% endblock %}
+
+{% block pagetitle %}Coin Store{% endblock %}
+
+{% block head %}
+    <style>
+        .store-listing {
+            padding: 5px;
+        }
+
+        .store-listing .store-listing-content {
+            background-color: #333;
+            padding: 0px;
+            box-shadow: 1px 1px 1px #000;
+            min-height: 300px;
+            position: relative;
+        }
+
+        .store-listing .store-listing-content .store-listing-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+            padding: 10px;
+        }
+
+        .store-listing .store-listing-content .store-listing-description {
+            margin-bottom: 5px;
+            padding: 10px;
+        }
+
+        .store-listing .store-listing-content .store-listing-price {
+            margin-bottom: 5px;
+            padding: 10px;
+            font-size: 22px;
+        }
+
+        .store-listing .store-listing-content .store-listing-buy {
+            background-color: #09c;
+            color: #fff;
+            padding: 10px 5px;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+        }
+
+        .store-listing .store-listing-content .store-listing-buy:hover {
+            background-color: #1ad;
+        }
+    </style>
+{% endblock %}
+
+
+
+{% block endofpage %}
+    <script>
+        $(".store-listing-buy").click(function() {
+            var listing = $(this).closest(".store-listing");
+            var title = listing.find(".store-listing-title").html();
+            var price = listing.data("price");
+            var duration = listing.data("duration");
+            var itemId = listing.data("item-id");
+
+            $.confirmModal({
+                title: "Confirm Purchase",
+                message: "Are you sure you want to purchase a " + title + " (" + duration + ") for " + price + " Coins?",
+                confirmCallback: function() {
+                    $("#confirm-modal .modal-body").html('<i class="fa fa-spin fa-spinner" style="font-size:32px;"></i>');
+                    $.ajax({
+                        method: 'GET',
+                        data: {
+                            buy: itemId,
+                        },
+                        dataType: "json",
+                        success: function(d) {
+                            console.log(d);
+                            $("#confirm-modal").modal('hide');
+                            $(".coin-balance").html(d.newbalance);
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+{% endblock %}
+
+
+
+{% block body %}
+    <div class="row">
+        {% if GLOBAL.user.isLoggedIn() %}
+            <div class="col-md-3 col-sm-12">
+                <div class="text-center">
+                    <div style="font-size:17px;"><b><span class="coin-balance">{{ GLOBAL.status.coins|number_format }}</span></b></div>
+                    My Coins
+                </div>
+                    
+                <div class="text-center">
+                    <div style="font-size:17px; margin-top:10px;">
+                        <a href="/account/stuff/"><i class="fa fa-briefcase"></i> Go to My Stuff</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-9 col-sm-12">
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li role="presentation" class="active"><a href="#badges" aria-controls="badges" role="tab" data-toggle="tab">Badges</a></li>
+                        <li role="presentation"><a href="#items" aria-controls="items" role="tab" data-toggle="tab">Items</a></li>
+                    </ul>
+                    
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active" id="badges">
+                            <div class="row">
+                                {% for i in badgeListings %}
+                                    <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12 store-listing" data-item-id="{{ i }}" data-duration="7 days" data-price="{{ prices[i]|number_format }}">
+                                        <div class="store-listing-content">
+                                            <div class="text-center store-listing-title">{{ itemInfo[i][2] }}</div>
+
+                                            <div class="text-center store-listing-image">
+                                                <img src="{{ GLOBAL.staticUrl }}{{ itemInfo[i][3] }}" alt="{{ itemInfo[i][2] }}" />
+                                            </div>
+
+                                            <div class="text-center store-listing-description">
+                                                This badge lasts for 7 days.
+                                            </div>
+
+                                            <div class="text-center store-listing-price">
+                                                <span style="vertical-align:middle;">{{ prices[i]|number_format }}</span> <img src="{{ GLOBAL.staticUrl }}/img/coins/coin19.png" alt="Coins" />
+                                            </div>
+
+                                            <div class="text-center store-listing-buy">BUY</div>
+                                        </div>
+                                    </div>
+
+
+                                    {% if 3 == (loop.index0 % 4) %}
+                                        <div class="clearfix visible-lg-block visible-md-block"></div>
+                                    {% endif %}
+
+                                    {% if 2 == (loop.index0 % 3) %}
+                                        <div class="clearfix visible-sm-block"></div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                        
+                        <div role="tabpanel" class="tab-pane" id="items">
+                            items
+                        </div>
+                    </div>
+            </div>
+        {% else %}
+            <div class="col-md-12 text-center">Please <a href="/account/?thru=/store/">log in</a> to view the Coin Store.</div>
+        {% endif %}
+    </div>
+{% endblock %}

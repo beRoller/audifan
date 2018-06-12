@@ -1,0 +1,69 @@
+<div class="row">
+    <div class="col-md-12">
+        <div class="row hidden-xs">
+            <div class="col-md-12 link-container text-center">
+                <span><b><a href="/community/profile/{{ GLOBAL.user.getId() }}/">{{ GLOBAL.user.getNickname() }}</a></b></span>
+                <span><a href="/account/stuff/"><i class="fa fa-briefcase"></i> My Stuff</a></span>
+                <span><a href="/community/requests/"><i class="fa fa-list"></i> My Requests</a></span>
+                <span><a href="/community/profile/{{ GLOBAL.user.getId() }}/characters/"><i class="fa fa-user"></i> My Characters</a></span>
+                <span><a href="/community/profile/{{ GLOBAL.user.getId() }}/comments/"><i class="fa fa-comment"></i> My Comments</a></span>
+                <span><a href="/community/profile/{{ GLOBAL.user.getId() }}/friends/"><i class="fa fa-users"></i> My Friends</a></span>
+                <span><a href="/account/myaccount/"><i class="fa fa-cog"></i> My Account</a></span>
+                <span><a href="/account/logout/?thru={{ GLOBAL.requestUri }}"><i class="fa fa-sign-out"></i> Log Out</a></span>
+            </div>
+        </div>
+            
+        <div class="row visible-xs">
+            <div class="col-xs-7 mobile-link-container text-left">
+                <div>
+                    <a href="#" id="mobile-menu-toggle"><span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span> <b>{{ GLOBAL.user.getNickname() }}</b></a>
+                </div>
+                
+                <div class="mobile-links">
+                    <div><a href="/community/profile/{{ GLOBAL.user.getId() }}/"><i class="fa fa-th-large"></i> My Profile</a></div>
+                    <div><a href="/account/stuff/"><i class="fa fa-briefcase"></i> My Stuff</a></div>
+                    <div><a href="/community/requests/"><i class="fa fa-list"></i> My Requests</a></div>
+                    <div><a href="/community/profile/{{ GLOBAL.user.getId() }}/characters/"><i class="fa fa-user"></i> My Characters</a></div>
+                    <div><a href="/community/profile/{{ GLOBAL.user.getId() }}/comments/"><i class="fa fa-comment"></i> My Comments</a></div>
+                    <div><a href="/community/profile/{{ GLOBAL.user.getId() }}/friends/"><i class="fa fa-users"></i> My Friends</a></div>
+                    <div><a href="/account/myaccount/"><i class="fa fa-cog"></i> My Account</a></div>
+                </div>
+            </div>
+                
+            <div class="col-xs-5 log-out-link-container text-right">
+                <a href="/account/logout/?thru={{ GLOBAL.requestUri }}"><i class="fa fa-sign-out"></i> Log Out</a>
+            </div>
+        </div>
+        
+        <div class="row hidden-xs">
+            <div class="dashboard-bar text-center">
+                <span title="Happy Box"><a href="/community/happybox/"><b>HB</b></a>: <span data-countdown="{{ GLOBAL.status.hb }}" data-countdown-complete-string="Ready!"></span></span>
+                <span>
+                    <a href="/community/gardentimer/"><b>Garden</b></a>: 
+                    <span title="Water">
+                        W - <span data-countdown="{{ GLOBAL.status.garden.water }}" data-countdown-complete-string="Ready!"></span>
+                    </span>, 
+                    <span title="Dust">
+                        D - <span data-countdown="{{ GLOBAL.status.garden.dust }}" data-countdown-complete-string="Ready!"></span>
+                    </span>, 
+                    <span title="Fertilize">
+                        F - <span data-countdown="{{ GLOBAL.status.garden.fertilize }}" data-countdown-complete-string="Ready!"></span>
+                    </span>
+                </span>
+                <span class="questsection">
+                    <a href="/quests/"><b>Quests</b></a>: 
+                    <span style="margin-right:5px;">{{ GLOBAL.status.quests.points|number_format }} QP{% if GLOBAL.status.quests.rank > 0 %} / <a href="/quests/ranking/">#{{ GLOBAL.status.quests.rank }}</a>{% endif %}</span>
+                    {% for i, diff in ["E","M","H","I","G","B"] %}
+                        <span class="{% if GLOBAL.status.quests.submissions[i+1]=="Pending" %}userbarquestpending{% elseif GLOBAL.status.quests.submissions[i+1]=="Complete" %}userbarquestcomplete{% elseif GLOBAL.status.quests.submissions[i+1]=="Rejected"%}userbarquestrejected{% endif %}">{{ diff }}</span>
+                    {% endfor %}
+                </span>
+                <span class="vipsection">
+                    <a href="/community/vipdrawing/"><b>VIP</b></a>: 
+                    {% for day, letter in ["M","T","W","T","F","S","S"] %}
+                        <span class="{% if (GLOBAL.user.getFlag("vip_count_days") b-and (2 ** (7 - day - 1))) != 0 %}userbarvipsuccess{% elseif GLOBAL.now.getDayNumberOfWeek() > (day + 1) %}userbarvipmissed{% endif %}">{{ letter }}</span>
+                {% endfor %}
+                </span>
+            </div>
+        </div>
+    </div>
+</div>

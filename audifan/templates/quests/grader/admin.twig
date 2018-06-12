@@ -1,0 +1,102 @@
+{% extends "base.twig" %}
+
+{% block title %}Audifan.net - Admin Grader Functions{% endblock %}
+
+{% block pagetitle %}<a href="/quests/">Quests</a>: <a href="/quests/grader/">Grader Hub</a>: Admin Grader Functions{% endblock %}
+
+{% block head %}
+    <style>
+
+        table.sublist {
+            border: 1px solid #FFF;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        table.sublist tr th, table.sublist tr td {
+            text-align: center;
+            border: 1px solid #FFF;
+            padding: 2px;
+        }
+
+        table.sublist tr th {
+            font-size: 10pt;
+            font-weight: bold;
+        }
+
+        table.sublist tr td {
+            font-size: 9pt;
+        }
+
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="contentwrapperfull">
+        <div class="float">
+            Current date and time: {{ "now"|date("l, F j, Y - g:i:sa") }}<br />
+            Current year: {{ "now"|date("Y") }}<br />
+            Current week number: {{ "now"|date("W") }}<br />
+            <br />
+            Update points for week:<br />
+            <form method="post" action="/quests/grader/admin/">
+                Year: <input type="text" name="year" maxlength="4" style="width:30px;" autocomplete="off" /><br />
+                Week Number: <input type="text" name="week" maxlength="2" style="width:30px;" autocomplete="off" /><br />
+                <input type="submit" name="submit_points" value="Update Points" style="margin-top:5px; font-weight:bold;" />
+            </form><br />
+            <br />
+            <form method="post" action="/quests/grader/admin/">
+                <input type="submit" name="submit_rankings" value="Update Rankings" style="margin-top:5px; font-weight:bold;" />
+            </form><br />
+            <br />
+            <br />
+            Submission Table Dump (by Descending ID)<br />
+            Quest Flags: 1 - Normal, 2 - Beat Up, 4 - One Two, 8 - Beat Rush, 32 - Guitar<br />
+            Image URL formats: http://imagizer.imageshack.com/img%d/%d/%s.jpg / /img/questsubmissions/%s.jpg<br />
+            <br />
+            <table class="sublist">
+                <tr>
+                    <th>ID</th>
+                    <th>Account</th>
+                    <th>Quest/Week/Year</th>
+                    <th>IGN</th>
+                    <th>Submit<br />Time</th>
+                    <th>Grade<br />Status</th>
+                    <th>Battle Score /<br />Grade Message</th>
+                    <th>Graders</th>
+                    <th>Grade<br />Time</th>
+                    <th>Points<br />Given?</th>
+                    <th>Update</th>
+                </tr>
+
+                {% for s in submissions %}
+                    <form method="post" action="/quests/grader/admin/">
+                        <tr>
+                            <td>
+                                <input type="hidden" name="id" value="{{ s.submit_id }}" />
+                                <span><a href="{{ GLOBAL.staticUrl }}/img/questsubmissions/{{ (s.submit_screenshot|split(";"))[1] }}.jpg" target="_blank">{{ s.submit_id }}</a></span>
+                            </td>
+                            <td><a href="/community/profile/{{ s.submit_account_id }}/" target="_blank">{{ s.name0 }}</a> ({{ s.submit_account_id }})</td>
+                            <td>{{ diffs[ s.req_difficulty - 1 ] }} - {{ s.req_text }}<br />ID: {{ s.req_id }}, FLAGS: {{ s.req_flags }}<br />{{ s.req_week_number }} / {{ s.req_year }}</td>
+                            <td>{{ s.ign_ign }} ({{ s.ign_id }})</td>
+                            <td>{{ s.submit_time|date("r") }}<br />({{ s.submit_time }})</td>
+                            <td><input type="text" name="status" value="{{ s.submit_grade_status }}" style="width:30px;" maxlength="1" /></td>
+                            <td>
+                                <input type="text" name="score" value="{{ s.submit_battle_score }}" style="width:150px;" maxlength="25" /><br />
+                                <input type="text" name="message" value="{{s.submit_grade_message }}" style="width:150px;" maxlength="255" />
+                            </td>
+                            <td>{{ s.name1 }}</td>
+                            <td>
+                                {% if s.submit_last_grade_time != 0 %}
+                                    {{ s.submit_last_grade_time|date("r") }}<br />({{ s.submit_last_grade_time }})
+                                {% endif %}
+                            </td>
+                            <td>{{ s.submit_points_given }}</td>
+                            <td><input type="submit" name="submit_{{ s.id }}" value="Update" /></td>
+                        </tr>
+                    </form>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+{% endblock %}

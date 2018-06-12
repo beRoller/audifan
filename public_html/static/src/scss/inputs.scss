@@ -1,0 +1,43 @@
+/**
+ * Form inputs.  Text fields, dropdowns, buttons, etc.
+ */
+
+input.prettyinputtext, textarea.prettyinputtext {
+	background-color: $input-color;
+	border: 1px solid $link-color;
+	border-radius: 2px;
+	padding: 2px;
+	color: $font-color;
+	outline: none;
+	font-family: $font-family;
+}
+
+input.prettyinputbutton {
+	background-color: $input-color;
+    border: 1px solid $link-color;
+    box-shadow: 0px 0px 2px 2px $link-color;
+    border-radius: 2px;
+    padding: 2px 4px;
+    color: $font-color;
+    outline: none;
+    font-family: $font-family;
+
+    &:disabled {
+    	box-shadow: none;
+    	color: #444400;
+    }
+
+    &:active {
+    	box-shadow: 0px 0px 0px 0px $input-active-color;
+    }
+}
+
+select.prettyinputselect {
+	background-color: $input-color;
+    border: 1px solid $link-color;
+    border-radius: 2px;
+    padding: 2px;
+    color: $font-color;
+    outline: none;
+    font-family: $font-family;
+}

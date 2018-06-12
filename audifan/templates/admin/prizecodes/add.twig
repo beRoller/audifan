@@ -1,0 +1,21 @@
+{% extends "base.twig" %}
+
+{% block title %}{% endblock %}
+
+{% block pagetitle %}Add Prize Code{% endblock %}
+
+{% block body %}
+    <div class="contentwrapperhalf">
+        <div class="float">
+            <div class="sectionwrapper">
+                <form method="post" action="?">
+                    <div>Item ID: <input type="text" name="id" /> (-1 for coins)</div>
+                    <div>Duration: <input type="text" name="duration" /><br />(-1=indef, {{ 3600*24*7 }}=1wk, {{ 3600*24*14 }}=2wks, {{ 3600*24*30 }}=1mnth, {{ 3600*24*60 }}=2mnths)</div>
+                    <div>Charges: <input type="text" name="charges" value="0" /> (or # of coins)</div>
+                    <div>PRIZE CODE Duration: <input type="text" name="prizecodeduration" /></div>
+                    <div><input type="submit" name="submit" value="Create" /></div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

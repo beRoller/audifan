@@ -1,0 +1,15 @@
+{% macro start(action, method, id, multipart) %}<form method="{{ method|default('post') }}" action="{{ action }}" id="{{ id }}"{% if multipart %} enctype="multipart/form-data"{% endif %}>{% endmacro %}
+{% macro end() %}</form>{% endmacro %}
+{% macro textField(name, value, id, class, maxlength) %}<input type="text" name="{{ name }}" value="{{ value }}" id="{{ id }}"{% if maxlength %} maxlength="{{ maxlength }}"{% endif %} class="form-control {{ class }}" />{% endmacro %}
+{% macro password(name, id, class, maxlength) %}<input type="password" name="{{ name }}" id="{{ id }}"{% if maxlength %} maxlength="{{ maxlength }}"{% endif %} class="prettyinputtext {{ class }}" />{% endmacro %}
+{% macro textArea(name, value, id) %}<textarea name="{{ name }}" id="{{ id }}" class="prettyinputtext">{{ value }}</textarea>{% endmacro %}
+{% macro checkbox(name, checked, id) %}<input{% if checked %} checked{% endif %} name="{{ name }}" type="checkbox" id="{{ id }}" style="vertical-align:middle;" />{% endmacro %}
+{% macro radioButton(name, value, checked, id, class) %}<input{% if checked %} checked{% endif %} type="radio" name="{{ name }}" value="{{ value }}" id="{{ id }}" class="{{ class }}" />{% endmacro %}
+{% macro selectFull(name, values, selectedValue, id, textsAsValues, class) %}<select name="{{ name }}" class="prettyinputselect {{ class }}" id="{{ id }}">{% for k, v in values %}<option{% if k == selectedValue %} selected{% endif %} value="{% if textsAsValues %}{{ v }}{% else %}{{ k }}{% endif %}">{{ v }}</option>{% endfor %}</select>{% endmacro %}
+{% macro selectStart(name, id) %}<select name="{{ name }}" id="{{ id }}" class="prettyinputselect">{% endmacro %}
+{% macro selectEnd() %}</select>{% endmacro %}
+{% macro selectOption(value, text, selected) %}<option{% if selected %} selected{% endif %} value="{{ value }}">{{ text }}</option>{% endmacro %}
+{% macro selectOptions(values, selectedValue, textsAsValues) %}{% for k, v in values %}<option{% if ((textsAsValues and v == selectedValue) or (not textsAsValues and k == selectedValue)) %} selected{% endif %} value="{% if textsAsValues %}{{ v }}{% else %}{{ k }}{% endif %}">{{ v }}</option>{% endfor %}{% endmacro %}
+{% macro submit(name, value, id, class) %}<input type="submit" name="{{ name }}" value="{{ value }}" id="{{ id }}" class="btn {{ class }}" />{% endmacro %}
+{% macro button(value, id, class) %}<input type="button" value="{{ value }}" id="{{ id }}" class="btn {{ class }}" />{% endmacro %}
+{% macro hidden(name, value) %}<input type="hidden" name="{{ name }}" value="{{ value }}" />{% endmacro %}

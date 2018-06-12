@@ -1,0 +1,145 @@
+{% extends "base.twig" %}
+{% from "macros/pagination.twig" import pagination %}
+
+{% block pagetitle %}
+	<a href="/quests/">Quests</a>
+	 &gt; 
+	{% if board == 0 %}
+		Overall Ranking
+	{% elseif board == 1 %}
+        Overall Ranking Without Insane
+    {% elseif board == 2 %}
+        Normal Mode Ranking
+    {% elseif board == 3 %}
+        Beat Up Ranking
+    {% elseif board == 4 %}
+        One Two Party Ranking
+    {% elseif board == 5 %}
+        Beat Rush Ranking
+    {% elseif board == 6 %}
+        Guitar Ranking
+    {% elseif board == 7 %}
+        Individual Quest Ranking
+    {% endif %}
+{% endblock %}
+
+{% block head %}
+	<style>
+		.nav.nav-tabs {
+			text-align: center;
+			border: 0px;
+			margin: 10px 0px;
+		}
+
+		.nav.nav-tabs > li {
+			float: none;
+			display: inline-block;
+		}
+	</style>
+{% endblock %}
+
+{% block body %}
+	<div class="row">
+		<div class="col-md-12">
+			<ul class="nav nav-tabs">
+				{% for board_id,board_name in {0:'Overall',1:'Overall without Insane',7:'Individual Only',2:'Normal Modes',3:'Beat Up',4:'One Two Party',5:'Beat Rush',6:'Guitar'} %}
+					<li class="{% if board == board_id %}active{% endif %}">
+						<a href="?b={{ board_id }}">{{ board_name }}</a>
+					</li>
+				{% endfor %}
+			</ul>
+			{# <span class="listlink"><b>Mode Rankings:</b></span>
+	        <span class="listlink">
+	            {% if board == 2 %}Normal Modes{% else %}<a href="?b=2">Normal Modes</a>{% endif %}
+	        </span>
+	        <span class="listlink">
+	            {% if board == 3 %}Beat Up{% else %}<a href="?b=3">Beat Up</a>{% endif %}
+	        </span>
+	        <span class="listlink">
+	            {% if board == 4 %}One Two Party{% else %}<a href="?b=4">One Two Party</a>{% endif %}
+	        </span>
+	        <span class="listlink">
+	            {% if board == 5 %}Beat Rush{% else %}<a href="?b=5">Beat Rush</a>{% endif %}
+	        </span>
+	        <span class="listlink">
+	            {% if board == 6 %}Guitar{% else %}<a href="?b=6">Guitar</a>{% endif %}
+	        </span> #}
+		</div>
+	</div>
+
+	<div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-offset-2 col-md-8 col-lg-offset-2 col-lg-8">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Nickname</th>
+                        <th>IGN(s)</th>
+                        <th>
+                        	{% if board == 0 %}
+	                            Total QP
+	                        {% elseif board == 1 %}
+	                            Total QP<br />
+	                            Without Insane
+	                        {% elseif board == 2 %}
+	                            Normal Mode QP
+	                        {% elseif board == 3 %}
+	                            Beat Up QP
+	                        {% elseif board == 4 %}
+	                            One Two<br />
+	                            Party QP
+	                        {% elseif board == 5 %}
+	                            Beat Rush QP
+	                        {% elseif board == 6 %}
+	                            Guitar QP
+	                        {% elseif board == 7 %}
+	                            Individual<br />
+	                            Quest QP
+	                        {% endif %}
+                        </th>
+
+                        {% if board != 0 %}
+							<th>Total QP</th>
+                        {% endif %}
+                    </tr>
+                </thead>
+                
+                <tbody>
+                    {% for i, r in ranks %}
+	                    <tr>
+	                        <td>{{ (i + rankNumberOffset) }}</td>
+	                        <td>
+	                            <div><a href="/community/profile/{{ r.rank_account_id }}/">{{ r.display_name }}</a></div>
+	                                {% set currItems = r.items|split(',') %}
+	                                {% if 7 in currItems %}
+	                                <img src="{{ GLOBAL.staticUrl }}/img/quest/badge1.png" alt="Thumbs Up" title="Completed one individual quest last week." />
+	                            {% elseif 8 in currItems %}
+	                                <img src="{{ GLOBAL.staticUrl }}/img/quest/badge2.png" alt="Bronze Medal" title="Completed two individual quests last week." />
+	                            {% elseif 9 in currItems %}
+	                                <img src="{{ GLOBAL.staticUrl }}/img/quest/badge3.gif" alt="Silver Medal" title="Completed three individual quests last week." />
+	                            {% elseif 10 in currItems %}
+	                                <img src="{{ GLOBAL.staticUrl }}/img/quest/badge4.gif" alt="Gold Medal" title="Completed all four individual quests last week (ACE)." />
+	                            {% endif %}
+	                        </td>
+	                        <td>
+	                            {% for ign in r.igns|split(',') %}
+	                                <div>{{ ign }}</div>
+	                            {% endfor %}
+	                        </td>
+	                        <td>{{ r.points|number_format }}</td>
+	                        {% if board != 0 %}
+	                            <td>{{ r.total_points|number_format }}</td>
+	                        {% endif %}
+	                    </tr>
+	                {% else %}
+	                    <tr>
+	                        <td colspan="4">(Nobody is ranked in this category)</td>
+	                    </tr>
+	                {% endfor %}
+                </tbody>
+            </table>
+                
+            {{ pagination("?page=", "&b="~board, totalPages, page) }}
+        </div>
+    </div>
+{% endblock %}

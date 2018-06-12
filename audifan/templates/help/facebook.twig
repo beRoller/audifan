@@ -1,0 +1,44 @@
+{% extends "base.twig" %}
+
+{% block title %}Audifan.net - Help - Connecting/Disconnecting with Facebook{% endblock %}
+
+{% block pagetitle %}<a href="/help/">Help</a>: Connecting/Disconnecting with Facebook{% endblock %}
+
+{% block head %}
+    <style>
+    li > img {
+        border: 1px solid #954e9d;
+        border-radius: 3px;
+        padding: 3px;
+    }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="contentwrapperhalf">
+        <div class="float">
+            <div class="sectionheading">Connecting with Facebook</div>
+            <ul>
+                <li>To connect with Facebook, first make sure you are logged out.  Then, click the Log In with Facebook button at the top of any page.<br /><img src="{{ GLOBAL.staticUrl }}/img/helpguides/facebook01.png" /></li>
+                <li>A message from Facebook will appear which asks for your permission to let Audifan connect.  Click Okay at the bottom.<br /><img src="{{ GLOBAL.staticUrl }}/img/helpguides/facebook02.png" /></li>
+                <li>Next, you will need to specify an Audifan account with which you want to connect your Facebook account.<br /><img src="{{ GLOBAL.staticUrl }}/img/helpguides/facebook03.png" />
+                    <ul>
+                        <li>If you already have an account, enter the email and password for it.  Your Facebook account can now be used to log in to your account in addition to your email/password.</li>
+                        <li>If you do not have an account, you just have to enter a nickname and a new account will be created.</li>
+                </ul></li>
+            </ul>
+            <div class="sectionheading">Disconnecting from Facebook</div>
+            <ul>
+                <li>To disconnect your Facebook account, first click My Account at the top of any page.<br /><img src="{{ GLOBAL.staticUrl }}/img/helpguides/facebook04.png" /></li>
+                <li>Next, click Disconnect in the Facebook Connectivity section.<br /><img src="{{ GLOBAL.staticUrl }}/img/helpguides/facebook05.png" /></li>
+                <li>If you already had an email/password combination to log in to your account, just click the "Disconnect Facebook Account" button on the next page.</li>
+                <li>If you created your account when logging in with Facebook, you'll have to add an email and password.
+                    <ul>
+                        <li>Enter your email address, enter it again, and create a password.</li>
+                        <li>Next, verify your email address by click the link in an email that will be sent to you.</li>
+                        <li>After that, you can log in with your email and password.</li>
+                    </ul></li>
+            </ul>
+        </div>
+    </div>
+{% endblock %}

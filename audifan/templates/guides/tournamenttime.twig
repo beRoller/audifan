@@ -1,0 +1,132 @@
+{% extends "base.twig" %}
+
+{% block title %}Audifan.net - Guides - Tournament Time Guide{% endblock %}
+
+{% block head %}
+    <style>
+    td.tourneyname {
+        width: 350px;
+    }
+
+    td.tourneystatus {
+        width: 150px;
+    }
+    </style>
+    <script type="text/javascript" src="{{ GLOBAL.staticUrl }}/js/audifan.tourneys.js"></script>
+    <script type="text/javascript">
+        
+        $(function() {
+            {% for i,t in timeUntil %}
+                Tourneys.info[{{ i }}].timeUntil = {{ t }};
+            {% endfor %}
+            Tourneys.init();
+        });
+        
+    </script>
+{% endblock %}
+
+{% block body %}
+    <div class="pagetitle">Tournament Time Guide</div>
+    
+    <div class="contentwrapperhalf">
+        <div class="float">
+            <table style="width:500px;">
+                <tr>
+                    <td style="width:350px; font-size:1em; font-weight:bold;">
+                        Tournament
+                    </td>
+                    <td style="width:150px; font-size:1em; font-weight:bold;">
+                        Status
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="tourneyname">
+                        <div id="tourneyname_beatup">Beat Up Tournament (6:00 pm EST)</div>
+                    </td>
+                    <td class="tourneyname">
+                        <div id="tourneystatus_beatup">Loading...</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="tourneyname">
+                        <div id="tourneyname_beatrush">Beat Rush Tournament (7:00 pm EST)</div>
+                    </td>
+                    <td class="tourneyname">
+                        <div id="tourneystatus_beatrush">Loading...</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="tourneyname">
+                        <div id="tourneyname_guitar">Guitar Tournament (7:45 pm EST)</div>
+                    </td>
+                    <td class="tourneyname">
+                        <div id="tourneystatus_guitar">Loading...</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="tourneyname">
+                        <div id="tourneyname_beginner">Beginner Tournament (8:57 pm EST)</div>
+                    </td>
+                    <td class="tourneyname">
+                        <div id="tourneystatus_beginner">Loading...</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="tourneyname">
+                        <div id="tourneyname_expert">Expert Tournament (9:00 pm EST)</div>
+                    </td>
+                    <td class="tourneyname">
+                        <div id="tourneystatus_expert">Loading...</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="tourneyname">
+                        <div id="tourneyname_intermediate">Intermediate Tournament (9:03 pm EST)</div>
+                    </td>
+                    <td class="tourneyname">
+                        <div id="tourneystatus_intermediate">Loading...</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="tourneyname">
+                        <div id="tourneyname_team">Team Tournament (9:30 pm EST)</div>
+                    </td>
+                    <td class="tourneyname">
+                        <div id="tourneystatus_team">Loading...</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="tourneyname">
+                        <div id="tourneyname_couple">Couple Tournament (10:00 pm EST)</div>
+                    </td>
+                    <td class="tourneyname">
+                        <div id="tourneystatus_couple">Loading...</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="tourneyname">
+                        <div id="tourneyname_ballroom">Ballroom Tournament (11:00 pm EST)</div>
+                    </td>
+                    <td class="tourneyname">
+                        <div id="tourneystatus_ballroom">Loading...</div>
+                    </td>
+                </tr>
+            </table>
+            <div style="margin-top:10px;">
+                <b>Note:</b> We try to keep times accurate to within 10 seconds.  For the most accurate times, please occasionally <a href="/guides/tournamenttime/">refresh this page</a>.<br />
+                <br />
+                A tournament is <span style="color:#AAFFAA;">open</span> when it allows you to enter the channel before starting.<br>
+                A tournament is <span style="color:#FFFFAA;">in progress</span> when games are currently being played and you cannot join.
+            </div>
+        </div>
+    </div>
+{% endblock %}

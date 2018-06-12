@@ -1,0 +1,9 @@
+{% from "macros/comment.twig" import comment %}
+
+{{ sectionStart("Latest Comments") }}
+	<div style="max-height:500px; overflow-y:scroll;">
+		{% for cmt in moduleData[3].comments %}
+			{{ comment(cmt, GLOBAL.staticUrl) }}
+		{% endfor %}
+	</div>
+{{ sectionEnd() }}

@@ -1,0 +1,161 @@
+{% extends "base.twig" %}
+
+{% block title %}Audifan.net - Guides - Story Guide - {{ episodeName }}{% endblock %}
+
+{% block head %}
+<style type="text/css">
+    .storywrapper {
+        margin-bottom: 10px;
+    }
+    
+    .name {
+        font-size: 1.8em;
+    }
+    
+    .detailswrapper {
+        margin-left: 25px;
+        font-size: 1.1em;
+    }
+    
+    .type {
+        font-style: italic;
+        margin-bottom: 5px;
+    }
+    
+    .reqs {
+        margin-top: 5px;
+    }
+    
+    .guidelistlink {
+        margin: 0px 5px;
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="contentwrapperhalf">
+    <div class="float">
+        <div class="pagetitle">Story Guide - {{ episodeName }}</div>
+        <div class="_center" style="margin-bottom:10px;">
+            <span class="guidelistlink">
+                {% if episodeName == "Episode 1" %}
+                Episode 1
+                {% else %}
+                <a href="/guides/story/e1/">Episode 1</a>
+                {% endif %}
+            </span>
+            <span class="guidelistlink">
+                {% if episodeName == "Episode 2" %}
+                Episode 2
+                {% else %}
+                <a href="/guides/story/e2/">Episode 2</a>
+                {% endif %}
+            </span>
+            <span class="guidelistlink">
+                {% if episodeName == "Episode 3" %}
+                Episode 3
+                {% else %}
+                <a href="/guides/story/e3/">Episode 3</a>
+                {% endif %}
+            </span>
+            <span class="guidelistlink">
+                {% if episodeName == "Secret Episode" %}
+                Secret Episode
+                {% else %}
+                <a href="/guides/story/secret/">Secret Episode</a>
+                {% endif %}
+            </span>
+        </div>
+        {% for s in stories %}
+        <div class="storywrapper">
+            <div class="name">{{ s.story_number }} - {{ s.story_name }}</div>
+            <div class="detailswrapper">
+                <div class="type">
+                    {% if s.story_public %}
+                    Public Story
+                    {% else %}
+                    NPC Story
+                    {% endif %}
+                </div>
+                <div>
+                    <b>EXP:</b> {{ (s.story_reward*8)|number_format }} ~ {{ s.story_reward }}<br />
+                    <b>Beats:</b> {{ (s.story_reward*16)|number_format }} ~ {{ (s.story_reward*2)|number_format }}<br />
+                    <b>Mode:</b> {{ s.mode_name }}<br />
+                    {% if s.story_public %}
+                        {% if s.players > 1 %}
+                        <b>Players Needed:</b> {{ s.players }}<br />
+                        {% endif %}
+                        <b>Rounds Needed:</b> {{ s.rounds }}<br />
+                    {% else %}
+                        <b>Song:</b> {{ s.artist }} - {{ s.title }} ({{ s.bpm }} bpm, {{ s.length // 60 }}:{{ "%02d"|format(s.length % 60) }})<br />
+                    {% endif %}
+                    
+                    <div class="reqs">
+                        <div><b>Requirements:</b></div>
+                        
+                        <ul style="margin:0px;">
+                        {% if s.chain>-1 or s.place>-1  or s.perfect>-1 or s.great>-1 or s.cool>-1 or s.bad>-1 or s.miss>-1 or s.score>-1 or s.win or s.synch>-1 or s.fm>-1 or s.combo>-1 %}
+                        {% if s.chain > -1 %}
+                        <li>Get at least Perfect x{{ s.chain }}</li>
+                        {% endif %}
+                        
+                        {% if s.place > -1 %}
+                            {% if s.inexact %}
+                                <li>Get at least {{ s.place }} place</li>
+                            {% else %}
+                                <li>Get exactly {{ s.place }} place</li>
+                            {% endif %}
+                        {% endif %}
+                        
+                        {% if s.perfect > -1 %}
+                        <li>Get at least {{ s.perfect }} Perfects</li>
+                        {% endif %}
+                        
+                        {% if s.great > -1 %}
+                        <li>Get at least {{ s.great }} Greats</li>
+                        {% endif %}
+                        
+                        {% if s.cool > -1 %}
+                        <li>Get no Cools</li>
+                        {% endif %}
+                        
+                        {% if s.bad > -1 %}
+                        <li>Get no Bads</li>
+                        {% endif %}
+                        
+                        {% if s.miss > -1 %}
+                        <li>Get no Misses</li>
+                        {% endif %}
+                        
+                        {% if s.score > -1 %}
+                        <li>Get at least {{ s.score}},000 points</li>
+                        {% endif %}
+                        
+                        {% if s.win %}
+                        <li>Win the game as a team</li>
+                        {% endif %}
+                        
+                        {% if s.synch > -1 %}
+                        <li>Get at least {{ s.synch }} Synchro Perfects</li>
+                        {% endif %}
+                        
+                        {% if s.fm > -1 %}
+                        <li>Get at least {{ s.fm }} Finish Moves</li>
+                        {% endif %}
+                        
+                        {% if s.combo > -1 %}
+                        <li>Get a Combo of at least {{ s.combo }}</li>
+                        {% endif %}
+                        {% else %}
+                        <li>Finish the game</li>
+                        {% endif %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <div style="clear:both;"></div>
+</div>
+{% endblock %}

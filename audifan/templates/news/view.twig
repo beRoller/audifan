@@ -1,0 +1,42 @@
+{% extends "base.twig" %}
+{% import "macros/forms.twig" as forms %}
+
+{% block title %}Audifan.net - News - {{ story.title }}{% endblock %}
+
+{% block head %}
+    <style>
+        #bodytext {
+            width: 100%;
+            height: 100px;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="pagetitle"><a href="/news/">News</a>: {{ story.title }}</div>
+    <div class="contentwrapperhalf">
+        <div class="float">
+            <div class="sectionwrapper">
+                <div>
+                    {{ story.description|raw }}
+                </div>
+            </div>
+            <div class="_center" style="font-style:italic; margin-top:10px;">Posted on {{ story.time|date("F j, Y \\a\\t g:ia") }}.</div>
+            
+            {% if (GLOBAL.user.isAdmin()) %}
+                <div style="margin-top:15px;">
+                    <div class="sectionwrapper">
+                        <div class="sectionheading">[ADMIN] Edit News Story</div>
+                        {{ forms.start("/news/view/"~story.id~"/") }}
+                        <div>Title: {{ forms.textField("name", story.title) }}</div>
+                        <div>Type: {{ forms.textField("type", story.type) }}</div>
+                        <div>Link: {{ forms.textField("link", story.link) }}</div>
+                        {{ forms.textArea("body", story.description|raw, "bodytext") }}
+                        <div class="_center">{{ forms.submit("submit_add", "Submit") }} {{ forms.submit("submit_delete", "Delete") }}</div>
+                        {{ forms.end() }}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

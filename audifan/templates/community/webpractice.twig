@@ -1,0 +1,25 @@
+{% extends "base.twig" %}
+
+{% block title %}Audifan.net - Web Practice{% endblock %}
+
+{% block pagetitle %}Web Practice{% endblock %}
+
+{% block head %}
+    <style>
+        #canvascontainer {
+            width: 900px;
+            height: 500px;
+            background-color: #000000;
+            margin: auto;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div id="canvascontainer"></div>
+{% endblock %}
+
+{% block endofpage %}
+    <script type="text/javascript" src="{{ GLOBAL.staticUrl }}/js/pixi.min.js"></script>
+    <script type="text/javascript" src="{{ GLOBAL.staticUrl }}/js/audifan.webpractice-v20160605.js"></script>
+{% endblock %}

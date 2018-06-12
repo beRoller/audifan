@@ -1,0 +1,279 @@
+/* Styling for profiles. */
+
+#editprofilenotice {
+    background-color: #aa8800;
+    text-align: center;
+    padding: 5px;
+    margin-bottom: 10px;
+}
+
+#editprofilenotice a {
+    color: #cccccc;
+}
+
+#editprofilenotice a:hover {
+    color: #ffffff;
+}
+
+#basicinfocontainer {
+    margin-bottom: 10px;
+}
+
+#basicinfopicture {
+    float: left;
+    width: 200px;
+    min-height: 200px;
+    margin-right: 10px;
+    text-align: center;
+}
+
+#basicinfo {
+    width: 750px;
+    float: left;
+}
+
+#basicinfoname {
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+#basicinfoonlinestatus > img, #basicinfoonlinestatus > span {
+    margin-right: 5px;
+    vertical-align: middle;
+}
+
+#basicinfolinks {
+    margin-top: 20px;
+}
+
+#basicinfolinks a, #basicinfolinks span {
+    margin-right: 20px;
+    vertical-align: middle;
+}
+
+#basicinfolinks a img, #basicinfolinks span img {
+    vertical-align: middle;
+    margin-right: 3px;
+}
+
+
+
+
+/* Favorite Songs */
+
+#songtableedit, #songtable {
+    border: 0px;
+    border-collapse: collapse;
+    border-spacing: 0px;
+    width: 100%;
+}
+
+#songtableedit tr td {
+    width: 40%;
+    padding: 3px;
+}
+
+#songtableedit tr td.songcheckbox {
+    width: 20%;
+    text-align: center;
+}
+
+#songtable tr td {
+    width: 50%;
+    padding: 3px;
+}
+
+#songtableedit tr td.songrow1, #songtable tr td.songrow1 {
+    background-color: #532d63;
+}
+
+#songtableedit tr td.songrow2, #songtable tr td.songrow2 {
+    background-color: #643e74;
+}
+
+
+
+
+
+/* Edit Mode */
+
+.editmodewrapper {
+    border: 1px solid #9c8aa5;
+    border-radius: 5px;
+    padding-top: 10px;
+}
+
+.editmodeoptionscontainer {
+    background-color: #9c8aa5;
+    margin-top: 10px;
+    padding: 3px;
+    text-align: center;
+}
+
+.editmodeoption {
+    margin: 0px 7px;
+}
+
+.editmodeoption > img {
+    vertical-align: middle;
+    margin-right: 5px;
+}
+
+.editmodeoption > a {
+    color: #421c52;
+}
+
+.editmodeoption > a:hover {
+    color: #532d63;
+}
+
+.hiddenmodulecontainer {
+    border: 1px dotted #9c8aa5;
+    border-radius: 5px;
+    padding: 10px 3px;
+}
+
+
+
+
+/* Steam Module */
+
+#steaminfoname {
+    font-size: 1.5em;
+}
+
+#steaminfoweekplaytime {
+    margin-right: 25px;
+}
+
+
+
+
+
+/* Comment Module */
+
+.commentcontainer {
+    margin-bottom: 7px;
+    padding: 5px;
+}
+
+.commentname {
+    font-size: 1.35em;
+}
+
+.commentbody {
+    margin-top: 3px;
+    clear: both;
+}
+
+.commenttime {
+    margin-top: 3px;
+    font-size: .9em;
+    font-style: italic;
+}
+
+img.commentpic {
+    float: left;
+    margin-right: 5px;
+    max-height: 50px;
+    max-width: 50px;
+}
+
+
+/* My Characters */
+
+.characterwrapper {
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.characterwrapper:last-child {
+    margin-bottom: 0px;
+}
+
+.characterign {
+    font-size: 1.2em;
+}
+
+.characterfam a {
+    font-size: 1.1em;
+    color: #aaffaa;
+    text-decoration: none;
+}
+
+.characterfammaster a {
+    color: #ffaaaa;
+}
+
+.characterfamco a {
+    color: #aaaaff;
+}
+
+.characterlevel {
+    font-size: .9em;
+    vertical-align: middle;
+}
+
+.characterlevel img {
+    vertical-align: middle;
+    margin-left: 30px;
+}
+
+.characterteamwrapper {
+    font-size: 1.1em;
+    margin-bottom: 15px;
+}
+
+.characterteamwrapper:last-child {
+    margin-bottom: 0px;
+}
+
+table.characterteammates {
+    width: 450px;
+    border: 0px;
+    border-collapse: collapse;
+    margin: auto;
+}
+
+table.characterteammates tr td {
+    padding: 5px;
+}
+
+td.teammate1 {
+    text-align: right;
+    width: 200px;
+}
+
+td.teammatemiddle {
+    text-align: center;
+    width: 50px;
+}
+
+td.teammate2 {
+    text-align: left;
+    width: 200px;
+}
+
+
+
+/* Quest Stats */
+#questinfopoints {
+    font-size: 20pt;
+}
+
+#questinforank {
+    margin-top: 3px;
+}
+
+.questinfotable {
+    margin: auto;
+}
+
+.questinfotable tr th, .questinfotable tr td {
+    font-size: .8em;
+    text-align: center;
+}
+
+.questinfotable tr th {
+    font-weight: bold;
+}

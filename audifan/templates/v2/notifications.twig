@@ -1,0 +1,46 @@
+{% if GLOBAL.user.isLoggedIn() %}
+    <div class="col-md-12 col-lg-8 col-lg-offset-2 {% if GLOBAL.notifManager.hasUnreadNotifications() %}open{% endif %}" id="notification-container">
+        <div id="notification-button">
+            Notifications <i class="fa fa-chevron-down"></i>
+        </div>
+
+        <div id="notification-popup-container">
+            <div class="text-right popup-close"><i class="fa fa-close"></i></div>
+            <div id="notification-list">
+                {% for notif in GLOBAL.notifManager.getAllNotificationsForDisplay() %}
+                <div class="notification-list-item {% if notif.dbid %}deleteable{% endif %}" data-dbid="{{ notif.dbid }}">
+                    <div class="notification-list-item-text">
+                        {{ notif.html|raw }}
+                        <div class="notification-list-item-time">{{ notif.time|relativeTime }} ago</div>
+                    </div>
+                    <div class="notification-list-item-delete"><i class="fa fa-close"></i></div>
+                    <div style="clear:both;"></div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endif %}
+
+{#
+
+{% if GLOBAL.user.isLoggedIn() %}
+                <div id="notificationwrapper">
+                    <div id="notificationbutton">Notifications</div>
+                    <div id="notificationlistwrapper"{% if not GLOBAL.notifManager.hasUnreadNotifications() %} style="display:none;"{% endif %}>
+                        <div id="notificationlist">
+                            {% for notif in GLOBAL.notifManager.getAllNotificationsForDisplay() %}
+                                <div class="notification">
+                                    {{ notif.html|raw }}
+                                    <div class="notificationtime">{{ notif.time|relativeTime }} ago</div>
+                                </div>
+                            {% else %}
+                                <div class="_center">You have no notifications!</div>
+                            {% endfor %}
+                        </div>
+                        <div id="notificationclose">CLOSE</div>
+                    </div>
+                </div>
+            {% endif %}
+
+#}

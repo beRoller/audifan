@@ -1,0 +1,250 @@
+{% extends "base.twig" %}
+
+{% block pagetitle %}Quests{% endblock %}
+
+{% block head %}
+    <style>
+        @keyframes reqflashanim {
+            0% {
+                color: #ffffff;
+            }
+            50% {
+                color: #ffff00;
+            }
+        }
+
+        #reqflash {
+            -moz-animation: reqflashanim 3s linear 0s infinite;
+            -webkit-animation: reqflashanim 3s linear 0s infinite;
+            animation: reqflashanim 3s linear 0s infinite;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-6 col-sm-6">
+            {{ sectionStart("This Week's Quests")|raw }}
+                <div class="text-center">
+                    <div><em>{% include "generated/questdaterange.twig" %}</em></div>
+                    <div style="margin:3px 0px;">
+                        Quest submissions are due on Sunday by 11:50pm, Audition time.<br />
+                        New quests are randomly selected on Sunday at 11:59pm, Audition time.<br />
+                        <div id="reqflash" style="margin-top:3px;">
+                            <b>BEFORE ATTEMPTING A QUEST</b>,<br />
+                            be sure to read the <a href="/quests/submit/">screenshot requirements</a>.
+                        </div>
+                    </div>
+                    
+                    <div class="text-center">
+                        <h3>Individual Quests</h3>
+                        <div>
+                            Individual quests can be completed by yourself.<br />
+                            They award medals based on how many you complete.<br />
+                            Only points from Individual Quests count toward mode rankings.
+                        </div>
+                    </div>
+                    
+                    {% for i, label in {1:"easy",2:"medium",3:"hard",4:"insane"} %}
+                        <div class="panel panel_{{ label }}">
+                            <div class="panel-heading">{{ label|capitalize }}</div>
+                            <div class="panel-body">
+                                <div>
+                                    {% if thisWeeksQuests[i] == "" %}
+                                        No quest exists or quests are currently being updated.<br />
+                                        Please check back later.
+                                    {% else %}
+                                        {{ thisWeeksQuests[i]|raw }}
+                                    {% endif %}
+                                </div>
+                                
+                                {% if thisWeeksQuests[i] != "" %}
+                                    <div class="questworth">Worth {{ questWorths[i] }} points</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                    
+                    <div class="text-center">
+                        <h3>Group Quest</h3>
+                        You will have to play with at least one other<br />
+                        person in order to complete the group quest.
+                    </div>
+                    
+                    <div class="panel">
+                        <div class="panel-heading">Group</div>
+                        <div class="panel-body">
+                            <div>
+                                {% if thisWeeksQuests[5] == "" %}
+                                    No quest exists or quests are currently being updated.<br />
+                                    Please check back later.
+                                {% else %}
+                                    {{ thisWeeksQuests[5]|raw }}
+                                {% endif %}
+                            </div>
+                            
+                            {% if thisWeeksQuests[5] != "" %}
+                                <div class="questworth">Worth 10 points</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="text-center">
+                        <h3>Battle Quest</h3>
+                        The battle quest awards points based on how well you meet the<br />
+                        objective compared to all others who participate.
+                    </div>
+                        
+                    <div class="panel">
+                        <div class="panel-heading">Battle</div>
+                        <div class="panel-body">
+                            <div>
+                                {% if thisWeeksQuests[6] == "" %}
+                                    No quest exists or quests are currently being updated.<br />
+                                    Please check back later.
+                                {% else %}
+                                    {{ thisWeeksQuests[6]|raw }}
+                                {% endif %}
+                            </div>
+                            
+                            {% if thisWeeksQuests[6] != "" %}
+                                <div class="questworth">
+                                    {% if maxBattleQuestPoints <= 6 %}
+                                        Currently worth at least 6 points
+                                    {% else %}
+                                        Currently worth between 6 and {{ maxBattleQuestPoints }} points
+                                    {% endif %}
+                                    {% if maxBattleQuestPoints < 20 %}
+                                        <br />(increases as more people participate)
+                                    {% endif %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {{ sectionEnd()|raw }}
+        </div>
+        
+        <div class="col-md-6 col-sm-6">
+            {{ sectionStart('<a href="/quests/submit/">Submit a Screenshot</a>')|raw }}
+                
+            {{ sectionEnd()|raw }}
+            
+            {% if GLOBAL.user.isLoggedIn() %}
+                {{ sectionStart("My Stats")|raw }}
+                    <div class="text-center">
+                        <div style="font-size:20px;">1,234</div>
+                        <div>TOTAL QUEST POINTS (QP)</div>
+                    </div>
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>Number Completed</th>
+                                <th>Total QP</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for key,label in {'easy':'Easy','medium':'Medium','hard':'Hard','insane':'Insane','group':'Group','battle':'Battle'} %}
+                                <tr>
+                                    <td><b>{{ label }}</b></td>
+                                    <td>{{ questData['data_'~key~'_count'] }}</td>
+                                    <td>{{ questData['data_'~key~'_points'] }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {{ sectionEnd()|raw }}
+            {% endif %}
+
+            {{ sectionStart("Top 10 Overall")|raw }}
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Name</th>
+                            <th>Total QP</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                    {% for t in topTen %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td><a href="/community/profile/{{ t.id }}/">{{ t.display_name }}</a></td>
+                            <td>{{ t.qp|number_format }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                <div class="text-center">
+                    <a href="/quests/ranking/">View All Rankings</a>
+                </div>
+            {{ sectionEnd()|raw }}
+            
+            {{ sectionStart("Last Week's Battle Quest")|raw }}
+                <div class="text-center" style="margin-bottom:10px;">{{ bqLastWeekReq.req_text|raw }}</div>
+                
+                <ul class="nav nav-tabs" role="tablist">
+                    <li role="presentation" class="active"><a href="#battlequestranking" aria-controls="badges" role="tab" data-toggle="tab">Ranking</a></li>
+                    <li role="presentation"><a href="#battlequestqp" aria-controls="items" role="tab" data-toggle="tab">QP Requirements</a></li>
+                </ul>
+            
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane active" id="battlequestranking">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Rank</th>
+                                    <th>Name</th>
+                                    <th>{{ bqLastWeekReq.req_noun|capitalize }} Achieved</th>
+                                    <th>QP Earned</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                {% for b in bqLastWeekParticipants %}
+                                    <tr>
+                                        <td>{{ loop.index }}</td>
+                                        <td><a href="/community/profile/{{ b.id }}/">{{ b.display_name }}</a></td>
+                                        <td>{{ b.submit_battle_score|number_format }}</td>
+                                        <td>{{ b.points }}</td>
+                                    </tr>
+                                {% else %}
+                                    <tr>
+                                        <td colspan="4" style="text-align:center;">
+                                            (Points from last week have not been updated yet<br />
+                                            or nobody participated in last week's battle quest)
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div role="tabpanel" class="tab-pane" id="battlequestqp">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>QP Earned</th>
+                                    <th>Required {{ bqLastWeekReq.req_noun|capitalize }}</th>
+                                </tr>
+                            </thead>
+                            
+                            <tbody>
+                            {% for i, b in bqQpToScore %}
+                                <tr>
+                                    <td>{{ i + 6 }}</td>
+                                    <td>
+                                        {{ b|number_format }}{% if not loop.last %} ~ {{ (bqQpToScore[i + 1] - 1)|number_format }}{% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            {{ sectionEnd()|raw }}
+        </div>
+    </div>
+{% endblock %}

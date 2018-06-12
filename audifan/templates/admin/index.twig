@@ -1,0 +1,62 @@
+{% extends "base.twig" %}
+
+{% block title %}[ADMIN] Audifan.net{% endblock %}
+
+{% block body %}
+<div class="contentwrapper2col">
+    <div class="float">
+        <div class="sectionwrapper">
+            <div class="sectionheading">Server Info</div>
+            <div><b>Current Time:</b> {{ "now"|date("r") }}</div>
+            <div><a href="/admin/phpinfo/" target="_blank">PHP Info (new window)</a></div>
+            <div><a href="/admin/bitbucket/">Update Files From Repository</a></div>
+        </div>
+        <div class="sectionwrapper">
+            <div class="sectionheading">Song List</div>
+            <div>- <a href="/admin/songs/add/">Add Song</a></div>
+            <div>- <a href="/admin/songs/view/">View Complete List</a></div>
+            <div>- <a href="/admin/songs/edit/">Edit Song</a></div>
+            <div>- <a href="/admin/songs/removenewflags/">Remove New Flags</a></div>
+        </div>
+            <div class="sectionwrapper">
+            <div class="sectionheading">Run Cron Jobs</div>
+            <div><a href="/admin/cron/run/" target="_blank">Run a Script</a></div>
+            Script List:
+            <ul>
+                <li><a href="/admin/cron/run/?script=daily">daily</a></li>
+                <li><a href="/admin/cron/run/?script=quests">quests</a></li>
+                <li><a href="/admin/cron/run/?script=removeexpiredrequests">removeexpiredrequests</a></li>
+                <li><a href="/admin/cron/run/?script=removeexpiredsessions">removeexpiredsessions</a></li>
+                <li><a href="/admin/cron/run/?script=removeexpiredstuff">removeexpiredstuff</a></li>
+                <li><a href="/admin/cron/run/?script=removeoldcoinhistory">removeoldcoinhistory</a></li>
+                <li><a href="/admin/cron/run/?script=removeoldhappyboxwinners">removeoldhappyboxwinners</a></li>
+                <li><a href="/admin/cron/run/?script=removeoldnotifications">removeoldnotifications</a></li>
+                <li><a href="/admin/cron/run/?script=removeunverified">removeunverified</a></li>
+                <li><a href="/admin/cron/run/?script=startofweek">startofweek</a></li>
+                <li><a href="/admin/cron/run/?script=updatecandles">updatecandles</a></li>
+                <li><a href="/admin/cron/run/?script=updatevipranking">updatevipranking</a></li>
+                <li><a href="/admin/cron/run/?script=vipdrawing">vipdrawing</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="float">
+        <div class="sectionwrapper">
+            <div class="sectionheading">Account Management</div>
+            <div><a href="/admin/account/loginas/">Log In As Someone Else</a></div>
+            <div><a href="/admin/account/search/">Admin Member Search</a></div>
+            <div><a href="/admin/account/stuff/">Edit Someone's Account Stuff</a></div>
+            <div><a href="/admin/accountsbycoins/">View Accounts Sorted By Coins</a></div>
+        </div>
+        <div class="sectionwrapper">
+            <div class="sectionheading">Tickets</div>
+            <div><a href="/admin/ticketlist/">List</a></div>
+        </div>
+        <div class="sectionwrapper">
+            <div class="sectionheading">Prize Codes</div>
+            <div><a href="/admin/prizecodes/add/">Add One</a></div>
+            <div><a href="/admin/prizecodes/list/">View List</a></div>
+        </div>
+    </div>
+    <div style="clear:both;"></div>
+</div>
+{% endblock %}

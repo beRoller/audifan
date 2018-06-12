@@ -1,0 +1,158 @@
+{% extends "base.twig" %}
+{% from "macros/usercard.twig" import userCard %}
+{% import "macros/forms.twig" as forms %}
+
+{% block title %}Audifan.net - {{ profileBasicInfo.display_name }} - {% if selfComments %}Status Updates{% else %}Conversation with {{ otherBasicInfo.display_name }}{% endif %}{% endblock %}
+
+{% block head %}
+    <style>
+        .commentwriter {
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+        
+        .commentbody {
+            margin-top: 5px;
+            clear: both;
+        }
+        
+        .commentlinks {
+            text-align: center;
+            margin-top: 5px;
+            font-size: .9em;
+        }
+        
+        .commentlinks > span {
+            margin-right: 5px;
+            margin-left: 5px;
+            vertical-align: middle;
+        }
+        
+        .commentlinks > span img {
+            vertical-align: middle;
+            margin-right: 2px;
+        }
+        
+        .commenttime {
+            font-style: italic;
+        }
+        
+        img.commentpic {
+            float: left;
+            margin-right: 5px;
+            max-height: 50px;
+            max-width: 50px;
+        }
+        
+        .privatecomment {
+            text-align: center;
+            margin-bottom: 3px;
+            font-size: .95em;
+            color: #ffaaaa;
+        }
+        
+        .pagenav {
+            text-align: center;
+        }
+        
+        .pagenav > span {
+            margin-left: 25px;
+        }
+        
+        #newcomment {
+            width: 475px;
+            height: 100px;
+            resize: vertical;
+        }
+        
+        #newcommentmakeprivate * {
+            vertical-align: middle;
+        }
+        
+        #newcommentcancel {
+            margin-left: 5px;
+        }
+    </style>
+    <script type="text/javascript">
+        $(function() {
+            $("#addcommentlink").click(function() {
+                $("#addcomment").slideToggle("fast");
+            });
+            
+            $("#newcommentcancel").click(function() {
+                $("#addcomment").slideUp("fast");
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block body %}
+    <div class="pagetitle">
+        <a href="/community/profile/{{ profileBasicInfo.id }}/">{{ profileBasicInfo.display_name }}</a>'s {% if selfComments %}Status Updates{% else %}Conversation with <a href="/community/profile/{{ otherBasicInfo.id }}/">{{ otherBasicInfo.display_name }}</a>{% endif %}
+    </div>
+        
+    <div class="contentwrapperhalf">
+        {% if not profileBasicInfo.allow_comments and profileBasicInfo.id != GLOBAL.user.getId() %}
+            <div class="_right" style="margin-bottom:5px;">{{ profileBasicInfo.display_name }} does not allow comments.</div>
+        {% elseif not otherBasicInfo.allow_comments and otherBasicInfo.id != GLOBAL.user.getId() %}
+            <div class="_right" style="margin-bottom:5px;">{{ otherBasicInfo.display_name }} does not allow comments.</div>
+        {% elseif (GLOBAL.user.getId() == profileBasicInfo.id or GLOBAL.user.getId() == otherBasicInfo.id) %}
+            <div class="_right" style="margin-bottom:5px;"><a href="javascript:;" id="addcommentlink">Post a {% if selfComments %}Status Update{% else %}Comment{% endif %}</a></div>
+            <div class="sectionwrapper" id="addcomment"{% if not compose %} style="display:none;"{% endif %}>
+                <div class="sectionheading">Post a {% if selfComments %}Status Update{% else %}Comment{% endif %}</div>
+                <div class="commentwriter"><a href="/community/profile/{{ GLOBAL.user.getId() }}/">{{ GLOBAL.user.getNickname() }}</a></div>
+                {{ forms.start("/community/profile/"~profileBasicInfo.id~"/conversation/"~otherBasicInfo.id~"/?compose=true") }}
+                <div class="_center">{{ forms.textArea("comment", writingComment, "newcomment") }}</div>
+                <div id="newcommentmakeprivate">{{ forms.checkbox("private", private) }} <span>Make private.</span></div>
+                <div>A list of formatting codes is available <a href="/help/commentsyntax/" target="_blank">here</a>.</div>
+                <div class="_center" style="margin-top:5px;">
+                    {{ forms.submit("submit_newcomment", "Post") }}
+                    {{ forms.button("Cancel", "newcommentcancel") }}
+                </div>
+                {{ forms.end() }}
+            </div>
+        {% endif %}
+        {% for c in comments %}
+            <div class="sectionwrapper">
+            {% if c.private and GLOBAL.user.getId() != c.from_id and GLOBAL.user.getId() != c.to_id %}
+                <div class="_center">(This comment is private)</div>
+            {% else %}
+                {{ userCard({
+                    staticUrl: GLOBAL.staticUrl,
+                    id: c.from_id,
+                    nickname: c.display_name,
+                    inventory: c.itemstring|split(','),
+                    vip_rank: c.viprank,
+                    quest_points: c.qp,
+                    quest_rank: c.qrank,
+                    profile_pic_type: c.profile_pic_type,
+                    character: {
+                        ign: c.ign,
+                        level: c.level,
+                        fam: c.fam,
+                        fam_member_type: cmt.fam_member_type
+                    }
+                }) }}
+                <div class="commentbody">
+                    {% if c.private %}
+                        <div class="privatecomment">This comment is private.</div>
+                    {% endif %}
+                    {{ c.comment|bbcode }}
+                </div>
+
+                <div class="commentlinks">
+                    <span class="commenttime"><a title="{{ c.time|date('r') }}" href="/community/comment/{{ c.id }}/">{{ c.time|relativeTime }} ago</a></span>
+                </div>
+            {% endif %}
+            </div>
+        {% else %}
+            <div class="_center" style="margin-top:10px;">
+                {% if selfComments %}
+                    {{ profileBasicInfo.display_name }} hasn't posted any status updates yet.
+                {% else %}
+                    {{ profileBasicInfo.display_name }} and {{ otherBasicInfo.display_name }} haven't posted any comments on each other's profile yet.
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

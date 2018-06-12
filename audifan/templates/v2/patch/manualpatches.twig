@@ -1,0 +1,500 @@
+{% extends "base.twig" %}
+
+{% block title %}Audifan.net - Manual Patches{% endblock %}
+
+{% block head %}
+<style type="text/css">
+    /*.mp {
+        border: 2px solid #ffffff;
+        border-collapse: collapse;
+        width: 100%;
+    }
+    
+    .mp tr td, .mp tr th {
+        border: 1px solid #ffffff;
+        text-align: center;
+        padding: 3px;
+        font-size: .9em;
+    }
+    
+    .mp tr th {
+        font-weight: bold;
+    }*/
+</style>
+{% endblock %}
+
+{% block endofpage %}
+    <script type="text/javascript" src="{{ GLOBAL.staticUrl }}/js/jquery.xdomainajax.js"></script>
+    <script type="text/javascript">
+        $.ajax({
+            url: "http://redbana-patches.s3.amazonaws.com/Update.ini",
+            type: 'GET',
+            dataType: "text",
+            success: function(d, s, x) {
+                var s = new String(d.responseText);
+                var majorSearch = "MAJORVERSION = ",
+                    minorSearch = "MINORVERSION = ";
+                if (s.indexOf(majorSearch) !== -1 && s.indexOf(minorSearch) !== -1) {
+                    var major = s.substr(s.indexOf(majorSearch) + majorSearch.length, 2);
+                    var minor = s.substr(s.indexOf(minorSearch) + minorSearch.length, 3);
+                    $("#currentversion").html(new String(major).concat(minor));
+                }
+                else
+                    $("#currentversion").html("Unable to reach patch server at this time.");
+            },
+            error: function(x, s, e) {
+                $("#currentversion").html("Unable to reach patch server at this time.");
+            },
+            jsonp: {
+                
+            }
+        });
+    </script>
+{% endblock %}
+
+{% block pagetitle %}Manual Patches{% endblock %}
+
+{% block body %}
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2">
+        <div class="text-center" style="margin-bottom:15px;">
+            These manual patches will update your Audition client, providing an alternative to the Audition patcher.<br />
+            All manual patches are hosted by Mediafire.
+        </div>
+        
+        {{ sectionStart('Current Version: <span id="currentversion">Loading...</span>')|raw }}
+        {{ sectionEnd() }}
+        
+        {{ sectionStart("Game Client")|raw }}
+                <b>Current Game Client Download Version:</b> 10247<br />
+                Download via torrent <a href="http://www.redbana.com/Download/Audition_america_07_2014_oct.torrent" target="_blank">here</a>.<br />
+                Download via Mediafire <a href="http://www.mediafire.com/download/8t94spdcktbracd/audition_america_07.rar" target="_blank">here</a>.<br />
+		Download via Redbana <a href="http://redbana-client.s3.amazonaws.com/Audition_install.zip">here</a>.
+        {{ sectionEnd()|raw }}
+        
+        {{ sectionStart("Patches After Downloading the Game Client")|raw }}
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Starting Version</th>
+                        <th>Version After Updating</th>
+                        <th>Download File</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>10247</td>
+                        <td>10307</td>
+                        <td><a href="http://www.mediafire.com/download/quzza9fvn7smbu5/Audition10247to10307.exe" target="_blank">Audition10247to10307.exe</a> (423 MB)</td>
+                    </tr>
+                    <tr>
+                        <td>10247</td>
+                        <td>10265</td>
+                        <td><a href="http://www.mediafire.com/download/p9nlap71a63ip7f/Audition10247to10265.exe" target="_blank">Audition10247to10265.exe</a> (235 MB)</td>
+                    </tr>
+                </tbody>
+            </table>
+        {{ sectionEnd() }}
+        
+        {{ sectionStart("Single Patches")|raw }}
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Starting Version</th>
+                        <th>Version After Updating</th>
+                        <th>Download File</th>
+                    </tr>
+                </thead>
+                
+                <tbody>
+                    <tr>
+                        <td>10329</td>
+                        <td>10333</td>
+                        <td><a href="http://www.mediafire.com/download/9lc1xqa3ob86aeb/Audition10329to10333.exe" target="_blank">Audition10329to10333.exe</a> (61 MB)</td>
+                    </tr>
+                    <tr>
+                        <td>10325</td>
+                        <td>10329</td>
+                        <td><a href="http://www.mediafire.com/download/0z2hssapty1qe12/Audition10325to10329.exe" target="_blank">Audition10325to10329.exe</a> (37 MB)</td>
+                    </tr>
+                    <tr>
+                        <td>10324</td>
+                        <td>10325</td>
+                        <td><a href="http://www.mediafire.com/download/ezn6ynzyng5yb8u/Audition10324to10325.exe" target="_blank">Audition10324to10325.exe</a> (59 MB)</td>
+                    </tr>
+                    <tr>
+                        <td>10323</td>
+                        <td>10324</td>
+                        <td><a href="http://www.mediafire.com/download/5c1s94a1nwutc99/Audition10323to10324.exe" target="_blank">Audition10323to10324.exe</a> (1 MB)</td>
+                    </tr>
+                    <tr>
+                        <td>10321</td>
+                        <td>10323</td>
+                        <td><a href="http://www.mediafire.com/download/tqt5t58fjz2493r/Audition10321to10323.exe" target="_blank">Audition10321to10323.exe</a> (34 MB)</td>
+                    </tr>
+                    <tr>
+                        <td>10320</td>
+                        <td>10321</td>
+                        <td><a href="http://www.mediafire.com/download/rn2e3i3z14pqh4x/Audition10320to10321.exe" target="_blank">Audition10320to10321.exe</a> (34 MB)</td>
+                    </tr>
+                    <tr>
+                        <td>10319</td>
+                        <td>10320</td>
+                        <td><a href="http://www.mediafire.com/download/2cr34l92twolsrj/Audition10319to10320.exe" target="_blank">Audition10319to10320.exe</a> (1 MB)</td>
+                    </tr>
+                    <tr>
+                        <td>10316</td>
+                        <td>10319</td>
+                        <td><a href="http://www.mediafire.com/download/2pjasday0lhs823/Audition10316to10319.exe" target="_blank">Audition10316to10319.exe</a> (59 MB)</td>
+                    </tr>
+                    <tr>
+                        <td>10312</td>
+                        <td>10316</td>
+                        <td><a href="http://www.mediafire.com/download/u714u5o54kog9mn/Audition10312to10316.exe" target="_blank">Audition10312to10316.exe</a> (2 MB)</td>
+                    </tr>
+                    <tr>
+                        <td>10310</td>
+                        <td>10312</td>
+                        <td><a href="http://www.mediafire.com/download/cxed3tt8eibored/Audition10310to10312.exe" target="_blank">Audition10310to10312.exe</a> (21 MB)</td>
+                    </tr>
+                    <tr>
+                        <td>10309</td>
+                        <td>10310</td>
+                        <td><a href="http://www.mediafire.com/download/ltno968jg2ngbg8/Audition10309to10310.exe" target="_blank">Audition10309to10310.exe</a> (43 MB)</td>
+                    </tr>
+                    <tr>
+                        <td>10308</td>
+                        <td>10309</td>
+                        <td><a href="http://www.mediafire.com/download/5p95nstkv78adj9/Audition10308to10309.exe" target="_blank">Audition10308to10309.exe</a> (4 MB)</td>
+                    </tr>
+                    <tr>
+                        <td>10307</td>
+                        <td>10308</td>
+                        <td><a href="http://www.mediafire.com/download/xqxz3ewpdpz1nz6/Audition10307to10308.exe" target="_blank">Audition10307to10308.exe</a> (14 MB)</td>
+                    </tr>
+                    <tr>
+                        <td>10306</td>
+                        <td>10307</td>
+                        <td><a href="http://www.mediafire.com/download/7hpnja4ehn5ppxq/Audition10306to10307.exe" target="_blank">Audition10306to10307.exe</a> (13 MB)</td>
+                    </tr>
+                    <tr>
+                        <td>10305</td>
+                        <td>10306</td>
+                        <td><a href="http://www.mediafire.com/download/0o98vwd546cow20/Audition10305to10306.exe" target="_blank">Audition10305to10306.exe</a> (57 MB)</td>
+                    </tr>
+                    <tr>
+                        <td>10303</td>
+                        <td>10305</td>
+                        <td><a href="http://www.mediafire.com/download/yulcsanfeyrdess/Audition10303to10305.exe" target="_blank">Audition10303to10305.exe</a> (27 MB)</td>
+                    </tr>
+                    <tr>
+                        <td>10301</td>
+                        <td>10303</td>
+                        <td><a href="http://www.mediafire.com/download/non1r65dkzn9gpn/Audition10301to10303.exe" target="_blank">Audition10301to10303.exe</a> (50 MB)</td>
+                    </tr>
+                    <tr>
+                        <td>10299</td>
+                        <td>10301</td>
+                        <td><a href="http://www.mediafire.com/download/br1cawh9ashpqc1/Audition10299to10301.exe" target="_blank">Audition10299to10301.exe</a> (53 MB)</td>
+                    </tr>
+                    <tr>
+                        <td>10298</td>
+                        <td>10299</td>
+                        <td><a href="http://www.mediafire.com/download/e2b3jn959yvlct5/Audition10298to10299.exe" target="_blank">Audition10298to10299.exe</a> (892 KB)</td>
+                    </tr>
+                    <tr>
+                        <td>10295</td>
+                        <td>10298</td>
+                        <td><a href="http://www.mediafire.com/download/lchoi4j3f88b9ub/Audition10295to10298.exe" target="_blank">Audition10295to10298.exe</a> (2 MB)</td>
+                    </tr>
+                    <tr>
+                        <td>10291</td>
+                        <td>10295</td>
+                        <td><a href="http://www.mediafire.com/download/jvdozjcz1cucbu3/Audition10291to10295.exe" target="_blank">Audition10291to10295.exe</a> (42 MB)</td>
+                    </tr>
+                    <tr>
+                        <td>10289</td>
+                        <td>10291</td>
+                        <td><a href="http://www.mediafire.com/download/3vo5sd30pyy5l3y/Audition10289to10291.exe" target="_blank">Audition10289to10291.exe</a> (2 MB)</td>
+                    </tr>
+                    <tr>
+                        <td>10287</td>
+                        <td>10289</td>
+                        <td><a href="http://www.mediafire.com/download/szb0zrb088w0q5s/Audition10287to10289.exe" target="_blank">Audition10287to10289.exe</a> (24 MB)</td>
+                    </tr>
+                    <tr>
+                        <td>10279</td>
+                        <td>10287</td>
+                        <td><a href="http://www.mediafire.com/download/biacjqdzs4w7ukv/Audition10279to10287.exe" target="_blank">Audition10279to10287.exe</a> (41 MB)</td>
+                    </tr>
+                    <tr>
+                        <td>10277</td>
+                        <td>10279</td>
+                        <td><a href="http://www.mediafire.com/download/l4y356402ol1rq7/Audition10277to10279.exe" target="_blank">Audition10277to10279.exe</a> (42 MB)</td>
+                    </tr>
+                    <tr>
+                        <td>10274</td>
+                        <td>10277</td>
+                        <td><a href="http://www.mediafire.com/download/4bgdv0ysfn1r77s/Audition10274to10277.exe" target="_blank">Audition10274to10277.exe</a> (32 MB)</td>
+                    </tr>
+                    <tr>
+                        <td>10273</td>
+                        <td>10274</td>
+                        <td><a href="http://www.mediafire.com/download/lwj142asb89w0t2/Audition10273to10274.exe" target="_blank">Audition10273to10274.exe</a> (955 KB)</td>
+                    </tr>
+                    <tr>
+                        <td>10272</td>
+                        <td>10273</td>
+                        <td><a href="http://www.mediafire.com/download/9x1y2c0xvz83ymc/Audition10272to10273.exe" target="_blank">Audition10272to10273.exe</a> (26 MB)</td>
+                    </tr>
+                    <tr>
+                        <td>10271</td>
+                        <td>10272</td>
+                        <td><a href="http://www.mediafire.com/download/7dv5vxpy8c5axy1/Audition10271to10272.exe" target="_blank">Audition10271to10272.exe</a> (962 KB)</td>
+                    </tr>
+                    <tr>
+                        <td>10269</td>
+                        <td>10271</td>
+                        <td><a href="http://www.mediafire.com/download/6kpane19z0f0uns/Audition10269to10271.exe" target="_blank">Audition10269to10271.exe</a> (30 MB)</td>
+                    </tr>
+                    <tr>
+                        <td>10268</td>
+                        <td>10269</td>
+                        <td><a href="http://www.mediafire.com/download/fdsfvqwec9k22cs/Audition10268to10269.exe" target="_blank">Audition10268to10269.exe</a> (12 MB)</td>
+                    </tr>
+                    <tr>
+                        <td>10267</td>
+                        <td>10268</td>
+                        <td><a href="http://www.mediafire.com/download/lecgdyjhpq9qdys/Audition10267to10268.exe" target="_blank">Audition10267to10268.exe</a> (1 MB)</td>
+                    </tr>
+                    <tr>
+                        <td>10266</td>
+                        <td>10267</td>
+                        <td><a href="http://www.mediafire.com/download/oorzzjb6zz7sqln/Audition10266to10267.exe" target="_blank">Audition10266to10267.exe</a> (76 MB)</td>
+                    </tr>
+                    <tr>
+                        <td>10265</td>
+                        <td>10266</td>
+                        <td><a href="http://www.mediafire.com/download/4v1rn4rr3rb2pze/Audition10265to10266.exe" target="_blank">Audition10265to10266.exe</a> (12 MB)</td>
+                    </tr>
+                    <tr>
+                        <td>10264</td>
+                        <td>10265</td>
+                        <td><a href="http://www.mediafire.com/download/y936vxtb03i6l40/Audition10264to10265.exe" target="_blank">Audition10264to10265.exe</a> (45 MB)</td>
+                    </tr>
+                    <tr>
+                        <td>10263</td>
+                        <td>10264</td>
+                        <td><a href="http://www.mediafire.com/download/cptgomkk9xi8wom/Audition10263to10264.exe" target="_blank">Audition10263to10264.exe</a> (2 MB)</td>
+                    </tr>
+                    <tr>
+                        <td>10260</td>
+                        <td>10263</td>
+                        <td><a href="http://www.mediafire.com/download/enfmb54jbws662q/Audition10260to10263.exe" target="_blank">Audition10260to10263.exe</a> (26 MB)</td>
+                    </tr>
+                    <tr>
+                        <td>10258</td>
+                        <td>10260</td>
+                        <td><a href="http://www.mediafire.com/download/wvj94q9odghiufh/Audition10258to10260.exe" target="_blank">Audition10258to10260.exe</a> (70 MB)</td>
+                    </tr>
+                    <tr>
+                        <td>10256</td>
+                        <td>10258</td>
+                        <td><a href="http://www.mediafire.com/download/7y8bcmdt7934ufd/Audition10256to10258.exe" target="_blank">Audition10256to10258.exe</a> (79 MB)</td>
+                    </tr>
+                    <tr>
+                        <td>10255</td>
+                        <td>10256</td>
+                        <td><a href="http://www.mediafire.com/download/th7adxawmw86zk8/Audition10255to10256.exe" target="_blank">Audition10255to10256.exe</a> (24 MB)</td>
+                    </tr>
+                    <tr>
+                        <td>10253</td>
+                        <td>10255</td>
+                        <td><a href="http://www.mediafire.com/download/qx7auwy559sd57c/Audition10253to10255.exe" target="_blank">Audition10253to10255.exe</a> (68 MB)</td>
+                    </tr>
+                    <tr>
+                        <td>10248</td>
+                        <td>10253</td>
+                        <td><a href="http://www.mediafire.com/download/pu06xjzywzzrjh3/Audition10248to10253.exe" target="_blank">Audition10248to10253.exe</a> (50 MB)</td>
+                    </tr>
+                    <tr>
+                        <td>10247</td>
+                        <td>10248</td>
+                        <td><a href="http://www.mediafire.com/download/1dv7hkfwwezafwc/Audition10247to10248.exe" target="_blank">Audition10247to10248.exe</a> (41 MB)</td>
+                    </tr>
+                    <tr>
+                        <td>10245</td>
+                        <td>10247</td>
+                        <td><a href="http://www.mediafire.com/download/qr60ku6ca0au5sz/Audition10245to10247.exe" target="_blank">Audition10245to10247.exe</a> (42 MB)</td>
+                    </tr>
+                    <tr>
+                        <td>10243</td>
+                        <td>10245</td>
+                        <td><a href="http://www.mediafire.com/download/8wasmb8lp8yh8lc/Audition10243to10245.exe" target="_blank">Audition10243to10245.exe</a> (53 MB)</td>
+                    </tr>
+                    <tr>
+                        <td>10241</td>
+                        <td>10243</td>
+                        <td><a href="http://www.mediafire.com/download/768k899iwgx8g0q/Audition10241to10243.exe" target="_blank">Audition10241to10243.exe</a> (13 MB)</td>
+                    </tr>
+                    <tr>
+                        <td>10240</td>
+                        <td>10241</td>
+                        <td><a href="http://www.mediafire.com/download/ajb9s6bx5m970zb/Audition10240to10241.exe" target="_blank">Audition10240to10241.exe</a> (43 MB)</td>
+                    </tr>
+                    <tr>
+                        <td>10238</td>
+                        <td>10240</td>
+                        <td><a href="http://www.mediafire.com/download/rj73smh656snu7w/Audition10238to10240.exe" target="_blank">Audition10238to10240.exe</a> (66 MB)</td>
+                    </tr>
+                    <tr>
+                        <td>10237</td>
+                        <td>10238</td>
+                        <td><a href="http://www.mediafire.com/download/gd53xfgad3gaa49/Audition10237to10238.exe" target="_blank">Audition10237to10238.exe</a> (60 MB)</td>
+                    </tr>
+                    <tr>
+                        <td>10236</td>
+                        <td>10237</td>
+                        <td><a href="http://www.mediafire.com/download/1fhtf71bgmbii46/Audition10236to10237.exe" target="_blank">Audition10236to10237.exe</a> (39 MB)</td>
+                    </tr>
+                    <tr>
+                        <td>10234</td>
+                        <td>10236</td>
+                        <td><a href="http://www.mediafire.com/download/dypahuqbtd2b7c5/Audition10234to10236.exe" target="_blank">Audition10234to10236.exe</a> (11 MB)</td>
+                    </tr>
+                    <tr>
+                        <td>10233</td>
+                        <td>10234</td>
+                        <td><a href="http://www.mediafire.com/download/dyybgy7s0r59dj4/Audition10233to10234.exe" target="_blank">Audition10233to10234.exe</a> (60 MB)</td>
+                    </tr>
+                    <tr>
+                        <td>10228</td>
+                        <td>10233</td>
+                        <td><a href="http://www.mediafire.com/download/23pbdf1qy6sdwtm/Audition10228to10233.exe" target="_blank">Audition10228to10233.exe</a> (48 MB)</td>
+                    </tr>
+                    <tr>
+                        <td>10209</td>
+                        <td>10228</td>
+                        <td><a href="http://www.mediafire.com/download/17eggk6zctva7qc/Audition10209to10228.exe" target="_blank">Audition10209to10228.exe</a> (18 MB)</td>
+                    </tr>
+                    <tr>
+                        <td>10207</td>
+                        <td>10209</td>
+                        <td><a href="http://www.mediafire.com/download/jrwp8xsvr2hde6c/Audition10207to10209.exe" target="_blank">Audition10207to10209.exe</a> (18 MB)</td>
+                    </tr>
+                    <tr>
+                        <td>10206</td>
+                        <td>10207</td>
+                        <td><a href="http://www.mediafire.com/download/2ps0cri4wod8u19/Audition10206to10207.exe" target="_blank">Audition10206to10207.exe</a> (1 MB)</td>
+                    </tr>
+                    <tr>
+                        <td>10205</td>
+                        <td>10206</td>
+                        <td><a href="http://www.mediafire.com/download/llpce4ltc8s6u15/Audition10205to10206.exe" target="_blank">Audition10205to10206.exe</a> (40 MB)</td>
+                    </tr>
+                    <tr>
+                        <td>10204</td>
+                        <td>10205</td>
+                        <td><a href="http://www.mediafire.com/download/ermc5qv515820n5/Audition10204to10205.exe" target="_blank">Audition10204to10205.exe</a> (48 MB)</td>
+                    </tr>
+                    <tr>
+                        <td>10201</td>
+                        <td>10204</td>
+                        <td><a href="http://www.mediafire.com/download/119zf8w4lkw6knl/Audition10201to10204.exe" target="_blank">Audition10201to10204.exe</a> (11 MB)</td>
+                    </tr>
+                    <tr>
+                        <td>10200</td>
+                        <td>10201</td>
+                        <td><a href="http://www.mediafire.com/download/lnv14s5r2gig22j/Audition10200to10201.exe" target="_blank">Audition10200to10201.exe</a> (10 MB)</td>
+                    </tr>
+                    <tr>
+                        <td>10199</td>
+                        <td>10200</td>
+                        <td><a href="http://www.mediafire.com/download/8dleta3928ecgty/Audition10199to10200.exe" target="_blank">Audition10199to10200.exe</a> (69 MB)</td>
+                    </tr>
+                    <tr>
+                        <td>10196</td>
+                        <td>10199</td>
+                        <td><a href="http://www.mediafire.com/download/udbvw939awa51c5/Audition10196to10199.exe" target="_blank">Audition10196to10199.exe</a> (28 MB)</td>
+                    </tr>
+                    <tr>
+                        <td>10194</td>
+                        <td>10196</td>
+                        <td><a href="http://www.mediafire.com/download/hh926l95famfzkd/Audition10194to10196.exe" target="_blank">Audition10194to10196.exe</a> (29 MB)</td>
+                    </tr>
+                    <tr>
+                        <td>10191</td>
+                        <td>10194</td>
+                        <td><a href="http://www.mediafire.com/download/s73flcsi9c95kd8/Audition10191to10194.exe" target="_blank">Audition10191to10194.exe</a> (36 MB)</td>
+                    </tr>
+                    <tr>
+                        <td>10190</td>
+                        <td>10191</td>
+                        <td><a href="http://www.mediafire.com/download/u1n23slfyhuay1h/Audition10190to10191.exe" target="_blank">Audition10190to10191.exe</a> (16 MB)</td>
+                    </tr>
+                    <tr>
+                        <td>10189</td>
+                        <td>10190</td>
+                        <td><a href="http://www.mediafire.com/download/kdcf8ohyfjqa86c/Audition10189to10190.exe" target="_blank">Audition10189to10190.exe</a> (35 MB)</td>
+                    </tr>
+                    <tr>
+                        <td>10188</td>
+                        <td>10189</td>
+                        <td><a href="http://www.mediafire.com/download/bnqr4w43m74ie4w/Audition10188to10189.exe" target="_blank">Audition10188to10189.exe</a> (15 MB)</td>
+                    </tr>
+                    <tr>
+                        <td>10187</td>
+                        <td>10188</td>
+                        <td><a href="http://www.mediafire.com/download/hmwnjmwnz211j5n/Audition10187to10188.exe" target="_blank">Audition10187to10188.exe</a> (1 MB)</td>
+                    </tr>
+                    <tr>
+                        <td>10184</td>
+                        <td>10187</td>
+                        <td><a href="http://www.mediafire.com/download/e1n82fzo6i4rwee/Audition10184to10187.exe" target="_blank">Audition10184to10187.exe</a> (33 MB)</td>
+                    </tr>
+                    <tr>
+                        <td>10181</td>
+                        <td>10184</td>
+                        <td><a href="http://www.mediafire.com/download/wlcv65ar7bx9bx1/Audition10181to10184.exe" target="_blank">Audition10181to10184.exe</a> (22 MB)</td>
+                    </tr>
+                    <tr>
+                        <td>10179</td>
+                        <td>10181</td>
+                        <td><a href="http://www.mediafire.com/download/7ihr5gurzi795pi/Audition10179to10181.exe" target="_blank">Audition10179to10181.exe</a> (22 MB)</td>
+                    </tr>
+                    <tr>
+                        <td>10178</td>
+                        <td>10179</td>
+                        <td><a href="http://www.mediafire.com/download/tm5ndfzt3oaz2ah/Audition10178to10179.exe" target="_blank">Audition10178to10179.exe</a> (8 MB)</td>
+                    </tr>
+                    <tr>
+                        <td>10177</td>
+                        <td>10178</td>
+                        <td><a href="http://www.mediafire.com/download/hx62xkoqn9x7y75/Audition10177to10178.exe" target="_blank">Audition10177to10178.exe</a> (10 MB)</td>
+                    </tr>
+                    <tr>
+                        <td>10175</td>
+                        <td>10177</td>
+                        <td><a href="http://www.mediafire.com/download/ocn8layecsb527x/Audition10175to10177.exe" target="_blank">Audition10175to10177.exe</a> (42 MB)</td>
+                    </tr>
+                    <tr>
+                        <td>10174</td>
+                        <td>10175</td>
+                        <td><a href="http://www.mediafire.com/download/9zvj210nscaxn2l/Audition10174to10175.exe" target="_blank">Audition10174to10175.exe</a> (11 MB)</td>
+                    </tr>
+                    <tr>
+                        <td>10173</td>
+                        <td>10174</td>
+                        <td><a href="http://www.mediafire.com/download/mi9702qpa4jcxvm/Audition10173to10174.exe" target="_blank">Audition10173to10174.exe</a> (11 MB)</td>
+                    </tr>
+                    <tr>
+                        <td>10172</td>
+                        <td>10173</td>
+                        <td><a href="http://www.mediafire.com/download/zc3s131w33ruhxk/Audition10172to10173.exe" target="_blank">Audition10172to10173.exe</a> (8 MB)</td>
+                    </tr>
+                </tbody>
+            </table>
+        {{ sectionEnd()|raw }}
+    </div>
+</div>
+{% endblock %}

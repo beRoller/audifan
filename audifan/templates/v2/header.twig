@@ -1,0 +1,126 @@
+<div class="row header">
+    {% if GLOBAL.user.isLoggedIn() %}
+        <div class="row">
+            <div class="col-md-6 col-sm-6 text-center">
+                <a href="/store/" id="coindisplaystorelink">
+                    <img src="{{ GLOBAL.staticUrl }}/img/coins/coin19.png" />
+                    <span class="coinbalancedisplay">{{ GLOBAL.status.coins|number_format }}</span>
+                </a>
+            </div>
+            
+            <div class="col-md-6 col-sm-6 text-center">
+                <a href="/account/dashboard/" id="dashboardlink">My Dashboard &raquo;</a>
+            </div>
+        </div>
+    {% endif %}
+    
+    <div class="row hidden-xs">
+        <div class="col-md-12 logo">
+            <a href="/"><img src="{{ GLOBAL.staticUrl }}/img/logo_new.png" alt="Audifan.net" /></a>
+        </div>
+    </div>
+    
+    <div class="row main-nav-container">
+        <div class="col-md-12">
+            <nav class="navbar">
+                <div class="container-fluid">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar" aria-expanded="false">
+                            <span class="sr-only">Toggle Navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                        <a class="navbar-brand visible-xs" href="/"><img src="{{ GLOBAL.staticUrl }}/img/logo.png" alt="Audifan.net" /></a>
+                    </div>
+
+                    <div class="collapse navbar-collapse" id="main-navbar">
+                        <ul class="nav navbar-nav">
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Site Events <span class="caret"></span></a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="/community/happybox/">Happy Box</a></li>
+                                    <li><a href="/store/">Coin Store</a></li>
+                                    <li role="separator" class="divider"></li>
+                                    <li><a href="/community/vipdrawing/">VIP Drawing</a></li>
+                                    <li><a href="/community/vipranking/">VIP Ranking</a></li>
+                                    <li role="separator" class="divider"></li>
+                                    <li><a href="/quests/">Quests</a></li>
+                                    <li><a href="/quests/ranking/">Quest Rankings</a></li>
+                                    <li><a href="/quests/archive/">Quest Archive</a></li>
+                                </ul>
+                            </li>
+                            
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Community <span class="caret"></span></a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="/community/">Community Home</a></li>
+                                    <li><a href="/community/search/">Member Search</a></li>
+                                    <li><a href="/community/memberlist/">Member List by Nickname</a></li>
+                                    <li><a href="/community/memberlist/?cat=ign">Member List by IGN</a></li>
+                                    <li><a href="/news/">News &amp; Updates</a></li>
+                                    <li><a href="/community/">Megaphone</a></li>
+                                    <li role="separator" class="divider"></li>
+                                    <li><a href="https://www.facebook.com/audifan/" target="_blank"><i class="fa fa-facebook-official"></i> Audifan on Facebook</a></li>
+                                    <li><a href="https://www.facebook.com/RedbanaAudition/" target="_blank"><i class="fa fa-facebook-official"></i> Official Audition Facebook</a></li>
+                                    <li><a href="http://forums.redbana.com/" target="_blank"><i class="fa fa-external-link-square"></i> Official Audition Forums</a></li>
+                                    <li><a href="http://store.steampowered.com/app/349720/" target="_blank"><i class="fa fa-steam-square"></i> Audition on Steam</a></li>
+                                </ul>
+                            </li>
+                            
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Guides &amp; Tools <span class="caret"></span></a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="/community/siggenerator/">Signature Generator</a></li>
+                                    <li><a href="/community/gardentimer/">Couple Garden Timers</a></li>
+                                    <li role="separator" class="divider"></li>
+                                    <li><a href="/guides/exp/">EXP Table &amp; Calculator</a></li>
+                                    <li><a href="/guides/licenses/">License Guide</a></li>
+                                    <li><a href="/guides/story/e1/">Story Guide - Episode 1</a></li>
+                                    <li><a href="/guides/story/e2/">Story Guide - Episode 2</a></li>
+                                    <li><a href="/guides/story/secret/">Story Guide - Secret Episode</a></li>
+                                    <li><a href="/guides/couple/">Couple Guide</a></li>
+                                    <li><a href="/guides/coupleshop/">Couple Shop Guide</a></li>
+                                    <li><a href="/guides/couplegarden/">Couple Garden Guide</a></li>
+                                    <li><a href="/guides/tournamenttime/">Tournament Time Guide</a></li>
+                                    <li><a href="/guides/timebox/">Time Box Guide</a></li>
+                                </ul>
+                            </li>
+                            
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Patches <span class="caret"></span></a>
+                                <ul class="dropdown-menu pull-right-non-xs">
+                                    <li><a href="/patch/">Patch Archive</a></li>
+                                    <li><a href="/patch/20160720/">Latest Patch</a></li>
+                                    <li><a href="/patch/manualpatches/">Manual Patches</a></li>
+                                    <li role="separator" class="divider"></li>
+                                    {% for year in 2016..2007 %}
+                                        <li><a href="/patch/all/{{ year }}/">All {{ year }} Patches</a></li>
+                                    {% endfor %}
+                                </ul>
+                            </li>
+                            
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Music <span class="caret"></span></a>
+                                <ul class="dropdown-menu pull-right-non-xs">
+                                    <li><a href="/music/list/">Normal Songs</a></li>
+                                    <li><a href="/music/list/ballroom/">Ballroom Songs</a></li>
+                                    <li><a href="/music/list/beatup/">Beat Up Songs</a></li>
+                                    <li><a href="/music/list/blockbeat/">Block Beat Songs</a></li>
+                                    <li><a href="/music/list/guitar/">Guitar Mode Songs</a></li>
+                                    <li><a href="/music/list/night/">Night Dance Songs</a></li>
+                                    <li><a href="/music/list/onetwo/">One Two Party Songs</a></li>
+                                    <li><a href="/music/list/rhythmholic/">Rhythmholic Songs</a></li>
+                                    <li><a href="/music/list/spacepangpang/">Space Pang Pang Songs</a></li>
+                                    <li><a href="/music/list/bgmmaster/">BGM Master Songs</a></li>
+                                    <li><a href="/music/list/removed/">Removed Songs</a></li>
+                                    <li><a href="/music/nexonlist/">Nexon Songs</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </div>
+</div>

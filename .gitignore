@@ -1,0 +1,9 @@
+_dailyuserlogs/*
+public_html/static/img/profilepictures/*
+public_html/static/img/questsubmissions/*
+audifan/templatecache/*
+_dailyuserlogs/
+nbproject/
+audifan/logs/*
+/public_html/static/files/questarchives/
+/public_html/config.php

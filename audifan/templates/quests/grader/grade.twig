@@ -1,0 +1,148 @@
+{% extends "base.twig" %}
+{% import "macros/forms.twig" as forms %}
+
+{% block title %}Audifan.net - Quests - Grader Hub - Grade a Screenshot{% endblock %}
+
+{% block head %}
+    <style>
+
+        #checklistwrapper {
+            width: 100%;
+            margin: auto;
+        }
+
+        #checklistwrapper div {
+            padding: 3px 3px 3px 23px;
+            border: 1px solid #FFF;
+            text-align: left;
+            cursor: default;
+        }
+
+        #checklistwrapper div:hover {
+            background-color: #333;
+        }
+
+        #checklistwrapper div.checked {
+            background-color: #004400;
+            background-image: url('{{ GLOBAL.staticUrl }}/img/check.png');
+            background-repeat: no-repeat;
+            background-position: left center;
+        }
+
+        #nobutton, #idkbutton, #cancelbutton {
+            margin-left: 10px;
+        }
+
+    </style>
+    <script type="text/javascript">
+
+        $(function () {
+            $("#checklistwrapper div").click(function (e) {
+                if ($(e.target).hasClass("checked"))
+                    $(e.target).removeClass("checked");
+                else
+                    $(e.target).addClass("checked");
+            });
+
+            $("#nobutton").click(function () {
+                $("#btncontainers").fadeOut(250, "swing", function () {
+                    $("#whyno").fadeIn(250);
+                });
+            });
+
+            $("#cancelbutton").click(function () {
+                $("#whyno").fadeOut(250, "swing", function () {
+                    $("#btncontainers").fadeIn(250);
+                });
+            });
+        });
+        
+        function checkForm() {
+            if ($("#score").length > 0) {
+                if (!$("#score").val().match(/^[0-9]+$/)) {
+                    alert("Please enter a valid number for what they got for the battle quest.");
+                    $("#score").css("border", "1px solid #ff0000");
+                    $("#score").focus();
+                    return false;
+                }
+            } else
+                return true;
+        }
+
+    </script>
+{% endblock %}
+
+{% block pagetitle %}<a href="/quests/">Quests</a>: <a href="/quests/grader/">Grader Hub</a>: Grade a Screenshot{% endblock %}
+
+{% block body %}
+    {% if sub %}
+        <div class="_center">
+            <div><b>Screenshot may take a few seconds to load.</b></div>
+            <div style="margin-top:10px;">
+                <a href="{{ imgUrl }}" target="_blank"><img src="{{ imgUrl }}" style="width:100%; border:0px;" /></a>
+            </div>
+        </div>
+        <div class="contentwrapperhalf" style="margin-top:10px;">
+            <div class="float">
+                <div class="sectionwrapper">
+                    <div><b>Quest:</b> {{ sub.req_text }}</div>
+
+                    <div id="checklistwrapper" style="margin-top:15px;">
+                        <div>Check for the /time command in chat and if the time is in the week of {{ sub.req_start_time|date("F j, Y") }}.</div>
+                        <div>Check the IGN of the green highlighted row. It MUST be "{{ sub.ign_ign }}".</div>
+                        <div>Check the mode.</div>
+                        <div>Check the song.</div>
+                        {% if sub.req_difficulty != 6 %}<div>Check the quest requirements to see if it passes.</div>{% endif %}
+                    </div>
+
+                    <form method="post" action="/quests/grader/grade/" onsubmit="return checkForm();">
+
+                    {% if sub.req_difficulty == 6 %}
+                        <div style="margin-top:15px;">
+                            <div>
+                                <b>This is a Battle Quest</b><br />
+                                Enter the <b>* {{ sub.req_noun|capitalize }} *</b> that this person got for this battle quest. No commas please. :D
+                            </div>
+                            <input id="score" type="text" class="prettyinputtext" name="score" maxlength="25" autocomplete="off" />
+                        </div>
+                    {% endif %}
+
+                    <div style="margin-top:15px;">
+                        <div style="margin-bottom:3px;">Does the screenshot pass?</div>
+
+                        {{ forms.hidden("id", sub.submit_id) }}
+                        <div id="btncontainers">
+                            {{ forms.submit("submit_yes", "YES") }}
+                            {{ forms.button("NO", "nobutton") }}
+                            {{ forms.button("I'm Not Sure", "idkbutton") }}
+                        </div>
+                        <div id="whyno" style="display:none;">
+                            <div>
+                                Why is this screenshot rejected?<br />
+                                The person who submitted will see the message you write.
+                            </div>
+                            <div>
+                                Select a pre-written reason:<br />
+                                {{ forms.selectStart("submit_nopremessage") }}
+                                {{ forms.selectOption() }}
+                                {{ forms.selectOptions(noMessages, -1) }}
+                                {{ forms.selectEnd() }}<br />
+                                or enter your own reason: {{ forms.textField("submit_nomessage") }}
+                            </div>
+                            <div class="_center" style="margin-top:5px;">
+                                {{ forms.submit("submit_no", "Reject Screenshot") }}
+                                {{ forms.button("Cancel", "cancelbutton") }}
+                            </div>
+                        </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <div class="_center">
+            It doesn't look like there are any screenshots available for you to grade right now.
+        </div>
+    {% endif %}
+{% endblock %}

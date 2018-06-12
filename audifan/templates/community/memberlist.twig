@@ -1,0 +1,57 @@
+{% extends "base.twig" %}
+
+{% block title %}Audifan.net - Community - Member List{% endblock %}
+
+{% block head %}
+    <style>
+        .letter {
+            margin-right: 5px;
+            text-transform: uppercase;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+<div class="pagetitle">Member List by {% if cat == "ign" %}Character IGN{% else %}Nickname{% endif %}</div>
+<div class="_center" style="margin-bottom:5px;">
+    {% if cat == "ign" %}
+        <a href="?letter={{ letter }}">View List by Nickname</a>
+    {% else %}
+        <a href="?cat=ign&letter={{ letter }}">View List by Character IGN</a>
+    {% endif %}
+</div>
+<div class="_center" style="margin-bottom:15px;">
+    <span class="letter">
+        {% if letter == "0" %}
+            #
+        {% else %}
+            <a href="?cat={{ cat }}&letter=0">#</a>
+        {% endif %}
+    </span>
+    {% for l in 'a'..'z' %}
+        <span class="letter">
+            {% if letter == l %}
+                {{ l }}
+            {% else %}
+                <a href="?cat={{ cat }}&letter={{ l }}">{{ l }}</a>
+            {% endif %}
+        </span>
+    {% endfor %}
+</div>
+
+<div class="contentwrapper2col">
+    {% for m in members %}
+    <div class="float">
+        <div class="_center" style="margin-bottom:10px;">
+            {% if cat == "ign" %}
+                <div style="font-size:1.25em;">{{ m.ign }}</div>
+                <div>Owned by <a href="/community/profile/{{ m.id }}/">{{ m.display_name }}</a></div>
+            {% else %}
+                <div style="font-size:1.25em;"><a href="/community/profile/{{ m.id }}/">{{ m.display_name }}</a></div>
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+    <div style="clear:both;"></div>
+</div>
+{% endblock %}

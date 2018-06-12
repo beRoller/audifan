@@ -1,0 +1,40 @@
+{{ sectionStart("Favorite Songs") }}
+	{% if editMode %}
+		<div class="text-center" style="margin-bottom:5px;">
+			Add favorite songs from any <a href="/music/list/">Song List</a>
+		</div>
+	{% endif %}
+
+	{% if moduleData[1].songs|length > 0 %}
+		<form method="post" action="?edit">
+			<div style="max-height:250px; overflow-y:auto; padding-right:5px;">
+				<table class="table table-hover song-list-table">
+					<tbody>
+						{% spaceless %}
+							{% for song in moduleData[1].songs %}
+								<tr>
+									{% if editMode %}
+										<td class="songcheckbox">
+											<input type="checkbox" name="song_{{ song.id }}" />
+										</td>
+									{% endif %}
+
+									<td>{{ song.artist }}</td>
+									<td>{{ song.title }}</td>
+								</tr>
+							{% endfor %}
+						{% endspaceless %}
+					</tbody>
+				</table>
+			</div>
+
+			{% if editMode %}
+				<div class="text-center" style="margin-top:5px;">
+					<input type="submit" name="submit_songs" value="Delete Selected Favorite Songs" class="btn">
+				</div>
+			{% endif %}
+		</form>
+	{% else %}
+		<div class="text-center">No favorite songs added yet.</div>
+	{% endif %}
+{{ sectionEnd() }}

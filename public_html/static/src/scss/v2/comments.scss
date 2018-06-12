@@ -1,0 +1,83 @@
+.comment-container {
+	margin: 10px 0px;
+	padding: 5px;
+
+	&:nth-child(even) {
+		background-color: #333;
+	}
+
+	.usercardcontainer {
+		.usercard {
+			.usercardpicturecontainer {
+				text-align: center;
+
+				.usercardpicture {
+					max-height: 70px;
+				}
+			}
+
+			.usercardnamecontainer {
+				font-size: 20px;
+
+				@media (max-width: $bootstrap-xs-max) {
+					text-align: center;
+				}
+			}
+		}
+
+		.usercardmoreinfo {
+			display: none;
+
+			.usercardstatscontainer {
+
+				.usercardstatssection {
+					font-size: 12px;
+
+					.usercardcharlevel {
+						text-align: center;
+
+						span {
+							vertical-align: middle;
+						}
+
+						img {
+							vertical-align: middle;
+							margin-left: 10px;
+						}
+					}
+
+					.usercardcharfam {
+						text-align: center;
+					}
+
+					.usercardcharign {
+						text-align: center;
+					}
+				}
+
+			}
+		}
+
+		&.open {
+			.usercardmoreinfo {
+				display: block;
+			}
+
+			.usercardexpand i.fa:before {
+				content: "\f077"; // Change to fa-chevron-up
+			}
+		}
+	}
+
+	.comment-body {
+		margin-top: 10px;
+		font-size: 12px;
+	}
+
+	.comment-time {
+		margin-top: 10px;
+		font-size: 10px;
+		text-align: center;
+		font-style: italic;
+	}
+}

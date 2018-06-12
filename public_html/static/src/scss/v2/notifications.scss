@@ -1,0 +1,141 @@
+#notification-container {
+    position: relative;
+
+    #notification-button {
+        text-align: center;
+        padding: 5px;
+        cursor: pointer;
+        width: 200px;
+        z-index: 99;
+        font-weight: bold;
+        background-color: $content-background-color;
+        box-shadow: 0 0 2px 2px $content-background-color;
+
+        @media (max-width: $bootstrap-xs-max) {
+            width: 100%;
+            background-color: $content-background-color-2;
+            box-shadow: 0px 0px 0px 0px;
+        }
+
+        &:hover {
+            background-color: $content-background-color-2;
+            box-shadow: 0 0 2px 2px $content-background-color-2;
+        }
+    }
+
+    #notification-popup-container {
+        position: absolute;
+        left: 14px;
+        top: 27px;
+        z-index: 99;
+        background-color: rgba($content-background-color-2, .9);
+        width: 40%;
+        box-shadow: 0px 3px 2px $page-background-color;
+        display: none;
+        cursor: default;
+
+        .popup-close {
+            font-size: 22px;
+            padding-right: 10px;
+            padding-top: 5px;
+
+            i {
+                cursor: pointer;
+            }
+        }
+
+        #notification-list {
+            padding-bottom: 10px;
+
+            .notification-list-item {
+                // background-color: rgba($content-background-color-2, .9);
+
+                &:nth-child(even) {
+                    .notification-list-item-text {
+                        background-color: $content-background-color-3;
+                    }
+                }
+
+                .notification-list-item-text {
+                    padding: 5px 22px;
+                    text-align: center;
+                    font-weight: bold;
+                    float: left;
+                    width: calc(100% - 3px);
+                    background-color: $content-background-color-2;
+                    transition: all .2s;
+
+                    .notification-list-item-time {
+                        font-size: 12px;
+                        font-style: italic;
+                    }
+                }
+                
+                .notification-list-item-delete {
+                    float: right;
+                    width: 3px;
+                    overflow: hidden;
+                    text-align: center;
+                    font-size: 16px;
+                    transition: all .2s;
+
+                    i {
+                        display: none;
+                    }
+                }
+
+                &.deleteable {
+                    background-color: #ff0000;
+                    cursor: pointer;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+
+                    .notification-list-item-text {
+                        
+                    }
+
+                    &:hover, &:focus {
+                        .notification-list-item-text {
+                            width: calc(100% - 25px);
+                            padding-right: 3px;
+                            cursor: default;
+                        }
+                        
+                        .notification-list-item-delete {
+                            width: 25px;
+
+                            i {
+                                display: inline-block;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        @media (max-width: $bootstrap-xs-max) {
+            width: calc(100% - 28px);
+        }
+    }
+
+    &.open {
+        #notification-button {
+            background-color: $content-background-color-2;
+            box-shadow: 0 0 2px 2px $content-background-color-2;
+
+            i:before {
+                content: "\f077";
+            }
+        }
+
+        #notification-popup-container {
+            display: block;
+        }
+    }
+
+    @media (max-width: $bootstrap-xs-max) {
+        background-color: $content-background-color;
+        box-shadow: 0 0 2px 2px $content-background-color;
+    }
+}

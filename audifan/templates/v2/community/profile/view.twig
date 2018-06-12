@@ -1,0 +1,307 @@
+{% extends "base.twig" %}
+{% from "macros/badges.twig" import badges %}
+{% import "macros/forms.twig" as forms %}
+
+{% block title %}Audifan.net - {{ basicInfo.display_name }}{% endblock %}
+
+{% block head %}
+    <style>
+        .top-links {
+            margin: 5px 0px;
+        }
+
+        .editmodewrapper {
+            border: 1px solid #0077aa;
+            border-radius: 5px;
+            margin: 10px 0px;
+        }
+
+        .editmodemodulecontent {
+            padding: 5px;
+        }
+
+        .editmodeoptionscontainer {
+            text-align: center;
+            background-color: #0077aa;
+            padding: 5px;
+            font-size: 12px;
+        }
+
+        .editmodeoptionscontainer a {
+            color: #fff;
+        }
+
+        .editmodeoption {
+            margin: 0px 5px;
+            font-size: 16px;
+        }
+
+        @media (max-width: 768px) {
+            .editmodeoption {
+                font-size: 26px;
+            }
+        }
+
+        .quest-stats-module table tr td, .quest-stats-module table tr th {
+            font-size: 12px;
+        }
+
+        .song-list-table tbody tr:first-child td {
+            border: 0;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="row profile{% if editMode %} profile-edit-mode{% endif %}">
+        <div class="col-md-12">
+            {% if ownProfile %}
+                <div class="row">
+                    <div class="col-md-12 text-right" style="font-size:16px;">
+                        {% if editMode %}
+                            <b>Your Profile is in Edit Mode</b><br />
+                            <a href="?">Exit Edit Mode</a>
+                        {% else %}
+                            <a href="?edit"><i class="fa fa-pencil"></i> Edit Profile</a>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+            <div class="row">
+                <div class="col-md-3 col-sm-3 profile-pic text-center">
+                    <img src="{{ GLOBAL.staticUrl }}/img/profilepictures/{% if basicInfo.profile_pic_type != "" %}{{ basicInfo.id }}.{{ basicInfo.profile_pic_type }}{% else %}default.png{% endif %}?_={{ "now"|date("U") }}" alt="{{ basicInfo.display_name }}" />
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    <div class="row">
+                        <div class="col-md-12 display-name">
+                            <h3>{{ basicInfo.display_name }}</h3>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3 col-sm-3 online-status">
+                            {% if not basicInfo.invisible and onlineNow %}
+                                <i class="fa fa-circle online-now"></i> Online Now!
+                            {% else %} 
+                                <i class="fa fa-circle invisible"></i> Offline
+                            {% endif %}
+                        </div>
+                        <div class="col-md-9 col-sm-9 join-time">
+                            Joined on {{ basicInfo.join_time|date("F j, Y")}}.
+                        </div>
+                    </div>
+                    <div class="row top-links">
+                        <div class="col-md-3 col-sm-3 col-xs-6">
+                            <a href="/community/profile/{{ basicInfo.id }}/characters/"><i class="fa fa-user"></i> View Characters</a>
+                        </div>
+                        <div class="col-md-3 col-sm-3 col-xs-6">
+                            <a href="/community/profile/{{ basicInfo.id }}/comments/"><i class="fa fa-comment"></i> View Comments</a>
+                        </div>
+                        <div class="col-md-3 col-sm-3 col-xs-6">
+                            <a href="/community/profile/{{ basicInfo.id }}/friends/"><i class="fa fa-users"></i> View Friends</a>
+                        </div>
+                        <div class="col-md-3 col-sm-3 col-xs-6">
+                            {% if GLOBAL.user.isLoggedIn() and not ownProfile %}
+                                <span id="addfriend">
+                                    {% if isFriend %}
+                                        <i class="fa fa-thumbs-up"></i> You are friends.
+                                    {% else %}
+                                        <a href="javascript:;" onclick="addFriend();"><i class="fa fa-user-plus"></i> Add As Friend</a>
+                                    {% endif %}
+                                </span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+            <div class="row">
+                <div class="col-md-6 col-sm-6 left-side-modules">
+                    {% for m in leftModules %}
+                        <div class="sectionwrapper">
+                            {% if editMode %}
+                                <div class="editmodewrapper">
+
+                                    <div class="editmodemodulecontent">
+                            {% endif %}
+                            
+                            {% include "community/profile/modules/" ~ m ~ ".twig" %}
+                            
+                            {% if editMode %}
+                                </div> <!-- / .editmodemodulecontent -->
+
+                                <div class="editmodeoptionscontainer">
+                                    <div class="inline-xs">
+                                        {% if not loop.first %}
+                                            <span class="editmodeoption">
+                                                <a href="?edit&module={{ m }}&do=moveup">
+                                                    <i class="fa fa-arrow-up"></i> 
+                                                    <span class="hidden-xs">Move Up</span>
+                                                </a>
+                                            </span>
+                                        {% endif %}
+                                        {% if not loop.last %}
+                                            <span class="editmodeoption">
+                                                <a href="?edit&module={{ m }}&do=movedown">
+                                                    <i class="fa fa-arrow-down"></i> 
+                                                    <span class="hidden-xs">Move Down</span>
+                                                </a>
+                                            </span>
+                                        {% endif %}
+                                    </div>
+
+                                    <div class="inline-xs">
+                                        <span class="editmodeoption">
+                                            <a href="?edit&module={{ m }}&do=moveother">
+                                                <span class="hidden-xs">
+                                                    <i class="fa fa-arrow-right"></i> 
+                                                    Move to Right Side
+                                                </span>
+                                                <span class="visible-xs-inline">
+                                                    <i class="fa fa-long-arrow-down"></i>
+                                                </span>
+                                            </a>
+                                        </span>
+
+                                        <span class="editmodeoption">
+                                            <a href="?edit&module={{ m }}&do=hide">
+                                                <i class="fa fa-eye-slash"></i>
+                                                <span class="hidden-xs">Hide Module</span>
+                                            </a>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div> <!-- / .editmodewrapper -->
+                            {% endif %}
+                        </div>
+                    {% else %}
+                        <div style="height:1px;"></div>
+                    {% endfor %}
+                </div>
+
+                <div class="col-md-6 col-sm-6 right-side-modules">
+                    {% for m in rightModules %}
+                        <div class="sectionwrapper">
+                            {% if editMode %}
+                                <div class="editmodewrapper">
+
+                                    <div class="editmodemodulecontent">
+                            {% endif %}
+                            
+                            {% include "community/profile/modules/" ~ m ~ ".twig" %}
+                            
+                            {% if editMode %}
+                                    </div> <!-- / .editmodemodulecontent -->
+
+                                <div class="editmodeoptionscontainer">
+                                    <div class="inline-xs">
+                                        {% if not loop.first %}
+                                            <span class="editmodeoption">
+                                                <a href="?edit&module={{ m }}&do=moveup">
+                                                    <i class="fa fa-arrow-up"></i> 
+                                                    <span class="hidden-xs">Move Up</span>
+                                                </a>
+                                            </span>
+                                        {% endif %}
+                                        {% if not loop.last %}
+                                            <span class="editmodeoption">
+                                                <a href="?edit&module={{ m }}&do=movedown">
+                                                    <i class="fa fa-arrow-down"></i> 
+                                                    <span class="hidden-xs">Move Down</span>
+                                                </a>
+                                            </span>
+                                        {% endif %}
+                                    </div>
+
+                                    <div class="inline-xs">
+                                        <span class="editmodeoption">
+                                            <a href="?edit&module={{ m }}&do=moveother">
+                                                <span class="hidden-xs">
+                                                    <i class="fa fa-arrow-left"></i> 
+                                                    Move to Left Side
+                                                </span>
+                                                <span class="visible-xs-inline">
+                                                    <i class="fa fa-long-arrow-up"></i>
+                                                </span>
+                                            </a>
+                                        </span>
+
+                                        <span class="editmodeoption">
+                                            <a href="?edit&module={{ m }}&do=hide">
+                                                <i class="fa fa-eye-slash"></i>
+                                                <span class="hidden-xs">Hide Module</span>
+                                            </a>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div> <!-- / .editmodewrapper -->
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+
+
+
+            {% if editMode %}
+                <div class="row">
+                    <div class="col-md-6 col-md-offset-3">
+                        <div class="hiddenmodulecontainer">
+                            <div class="text-center">
+                                <h2>Hidden Modules</h2>
+                            </div>
+                            {% for m in hiddenModules %}
+                                <div class="sectionwrapper">
+                                    <div class="editmodewrapper">
+                                        <div class="editmodemodulecontent">
+                                            {% include "community/profile/modules/" ~ m ~ ".twig" %}
+                                        </div>
+                                        
+                                        <div class="editmodeoptionscontainer">
+                                            <span class="editmodeoption">
+                                                <a href="?edit&module={{ m }}&do=addleft">
+                                                    <span class="hidden-xs">
+                                                        <i class="fa fa-arrow-left"></i> 
+                                                        Add to Left Side
+                                                    </span>
+                                                    <span class="visible-xs-inline">
+                                                        <i class="fa fa-long-arrow-up"></i>
+                                                    </span>
+                                                </a>
+                                            </span>
+
+                                            <span class="editmodeoption">
+                                                <a href="?edit&module={{ m }}&do=addright">
+                                                    <span class="hidden-xs">
+                                                        <i class="fa fa-arrow-right"></i> 
+                                                        Add to Right Side
+                                                    </span>
+                                                    <span class="visible-xs-inline">
+                                                        <i class="fa fa-arrow-up"></i>
+                                                    </span>
+                                                </a>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% else %}
+                                <div class="text-center">(None)</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    {% if GLOBAL.user.isAdmin() %}
+        <div class="row" style="margin-top:25px;">
+            <div class="col-md-12">
+                <b>Admin:</b> <a href="/admin/account/view/?id={{ basicInfo.id }}" target="_blank">View Account Info</a> | <a href="/admin/account/stuff/?id={{ basicInfo.id }}" target="_blank">View Account Stuff</a>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,50 @@
+<div class="row">
+    <div class="col-md-offset-1 col-md-8 col-sm-12 col-xs-12 login-form mobile-visible">
+        <form method="post" action="/account/">
+            <input type="hidden" name="token" value="{{ GLOBAL.formTokens.login }}" />
+            <input type="hidden" name="thru" value="{{ GLOBAL.requestUri }}" />
+            <div class="col-md-6 col-sm-6 col-xs-12 login-text-fields">
+                <div class="form-group">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-at"></i></span>
+                        <input type="email" class="form-control input-sm" name="email" placeholder="Email" />
+                    </div>
+
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-lock"></i></span>
+                        <input type="password" class="form-control input-sm" name="password" placeholder="Password" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-sm-6 col-xs-12 login-buttons">
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="checkbox">
+                            <label><input type="checkbox" name="rememberme" /> Remember Me</label>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <input type="submit" class="btn btn-sm" name="submit_login" value="Log In" />
+                        <a href="/account/" class="btn btn-sm login-register-link">Register</a>
+                        <a href="#" class="btn btn-sm login-cancel-link visible-xs">Cancel</a>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="col-md-2 col-sm-12 col-xs-12">
+        <div class="hidden-md hidden-lg text-center">
+            <a href="#" id="mobile-login-toggle" class="btn btn-sm">Log In</a>
+            <a href="/account/" id="mobile-login-register" class="btn btn-sm">Register</a>
+            <div>
+                <a href="#" id="facebooklogin" class="btn btn-sm" style="margin-top:5px;"><i class="fa fa-facebook-official"></i> Log In with Facebook</a>
+                {# <a href="#" id="spotifylogin" class="btn btn-sm" style="margin-top:5px;"><i class="fa fa-spotify"></i> Log In with Spotify</a> #}
+            </div>
+        </div>
+        <div class="hidden-sm hidden-xs text-right">
+            <div><a href="#" id="facebooklogin" class="btn btn-sm"><i class="fa fa-facebook-official"></i> Log In with Facebook</a></div>
+            {# <div style="margin-top:5px;"><a href="#" id="spotifylogin" class="btn btn-sm"><i class="fa fa-spotify"></i> Log In with Spotify</a></div> #}
+        </div>
+    </div>
+</div>

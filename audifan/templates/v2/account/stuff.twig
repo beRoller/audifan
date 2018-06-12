@@ -1,0 +1,368 @@
+{% extends "base.twig" %}
+{% import "macros/forms.twig" as forms %}
+
+{% block head %}
+    <style>
+        .voucherselect {
+            width: 100%;
+        }
+        
+        .selectwidth100 {
+            width: 100%;
+        }
+        
+        .multiplecoinboxrow {
+            margin: 5px 0px;
+        }
+        
+        .table tr td {
+            vertical-align: middle !important;
+        }
+        
+        .table img {
+            min-width: 16px;
+        }
+    </style>
+{% endblock %}
+
+{% block pagetitle %}My Stuff{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-6 col-sm-6">
+            {{ sectionStart("Badges")|raw }}
+            {% if badges|length > 0 %}
+            <form method="post" action="/account/stuff/">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Badge Name</th>
+                            <th>Expire Time</th>
+                            <th>Show?</th>
+                        </tr>
+                    </thead>
+                    
+                    <tbody>
+                        {% for b in badges %}
+                            <tr>
+                                <td>
+                                    {% if itemInfo[b.item_id][3] %}
+                                        <img src="{{ GLOBAL.staticUrl }}{{ itemInfo[b.item_id][3] }}" />
+                                    {% endif %}
+                                </td>
+                                <td>{{ itemInfo[b.item_id][2] }}</td>
+                                <td>
+                                    {% if b.expire_time == -1 %}
+                                        {% if b.item_id == 39 %}
+                                            Transitory
+                                        {% else %}
+                                            Indefinite
+                                        {% endif %}
+                                    {% else %}
+                                        {{ b.expire_time|relativeTime }}
+                                    {% endif %}
+                                </td>
+                                <td><input{% if b.in_use %} checked{% endif %} type="checkbox" name="show_{{ b.stuff_id }}" /></td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                    
+                <div class="text-right">
+                    <input type="submit" value="Save Visibilities" class="btn" name="submit_show" />
+                </div>
+            </form>
+            {% else %}
+                <div class="text-center">
+                    You do not have any badges!
+                </div>
+            {% endif %}
+            {{ sectionEnd() }}
+            
+            {{ sectionStart("Prize Vouchers")|raw }}
+                {% if vouchers|length > 0 %}
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Voucher Name</th>
+                            <th>Expire Time</th>
+                            <th>Choose Prize</th>
+                        </tr>
+                    </thead>
+                    
+                    <tbody>
+                        {% for v in vouchers %}
+                            <tr>
+                                <td>{{ itemInfo[v.item_id][2] }}</td>
+                                <td>{% if v.expire_time == -1 %}Indefinite{% else %}{{ v.expire_time|relativeTime }}{% endif %}</td>
+                                <td>
+                                    {% if v.note == "" %}
+                                        <form method="post" action="/account/stuff/" onsubmit="return confirm('Are you sure you want to claim this prize?\nYou will not be able to change it.');">
+                                            <input type="hidden" name="id" value="{{ v.stuff_id }}" />
+                                            <input type="hidden" name="voucher" value="{{ v.item_id }}" />
+                                            <select class="selectwidth100" name="prize" onchange="checkVoucherPrize({{ v.item_id}},{{ v.stuff_id }} );" id="prize_{{ v.stuff_id }}">
+                                                {{ forms.selectOption("", "") }}
+                                                {{ forms.selectOptions(prizes[v.item_id]) }}
+                                            </select>
+                                            <div id="prizename_{{ v.stuff_id }}" style="display:none; margin:3px 0px;">
+                                                <div style="margin-bottom:5px;">Enter the name of the specific<br />item that you want:</div>
+                                                    {{ forms.textField("prizename") }}
+                                            </div>
+                                            <div style="margin-top:5px;">
+                                                <img src="" style="display:none; margin-right:5px; vertical-align:middle;" id="prizeimage_{{ v.stuff_id }}" />
+                                                <button type="button" class="btn" data-toggle="modal" data-target="#prizevoucherconfirmation">Claim Prize</button>
+                                            </div>
+                                        </form>
+                                    {% else %}
+                                        Your prize will be sent soon!
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                    <div class="text-center">
+                        You do not have any prize vouchers!<br />
+                        You can get a prize voucher from the <a href="/community/happybox/">Happy Box</a> or by winning the <a href="/community/vipdrawing/">VIP Drawing</a>.
+                    </div>
+                {% endif %}
+            {{ sectionEnd()|raw }}
+            
+            {{ sectionStart("Coin Boxes")|raw }}
+            {% if coinboxes|length > 0 %}
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Box Name</th>
+                            <th>Expire Time</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for c in coinboxes %}
+                        <tr>
+                            <td><img src="{{ GLOBAL.staticUrl }}{{ itemInfo[c.item_id][3] }}" />
+                            <td>{{ itemInfo[c.item_id][2] }}</td>
+                            <td>{% if c.expire_time == -1 %}Indefinite{% else %}{{ c.expire_time|relativeTime }}{% endif %}</td>
+                            <td>
+                                <a href="?openbox={{ c.stuff_id }}">Open This Box</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <div class="text-center">
+                    You do not have any coin boxes!<br />
+                    You can get a coin box from the <a href="/community/happybox/">Happy Box</a>, by logging in 3 or 6 days in a week, or from events.
+                </div>
+            {% endif %}
+
+            {% if coinboxcounts[31] + coinboxcounts[32] + coinboxcounts[33] + coinboxcounts[37] > 1 %}
+                <div class="panel">
+                    {{ forms.start("/account/stuff/") }}
+                    
+                    <div class="panel-heading">Open Multiple Coin Boxes</div>
+                    
+                    <div class="panel-body">
+                        {% if coinboxcounts[31] > 0 %}
+                            <div class="row multiplecoinboxrow">
+                                <div class="col-md-7">Regular Coin Box:</div>
+                                <div class="col-md-5">
+                                    {{ forms.selectFull("regular", 0..coinboxcounts[31], 0, "", true, "selectwidth100") }}
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        {% if coinboxcounts[32] > 0 %}
+                            <div class="row multiplecoinboxrow">
+                                <div class="col-md-7">Double Coin Box:</div>
+                                <div class="col-md-5">
+                                    {{ forms.selectFull("double", 0..coinboxcounts[32], 0, "", true, "selectwidth100") }}
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        {% if coinboxcounts[33] > 0 %}
+                            <div class="row multiplecoinboxrow">
+                                <div class="col-md-7">Triple Coin Box:</div>
+                                <div class="col-md-5">
+                                    {{ forms.selectFull("triple", 0..coinboxcounts[33], 0, "", true, "selectwidth100") }}
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        {% if coinboxcounts[37] > 0 %}
+                            <div class="row multiplecoinboxrow">
+                                <div class="col-md-7">Mystery Coin Box:</div>
+                                <div class="col-md-5">
+                                    {{ forms.selectFull("mystery", 0..coinboxcounts[37], 0, "", true, "selectwidth100") }}
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        <div class="row multiplecoinboxrow">
+                            <div class="col-md-12 text-center">
+                                {{ forms.submit("submit_selected", "Open Selected Number of Coin Boxes") }}
+                            </div>
+                        </div>
+                            
+                        <div class="row multiplecoinboxrow">
+                            <div class="col-md-12 text-center">
+                                {{ forms.submit("submit_all", "Open ALL Coin Boxes") }}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    {{ forms.end() }}
+                </div>
+            {% endif %}
+            {{ sectionEnd() }}
+
+            {{ sectionStart('Miscellaneous Items') }}
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Item Name</th>
+                            <th>Expire Time</th>
+                            <th>Item Count</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for o in others %}
+                            <tr>
+                                <td class="text-center">
+                                    {% if itemInfo[o.item_id][3] %}
+                                        <img src="{{ GLOBAL.staticUrl }}{{ itemInfo[o.item_id][3] }}" style="margin-top:3px;" /><br />
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {{ itemInfo[o.item_id][2] }}
+                                </td>
+                                <td>{% if o.expire_time == -1 %}Indefinite{% else %}{{ o.expire_time|relativeTime }}{% endif %}</td>
+                                <td>
+                                    {% if o.charges > 0 %}
+                                        {{ o.charges|number_format }}
+                                    {% else %}
+                                        N/A
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="3">
+                                    You do not have any miscellaneous items!
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {{ sectionEnd() }}
+        </div>
+
+
+
+
+
+        <div class="col-md-6 col-sm-6">
+            
+            {{ sectionStart('My Coins') }}
+                <div class="text-center">
+                    <div style="margin:10px 0px;">
+                        <div style="font-size:24px;">{{ GLOBAL.status.coins|number_format }}</div>
+                        <div style="font-size:12px;">Current Coin Balance</div>
+                    </div>
+                    <div style="margin:10px 0px;">
+                        <div style="font-size:24px;">{{ totalCoins|number_format }}</div>
+                        <div style="font-size:12px;">Total Coins Earned</div>
+                    </div>
+                    <div style="margin:10px 0px;">
+                        <a href="/store/">Go to Coin Store</a>
+                    </div>
+                </div>
+            {{ sectionEnd() }}
+
+
+            {{ sectionStart('My Coin Bonuses') }}
+                {% set hasBonus = false %}
+
+                {% if GLOBAL.coinGainMultiplier > 1 %}
+                    <div class="bonuswrapper">
+                        <div class="bonustitle">Site Event</div>
+                        <div class="bonusamount">+{{ ((GLOBAL.coinGainMultiplier - 1) * 100)|round }}% Coins</div>
+                    </div>
+                    {% set hasBonus = true %}
+                {% endif %}
+
+                {% if jointime <= oneyearago %}
+                    <div class="bonuswrapper">
+                        <div class="bonustitle">Veteran Bonus<br />(Account is over a year old)</div>
+                        <div class="bonusamount">+10% Coins</div>
+                        <div class="bonusexpire">Indefinite</div>
+                    </div>
+                    {% set hasBonus = true %}
+                {% endif %}
+
+                {% for o in others if (o.item_id in [34,35,36]) %}
+                    <div class="bonuswrapper">
+                        <div class="bonustitle">{{ itemInfo[o.item_id][2] }} Item</div>
+                        <div class="bonusamount">+{% if o.item_id == 34 %}5{% elseif o.item_id == 35 %}15{% elseif o.item_id == 36 %}25{% endif %}% Coins</div>
+                        <div class="bonusexpire">Expires in {{ o.expire_time|relativeTime }}</div>
+                    </div>
+                    {% set hasBonus = true %}
+                {% endfor %}
+
+                {% if not hasBonus %}
+                    <div style="text-align:center;">
+                        You do not have any coin bonuses.<br />You can get one from the <a href="/community/happybox/">Happy Box</a>!
+                    </div>
+                {% endif %}
+            {{ sectionEnd() }}
+
+
+            {{ sectionStart('My Coin History') }}
+                <div style="max-height:600px; overflow-y:auto;">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Time</th>
+                                <th>Balance Change</th>
+                                <th>Source</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {% for h in history %}
+                                <tr>
+                                    <td>{{ h.history_time|relativeTime }} ago</td>
+                                    {% if h.history_amount >= 0 %}
+                                        <td class="balanceup">
+                                            <b>+ {{ h.history_amount|number_format }}</b>
+                                            {% if h.history_bonus > 0 %}
+                                                <br />{{ (h.history_amount - h.history_bonus)|number_format }} (+ {{ h.history_bonus|number_format }} Bonus)
+                                            {% endif %}
+                                        </td>
+                                    {% else %}
+                                        <td class="balancedown">
+                                            <b>- {{ (-h.history_amount)|number_format }}</b>
+                                        </td>
+                                    {% endif %}
+                                    <td>{{ h.history_source }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {{ sectionEnd() }}
+
+        </div>
+
+
+
+
+    </div>
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends "base.twig" %}
+
+{% block title %}[ADMIN] Audifan.net - Member Search{% endblock %}
+
+{% block head %}
+    <style>
+        ul.results > li {
+            margin-bottom: 7px;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="contentwrapperhalf">
+        <div>
+            <form method="post" action="/admin/account/search/">
+                <div>Query: <input type="text" name="query" /></div>
+                <div>Search By: <select name="by">
+                        <option value=""></option>
+                        <option value="email">Email</option>
+                        <option value="itemid">Has Item with ID</option>
+                    </select></div>
+                <input type="submit" name="submit" value="Search" />
+            </form>
+        </div>
+        
+        <div>
+            <div>Results:</div>
+            <ul class="results">
+            {% for r in results %}
+                <li><ul>
+                        {% for k, v in r %}
+                            <li>{{ k }} = {{ v }}</li>
+                        {% endfor %}
+                    </ul></li>
+            {% else %}
+                <li>(None)</li>
+            {% endfor %}
+            </ul>
+        </div>
+    </div>
+{% endblock %}

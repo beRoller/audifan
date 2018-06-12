@@ -1,0 +1,215 @@
+{% extends "base.twig" %}
+
+{% block title %}Audifan.net - Quests - Rankings{% endblock %}
+
+{% block head %}
+    <style type="text/css">
+        .listlink {
+            margin: 0px 5px;
+        }
+
+        .ranks {
+            border: 2px solid #ffffff;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        .ranks tr td, .ranks tr th {
+            border: 1px solid #ffffff;
+            text-align: center;
+            padding: 3px;
+            font-size: 1.25em;
+        }
+
+        .pagenav {
+            margin-top: 5px;
+            text-align: center;
+        }
+
+        .pagenav span {
+            margin-right: 7px;
+            margin-left: 7px;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="pagetitle">
+        <a href="/quests/">Quests</a>: 
+        {% if board == 0 %}
+            Overall Ranking
+        {% elseif board == 1 %}
+            Overall Ranking Without Insane
+        {% elseif board == 2 %}
+            Normal Mode Ranking
+        {% elseif board == 3 %}
+            Beat Up Ranking
+        {% elseif board == 4 %}
+            One Two Party Ranking
+        {% elseif board == 5 %}
+            Beat Rush Ranking
+        {% elseif board == 6 %}
+            Guitar Ranking
+        {% elseif board == 7 %}
+            Individual Quest Ranking
+        {% endif %}
+    </div>
+
+    <div class="_center" style="margin-bottom:10px;">
+        <span class="listlink"><b>General Rankings:</b></span>
+        <span class="listlink">
+            {% if board == 0 %}Overall{% else %}<a href="?b=0">Overall</a>{% endif %}
+        </span>
+        <span class="listlink">
+            {% if board == 1 %}Overall Without Insane{% else %}<a href="?b=1">Overall Without Insane</a>{% endif %}
+        </span>
+        <span class="listlink">
+            {% if board == 7 %}Individual Quests Only{% else %}<a href="?b=7">Individual Quests Only</a>{% endif %}
+        </span>
+    </div>
+
+    <div class="_center" style="margin-bottom:10px;">
+        <span class="listlink"><b>Mode Rankings:</b></span>
+        <span class="listlink">
+            {% if board == 2 %}Normal Modes{% else %}<a href="?b=2">Normal Modes</a>{% endif %}
+        </span>
+        <span class="listlink">
+            {% if board == 3 %}Beat Up{% else %}<a href="?b=3">Beat Up</a>{% endif %}
+        </span>
+        <span class="listlink">
+            {% if board == 4 %}One Two Party{% else %}<a href="?b=4">One Two Party</a>{% endif %}
+        </span>
+        <span class="listlink">
+            {% if board == 5 %}Beat Rush{% else %}<a href="?b=5">Beat Rush</a>{% endif %}
+        </span>
+        <span class="listlink">
+            {% if board == 6 %}Guitar{% else %}<a href="?b=6">Guitar</a>{% endif %}
+        </span>
+    </div>
+
+    <div class="contentwrapperhalf">
+        <div class="float">
+            <table class="ranks">
+                <tr>
+                    <th>Rank</th>
+                    <th>Nickname</th>
+                    <th>IGN(s)</th>
+                    <th>
+                        {% if board == 0 %}
+                            Total QP
+                        {% elseif board == 1 %}
+                            Total QP<br />
+                            Without Insane
+                        {% elseif board == 2 %}
+                            Normal Mode QP
+                        {% elseif board == 3 %}
+                            Beat Up QP
+                        {% elseif board == 4 %}
+                            One Two<br />
+                            Party QP
+                        {% elseif board == 5 %}
+                            Beat Rush QP
+                        {% elseif board == 6 %}
+                            Guitar QP
+                        {% elseif board == 7 %}
+                            Individual<br />
+                            Quest QP
+                        {% endif %}
+                    </th>
+                    {% if board != 0 %}
+                        <th>Total QP</th>
+                        {% endif %}
+                </tr>
+                {% for i, r in ranks %}
+                    <tr>
+                        <td>{{ (i + rankNumberOffset) }}</td>
+                        <td>
+                            <div><a href="/community/profile/{{ r.rank_account_id }}/">{{ r.display_name }}</a></div>
+                                {% set currItems = r.items|split(',') %}
+                                {% if 7 in currItems %}
+                                <img src="{{ GLOBAL.staticUrl }}/img/quest/badge1.png" alt="Thumbs Up" title="Completed one individual quest last week." />
+                            {% elseif 8 in currItems %}
+                                <img src="{{ GLOBAL.staticUrl }}/img/quest/badge2.png" alt="Bronze Medal" title="Completed two individual quests last week." />
+                            {% elseif 9 in currItems %}
+                                <img src="{{ GLOBAL.staticUrl }}/img/quest/badge3.gif" alt="Silver Medal" title="Completed three individual quests last week." />
+                            {% elseif 10 in currItems %}
+                                <img src="{{ GLOBAL.staticUrl }}/img/quest/badge4.gif" alt="Gold Medal" title="Completed all four individual quests last week (ACE)." />
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% for ign in r.igns|split(',') %}
+                                <div>{{ ign }}</div>
+                            {% endfor %}
+                        </td>
+                        <td>{{ r.points|number_format }}</td>
+                        {% if board != 0 %}
+                            <td>{{ r.total_points|number_format }}</td>
+                        {% endif %}
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="4">(Nobody is ranked in this category)</td>
+                    </tr>
+                {% endfor %}
+            </table>
+
+            <div class="pagenav">
+                <span>
+                    {% if page != 1 %}
+                        <a href="?b={{ board }}&page=1">&lt;&lt First Page</a>
+                    {% else %}
+                        &lt;&lt First Page
+                    {% endif %}
+                </span>
+                <span>
+                    {% if page > 1 %}
+                        <a href="?b={{ board }}&page={{ page - 1 }}">&lt; Previous Page</a>
+                    {% else %}
+                        &lt; Previous Page
+                    {% endif %}
+                </span>
+                <span>
+                    {% if page < totalPages %}
+                        <a href="?b={{ board }}&page={{ page + 1 }}">Next Page &gt;</a>
+                    {% else %}
+                        Next Page &gt;
+                    {% endif %}
+                </span>
+                <span>
+                    {% if page != totalPages %}
+                        <a href="?b={{ board }}&page={{ totalPages }}">Last Page &gt;&gt;</a>
+                    {% else %}
+                        Last Page &gt;&gt;
+                    {% endif %}
+                </span>
+            </div>
+
+            <div class="_center" style="margin-top:15px;">
+                {% if board == 0 %}
+                    Overall Ranking includes all points from all quests.
+                {% elseif board == 1 %}
+                    Overall Ranking without Insane includes all points from all quests except the Insane quest.
+                {% elseif board == 2 %}
+                    Normal Mode Ranking includes points from individual quests involving expert tournament modes.
+                {% elseif board == 3 %}
+                    Beat Up Ranking includes points from individual quests involving Beat Up modes.
+                {% elseif board == 4 %}
+                    One Two Party Ranking includes points from individual quests involving One Two Party modes.
+                {% elseif board == 5 %}
+                    Beat Rush Ranking includes points from individual quests involving Beat Rush modes.
+                {% elseif board == 6 %}
+                    Guitar Ranking includes points from individual quests involving Guitar Mode.
+                {% elseif board == 7 %}
+                    Individual Quest Ranking includes points from individual quests (Easy, Medium, Hard, and Insane) only.
+                {% endif %}
+            </div>
+
+            <div class="_center" style="margin-top:15px;">
+                Ties are broken in favor of whomever was first to start doing quests.<br />
+                In other words, whoever has the earlier timestamp on the very first screenshot that they submitted.<br />
+                <br />
+                Rankings were last updated on {% include "generated/questrankingupdatetime.twig" %}.
+            </div>
+        </div>
+    </div>
+{% endblock %}

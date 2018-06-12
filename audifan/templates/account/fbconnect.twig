@@ -1,0 +1,54 @@
+{% extends "base.twig" %}
+{% import "macros/forms.twig" as forms %}
+
+{% block title %}Audifan.net - Connect Facebook Account{% endblock %}
+
+{% block pagetitle %}Log In with Facebook{% endblock %}
+
+{% block body %}
+    <div class="contentwrapperhalf">
+        <div class="float">
+            {% if status == "noaccount" %}
+                <div class="_center">
+                    You have successfully authenticated Audifan as:
+                    <div style="margin-top:5px;">
+                        <a href="http://www.facebook.com/profile.php?id={{ fbid }}" target="_blank">
+                            <img src="http://graph.facebook.com/{{ fbid }}/picture" style="vertical-align:middle; margin-right:5px;" />
+                            {{ fbname }}
+                        </a>
+                    </div>
+                </div>
+                        <div class="_center" style="margin-top:5px;">
+                            Please connect your Facebook account to an Audifan account.
+                        </div>
+                        <div style="margin-top:20px;">
+                            {{ forms.start("/account/fbconnect/?accessToken="~accessToken) }}
+                            <div><b>Already have an Audifan account?  Please log in here.</b></div>
+                            <div style="margin-top:5px;">Audifan Email: {{ forms.textField("email") }}</div>
+                            <div style="margin-top:5px;">Audifan Password: {{ forms.password("password") }}</div>
+                            <div style="margin-top:5px;">{{ forms.submit("submit_existingaccount", "Log In with Existing Account") }}</div>
+                            {{ forms.end() }}
+                        </div>
+                        <div style="margin-top:20px;">
+                            {% if allowRegistration %}
+                                {{ forms.start("/account/fbconnect/?accessToken="~accessToken) }}
+                                <div><b>Don't have an Audifan account?  Please create a nickname to use on Audifan.</b></div>
+                                <div style="margin-top:5px;">Nickname: {{ forms.textField("nickname", "", "", "", 20) }}</div>
+                                <div style="margin-top:5px;">{{ forms.submit("submit_newaccount", "Create New Audifan Account") }}</div>
+                                {{ forms.end() }}
+                            {% else %}
+                                <div>You cannot connect your Facebook account to a new account at this time because new account registration is currently disabled. Please check back later.</div>
+                            {% endif %}
+                        </div>
+            {% elseif status == "badaccesstoken" %}
+                <div class="_center">
+                    Authentication with Facebook failed!  Please try again.<br />
+                    <br />
+                    <a href="javascript:;" onclick="_.logInWithFacebook()"><img src="{{ GLOBAL.staticUrl }}/img/loginwithfacebook.png" /></a>
+                </div>
+            {% elseif status == "accounterror" %}
+                
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

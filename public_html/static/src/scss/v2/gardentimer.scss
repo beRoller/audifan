@@ -1,0 +1,17 @@
+.garden-timer-container {
+	.timercontainer {
+		.timernameedit {
+			display: none;
+		}
+
+		&.edit-name {
+			.timernameedit {
+				display: block;
+			}
+
+			.timername {
+				display: none;
+			}
+		}
+	}
+}

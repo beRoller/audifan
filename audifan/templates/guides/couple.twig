@@ -1,0 +1,279 @@
+{% extends "base.twig" %}
+
+{% block title %}Audifan.net - Guides - Couple Guide{% endblock %}
+
+{% block head %}
+    <style>
+        .levelsection {
+            text-align: center;
+            margin-bottom: 5px;
+        }
+        
+        .levelsectionheading > img {
+            margin-right: 3px;
+            margin-left: 3px;
+            vertical-align: middle;
+        }
+        
+        .leveltable {
+            border: 0px;
+            border-collapse: collapse;
+            width: 100%;
+        }
+        
+        .leveltable tr td {
+            width: 50%;
+        }
+        
+        td.level {
+            font-weight: bold;
+            text-align: right;
+            padding-right: 15px;
+        }
+        
+        td.req {
+            text-align: left;
+            padding-left: 15px;
+        }
+        
+        .lovepartytable {
+            border: 0px;
+            border-collapse: collapse;
+        }
+        
+        .lovepartytable tr td {
+            padding-bottom: 10px;
+        }
+        
+        td.lpring {
+            width: 64px;
+        }
+        
+        .lplevel {
+            font-weight: bold;
+            font-size: 1.25em;
+            margin-bottom: 3px;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="pagetitle">Couple Guide</div>
+    
+    <div class="contentwrapper2col">
+        <div class="float">
+            <div class="sectionwrapper">
+                <div class="sectionheading">Required Hearts</div>
+                
+                {% spaceless %}
+                {% for level,hearts in [0,20,60,120,200,300,420,560,720,900,1100,1320,1560,1820,2100,2400,2720,3060,3420,3800,4200,4620,5060,5520,6000,6500,7020,7560,8120,8700,9300,9920,10560,11220,11900,12600,13320,14060,14820,15600,16400,17220,18060,18920,19800,20700,21620,22560,23520,24500,26520,27620,28760,30000,31420,33180,35600,39320,45620,57060] %}
+                    {% if level % 5 == 0 %}
+                        <div class="levelsection">
+                            <div class="levelsectionheading">
+                                <img src="{{ GLOBAL.staticUrl }}/img/rings/small/{{ ((level/5)|round(0, "floor")) + 1 }}.png" /><img src="{{ GLOBAL.staticUrl }}/img/coupleleveltitles/{{ ((level/5)|round(0, "floor")) + 1 }}.png" />
+                            </div>
+                            <table class="leveltable">
+                    {% endif %}
+                    
+                    <tr>
+                        <td class="level">Level {{ level + 1 }}</td>
+                        <td class="req">{{ hearts|number_format }}</td>
+                    </tr>
+                    
+                    {% if level % 5 == 4 %}
+                            </table>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+                
+                <div class="levelsection">
+                    <div class="levelsectionheading">
+                        <img src="{{ GLOBAL.staticUrl }}/img/rings/small/13.png" /><img src="{{ GLOBAL.staticUrl }}/img/coupleleveltitles/13.png" />
+                    </div>
+                    <table class="leveltable">
+                        <tr>
+                            <td class="level"><img src="{{ GLOBAL.staticUrl }}/img/coupleleveltitles/max.png" /></td>
+                            <td class="req">78,760</td>
+                        </tr>
+                    </table>
+                </div>
+                
+                {% endspaceless %}
+            </div>
+        </div>
+        
+        <div class="float">
+            <div class="sectionwrapper">
+                <div class="sectionheading">Wedding Requirements</div>
+                <div class="_center">
+                    With each ticket, you have 3 attempts to pass.<br />
+                    The requirements are lowered after each attempt.<br />
+                    Wedding Party uses the song Audition - Wedding Day (130 bpm)<br />
+                    on Couple Dance mode.
+                </div>
+                <div style="margin-top:10px;">
+                    <div class="_center" style="font-size:1.2em;">Attempt #1</div>
+                    <div style="margin-left:100px;">
+                        <b>Perfects:</b> 12<br />
+                        <b>Synchro Perfects:</b> 3<br />
+                        <b>Score:</b> 160,000
+                    </div>
+                    
+                    <div class="_center" style="font-size:1.2em; margin-top:7px;">Attempt #2</div>
+                    <div style="margin-left:100px;">
+                        <b>Perfects:</b> 8<br />
+                        <b>Synchro Perfects:</b> 2<br />
+                        <b>Score:</b> 120,000
+                    </div>
+                    
+                    <div class="_center" style="font-size:1.2em; margin-top:7px;">Attempt #3</div>
+                    <div style="margin-left:100px;">
+                        <b>Perfects:</b> 4<br />
+                        <b>Synchro Perfects:</b> 1<br />
+                        <b>Score:</b> 80,000
+                    </div>
+                </div>
+            </div>
+            
+            <div class="sectionwrapper">
+                <div class="sectionheading">Love Party Requirements</div>
+                <table class="lovepartytable">
+                    <tr>
+                        <td class="lpring"><img src="{{ GLOBAL.staticUrl }}/img/rings/large/2.png" /></td>
+                        <td>
+                            <div class="lplevel">Level 6</div>
+                            <b>Mode:</b> Ballroom - 4 Keys<br />
+                            <b>Song:</b> Audition - Opera (106 bpm)<br />
+                            <b>Perfects:</b> 12<br />
+                            <b>Love Perfects:</b> 3<br />
+                            <b>Score:</b> 180,000
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="lpring"><img src="{{ GLOBAL.staticUrl }}/img/rings/large/3.png" /></td>
+                        <td>
+                            <div class="lplevel">Level 11</div>
+                            <b>Mode:</b> Ballroom - 4 Keys<br />
+                            <b>Song:</b> Audition - Sad Samba (120 bpm)<br />
+                            <b>Perfects:</b> 20<br />
+                            <b>Love Perfects:</b> 5<br />
+                            <b>Score:</b> 250,000
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="lpring"><img src="{{ GLOBAL.staticUrl }}/img/rings/large/4.png" /></td>
+                        <td>
+                            <div class="lplevel">Level 16</div>
+                            <b>Mode:</b> Ballroom - 4 Keys<br />
+                            <b>Song:</b> Audition - Get Out (120 bpm)<br />
+                            <b>Perfects:</b> 15<br />
+                            <b>Love Perfects:</b> 5<br />
+                            <b>Score:</b> 200,000
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="lpring"><img src="{{ GLOBAL.staticUrl }}/img/rings/large/5.png" /></td>
+                        <td>
+                            <div class="lplevel">Level 21</div>
+                            <b>Mode:</b> Ballroom - 4 Keys<br />
+                            <b>Song:</b> Audition - Por Una Cabeza (120 bpm)<br />
+                            <b>Perfects:</b> 15<br />
+                            <b>Love Perfects:</b> 5<br />
+                            <b>Score:</b> 200,000
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="lpring"><img src="{{ GLOBAL.staticUrl }}/img/rings/large/6.png" /></td>
+                        <td>
+                            <div class="lplevel">Level 26</div>
+                            <b>Mode:</b> Ballroom - 4 Keys<br />
+                            <b>Song:</b> Audition - Feel of the Night (126 bpm)<br />
+                            <b>Perfects:</b> 20<br />
+                            <b>Love Perfects:</b> 5<br />
+                            <b>Score:</b> 230,000
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="lpring"><img src="{{ GLOBAL.staticUrl }}/img/rings/large/7.png" /></td>
+                        <td>
+                            <div class="lplevel">Level 31</div>
+                            <b>Mode:</b> Ballroom - 4 Keys<br />
+                            <b>Song:</b> Audition - Shall We Dance (128 bpm)<br />
+                            <b>Perfects:</b> 20<br />
+                            <b>Love Perfects:</b> 5<br />
+                            <b>Score:</b> 230,000
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="lpring"><img src="{{ GLOBAL.staticUrl }}/img/rings/large/8.png" /></td>
+                        <td>
+                            <div class="lplevel">Level 36</div>
+                            <b>Mode:</b> Ballroom - 4 Keys<br />
+                            <b>Song:</b> Audition - Last Summer (130 bpm)<br />
+                            <b>Perfects:</b> 20<br />
+                            <b>Love Perfects:</b> 5<br />
+                            <b>Score:</b> 200,000
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="lpring"><img src="{{ GLOBAL.staticUrl }}/img/rings/large/9.png" /></td>
+                        <td>
+                            <div class="lplevel">Level 41</div>
+                            <b>Mode:</b> Ballroom - 4 Keys<br />
+                            <b>Song:</b> Audition - Cowboy Jive (136 bpm)<br />
+                            <b>Perfects:</b> 22<br />
+                            <b>Love Perfects:</b> 5<br />
+                            <b>Score:</b> 200,000
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="lpring"><img src="{{ GLOBAL.staticUrl }}/img/rings/large/10.png" /></td>
+                        <td>
+                            <div class="lplevel">Level 46</div>
+                            <b>Mode:</b> Ballroom - 4 Keys<br />
+                            <b>Song:</b> Audition - Can Can (Acoustic Mix) (150 bpm)<br />
+                            <b>Perfects:</b> 30<br />
+                            <b>Love Perfects:</b> 6<br />
+                            <b>Score:</b> 280,000
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="lpring"><img src="{{ GLOBAL.staticUrl }}/img/rings/large/11.png" /></td>
+                        <td>
+                            <div class="lplevel">Level 51</div>
+                            <b>Mode:</b> Ballroom - 8 Keys<br />
+                            <b>Song:</b> Audition - Can Can (Acoustic Mix) (150 bpm)<br />
+                            <b>Perfects:</b> 20<br />
+                            <b>Love Perfects:</b> 5<br />
+                            <b>Score:</b> 350,000
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="lpring"><img src="{{ GLOBAL.staticUrl }}/img/rings/large/12.png" /></td>
+                        <td>
+                            <div class="lplevel">Level 56</div>
+                            <b>Mode:</b> Ballroom - 8 Keys<br />
+                            <b>Song:</b> Audition - Can Can (Acoustic Mix) (150 bpm)<br />
+                            <b>Perfects:</b> 20<br />
+                            <b>Love Perfects:</b> 6<br />
+                            <b>Score:</b> 400,000
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="lpring"><img src="{{ GLOBAL.staticUrl }}/img/rings/large/13.png" /></td>
+                        <td>
+                            <div class="lplevel"><img src="{{ GLOBAL.staticUrl }}/img/coupleleveltitles/max.png" /></div>
+                            <b>Mode:</b> Ballroom - 8 Keys<br />
+                            <b>Song:</b> Audition - Can Can (Acoustic Mix) (150 bpm)<br />
+                            <b>Perfects:</b> 30<br />
+                            <b>Love Perfects:</b> 6<br />
+                            <b>Score:</b> 450,000
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        
+        <div style="clear:both;"></div>
+    </div>
+{% endblock %}

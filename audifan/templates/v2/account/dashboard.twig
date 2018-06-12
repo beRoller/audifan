@@ -1,0 +1,68 @@
+{% extends "base.twig" %}
+
+{% block body %}
+    {% if GLOBAL.user.isLoggedIn() %}
+    	<div class="row">
+    		<div class="col-md-12 text-center">
+    			<h2>Hey tr848!</h2>
+    			<h4>You have been a member of Audifan for {{ join_time|relativeTime }}.</h4>
+    		</div>
+    	</div>
+    	
+    	<div class="row">
+            <div class="col-md-6 col-sm-6">
+            	{{ sectionStart('<a href="/community/requests/">My Requests</a>') }}
+            		You have no requests.
+            	{{ sectionEnd() }}
+
+
+            	{{ sectionStart('<a href="/account/stuff/">My Stuff</a>') }}
+            		You have 3 unopened coin boxes.
+            	{{ sectionEnd() }}
+
+
+            	{{ sectionStart('<a href="/community/happybox/">Happy Box</a>') }}
+            		<div class="text-center">
+                        <div data-countdown="{{ timeUntilNextHappyBoxSpin }}" style="font-size:26px;"></div>
+                        <div>Until Next Spin</div>
+                    </div>
+                    
+
+            	{{ sectionEnd() }}
+
+
+            	{{ sectionStart('<a href="/community/gardentimer/">Garden Timer</a>') }}
+
+            	{{ sectionEnd() }}
+
+
+            	{{ sectionStart('<a href="/quests/">Quests</a>') }}
+            		170 QP
+            	{{ sectionEnd() }}
+
+
+            	{{ sectionStart('<a href="/community/vipdrawing/">VIP</a>') }}
+            		You have logged in 4 days this week.
+            		( Mon | Tue | ... | Sat | Sun )
+            	{{ sectionEnd() }}
+
+
+            	{{ sectionStart("Tip") }}
+            		A random tip based on stuff the user hasn't done.  e.g. The more quest points you have, the shorter your Happy Box cooldown!<br />
+            		You earn a permanent 10% coin bonus once your account is at least a year old.
+            	{{ sectionEnd() }}
+            </div>
+            <div class="col-md-6 col-sm-6">
+            	{{ sectionStart("My Feed") }}
+
+            	{{ sectionEnd() }}
+            </div>
+        </div>
+    {% else %}
+        <div class="row">
+            <div class="col-md-12 text-center">
+                Please <a href="/account/?thru=/account/dashboard/">log in</a> to view your dashboard.
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,79 @@
+{% extends "base.twig" %}
+
+{% block title %}Audifan.net - Friend Requests{% endblock %}
+
+{% block pagetitle %}My Friend Requests{% endblock %}
+
+{% block head %}
+    <style>
+        table.requesttable {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        table.requesttable tr td, table.requesttable tr th {
+            padding: 5px;
+            text-align: center;
+        }
+        
+        table.requesttable tr th {
+            font-size: 1.25em;
+            font-weight: bold;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="contentwrapperhalf">
+        <div class="float">
+            <div class="sectionwrapper">
+                <div class="sectionheading">Incoming Requests</div>
+                {% if incoming|length > 0 %}
+                    <table class="requesttable">
+                        <tr>
+                            <th>Sender</th>
+                            <th>Time Received</th>
+                            <th></th>
+                        </tr>
+                        {% for r in incoming %}
+                            <tr>
+                                <td><a href="/community/profile/{{ r.fromid }}/">{{ r.display_name }}</a></td>
+                                <td>{{ r.time|relativeTime }} ago</td>
+                                <td>
+                                    <div><a href="?do=accept&id={{ r.fromid }}">Accept</a></div>
+                                    <div style="margin-top:5px;"><a href="?do=decline&id={{ r.fromid }}">Decline</a></div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                {% else %}
+                    <div class="_center">(None)</div>
+                {% endif %}
+            </div>
+
+            <div class="sectionwrapper">
+                <div class="sectionheading">Sent Requests</div>
+                {% if sent|length > 0 %}
+                    <table class="requesttable">
+                        <tr>
+                            <th>Recipient</th>
+                            <th>Time Sent</th>
+                            <th></th>
+                        </tr>
+                        {% for r in sent %}
+                            <tr>
+                                <td><a href="/community/profile/{{ r.toid }}/">{{ r.display_name }}</a></td>
+                                <td>{{ r.time|relativeTime }} ago</td>
+                                <td>
+                                    <a href="?do=unsend&id={{ r.toid }}">Unsend</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                {% else %}
+                    <div class="_center">(None)</div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

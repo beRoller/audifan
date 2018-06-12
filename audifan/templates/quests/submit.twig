@@ -1,0 +1,127 @@
+{% extends "base.twig" %}
+{% import "macros/forms.twig" as forms %}
+
+{% block title %}Audifan.net - Quests - Submit a Screenshot{% endblock %}
+
+{% block head %}
+    <style>
+        ol.reqlist {
+            margin: 0px;
+        }
+    </style>
+    
+    <script type="text/javascript">
+        $(function() {
+            $("#ssform").submit(function() {
+                $("#screenshotbutton").val("Processing...").attr("disabled", true);
+                return true;
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block pagetitle %}<a href="/quests/">Quests</a>: Submit a Screenshot{% endblock %}
+
+{% block body %}
+    <div class="contentwrapperhalf">
+        <div class="float">
+            <div class="sectionwrapper">
+                <div class="sectionheading">Screenshot Requirements</div>
+                <div class="_center" style="margin-bottom:3px;">Please read these carefully.</div>
+                <ol class="reqlist">
+                    <li>You must submit a screenshot of the final scoreboard at the end of the game.  Quests must be completed in Redbana Audition.</li>
+                    <li>You must use the /time command to display the time in chat in the screenshot.  The screenshot must be taken within the current submission period.</li>
+                    <li>The screenshot you submit must be a screenshot taken by pressing the Print Screen (PrtScn) button and saved to your Audition "screenshot" folder.  It may not be taken with any other program such as Fraps or saved by pasting into Photoshop, Paint, etc.</li>
+                    <li>The screenshot cannot be edited in any way.  It must be the same exact file that was saved to your screenshot folder.  You will be permanently banned from Audifan if you try to cheat.</li>
+                </ol>
+            </div>
+            
+            <div class="sectionwrapper">
+                {% if pageState == "submissionsclosed" %}
+                    <div class="_center">
+                        Screenshot submissions are currently closed.<br />
+                        Please check back at midnight.
+                    </div>
+                {% elseif pageState == "notloggedin" %}
+                    <div class="_center">
+                        Please <a href="/account/?thru=/quests/submit/">log in</a> to submit a screenshot.
+                    </div>
+                {% elseif pageState == "noign" %}
+                    {{ forms.start("/quests/submit/") }}
+                    <div class="_center">
+                        <div style="font-weight:bold;">Please enter your Audition in-game name for this week's quests.</div>
+                        <div>You can only submit screenshots with one in-game name each week.</div>
+                        <div style="margin-top:5px;">
+                            Enter a new IGN: {{ forms.textField("newign", "", "", "", 30) }}
+                            {% if questIgns is not empty %}
+                            <br />or select an IGN you've used previously:
+                            {{ forms.selectStart("prevign") }}
+                            {{ forms.selectOption("", "") }}
+                            {{ forms.selectOptions(questIgns) }}
+                            {{ forms.selectEnd() }}
+                            {% endif %}
+                        </div>
+                        <div style="margin-top:5px;">
+                            {{ forms.submit("submit_ign", "Submit IGN") }}
+                        </div>
+                    </div>
+                    {{ forms.end() }}
+                {% else %}
+                    {% if submittedDifficulties|length == 6 %}
+                        <div class="_center">You have submitted screenshots for all quests!</div>
+                    {% else %}
+                        <div class="_center" style="margin-bottom:5px;">
+                            Your IGN for this week's quests is <span style="margin:0px 5px; font-weight:bold;">{{ questCurrentIgn }}</span>.<br />
+                            Your IGN on the screenshot must match.
+                            {% if numSubmissions == 0 %}
+                                {{ forms.start("/quests/submit/") }}
+                                <div class="_center" style="margin-top:5px; margin-bottom:10px;">
+                                    <div>
+                                        {{ forms.submit("submit_change_ign", "Change IGN") }}
+                                    </div>
+                                </div>
+                                {{ forms.end() }}
+                            {% endif %}
+                        </div>
+
+                        {{ forms.start("/quests/submit/", "post", "ssform", true) }}
+                        
+                        1. For which quest do you want to submit a screenshot?
+                        
+                        <div style="margin-left:10px;">
+                            <table style="border:0px;">
+                                {% for i in 1..6 %}
+                                    {% if questRequirements[i] and i not in submittedDifficulties %}
+                                    <tr>
+                                        <td>
+                                            <input type="radio" name="req" value="{{ questRequirements[i].req_id }}" style="margin-right:5px; vertical-align:middle;" id="req_{{ questRequirements[i].req_id }}" />
+                                        </td>
+                                        <td>
+                                            <label for="req_{{ questRequirements[i].req_id }}">
+                                                <div><b>{{ diffLabels[i - 1] }}</b></div>
+                                                <div>{{ questRequirements[i].req_text|raw }}</div>
+                                            </label>
+                                        </td>
+                                    </tr>
+                                    {% endif %}
+                                {% endfor %}
+                            </table>
+                        </div>
+                            
+                        <div style="margin-top: 5px;">2. Select screenshot file.</div>
+                        <div style="margin-left:10px;">
+                            <input type="file" name="screenshot" style="background-color:#ffffff; color:#000000;" />
+                        </div>
+                        
+                        <div class="_center" style="margin-top:5px;">
+                            <!--<div style="margin-bottom:5px;">Please note that your screenshot will be privately uploaded to <a href="http://www.imageshack.com" target="_blank">ImageShack</a>.</div>-->
+                            {{ forms.submit("", "Submit Screenshot", "screenshotbutton") }}
+                        </div>
+                        
+                        {{ forms.end() }}
+                    {% endif %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

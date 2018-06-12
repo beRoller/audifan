@@ -1,0 +1,112 @@
+{% extends "base.twig" %}
+
+{% block title %}Audifan.net - ADMIN - Edit Account Stuff{% endblock %}
+
+{% block head %}
+    <style type="text/css">
+        .items {
+            margin-top: 10px;
+            margin-bottom: 10px;
+            width: 100%;
+            border: 2px solid #ffffff;
+            border-collapse: collapse;
+        }
+        
+        .items tr th, .items tr td {
+            border: 1px solid #ffffff;
+            padding: 3px;
+        }
+        
+        .items tr th {
+            font-weight: bold;
+            font-size: 1.2em;
+            text-align: center;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="pagetitle"><a href="/admin/">ADMIN</a>: Edit Account Stuff</div>
+    <div class="_center" style="margin-bottom:10px;">Change the person's account with query string ?id=__.</div>
+    
+    {% if id %}
+        <div>You are editing account ID {{ id }}.</div>
+        <div>
+            Item types:<br />
+            1 - Badge<br />
+            2 - Voucher<br />
+            3 - Misc<br />
+            <br />
+            Stack Methods:<br />
+            1 - Replace.  If another item is added and one already exists, remove the old one and replace it with the new one.<br />
+            2 - Charge.  If another item is added and one already exists, increase the charge on the existing one.<br />
+            3 - Multiple.  Multiple items can be separately added.<br />
+            4 - Extend.  If another item is added and one already exists, extend the duration of the existing item by the duration of the new one.<br />
+            5 - One Only.  If another item is added and one already exists, ignore the new one.
+        </div>
+        <table class="items">
+            <tr>
+                <th>Stuff ID</th>
+                <th>Item Info</th>
+                <th>Expire Time</th>
+                <th>Additional Data</th>
+                <th>Save Changes</th>
+            </tr>
+            
+            {% for i in stuff %}
+                <form method="post" action="/admin/account/stuff/?id={{ id }}">
+                    <input type="hidden" name="id" value="{{ i.stuff_id }}" />
+                <tr>
+                    <td>{{ i.stuff_id }}</td>
+                    <td>
+                        <b>ID:</b> {{ i.item_id }}<br />
+                        <b>Name:</b> {{ itemInfo[i.item_id][2] }}<br />
+                        <b>Image:</b> {{ itemInfo[i.item_id][3] }}<br />
+                        <b>Type:</b> {{ itemInfo[i.item_id][0] }}<br />
+                        <b>Stack Method:</b> {{ itemInfo[i.item_id][1] }}<br />
+                    </td>
+                    <td>
+                        <input type="text" value="{{ i.expire_time }}" name="expiretime" /><br />
+                        {% if i.expire_time == -1 %}
+                            Indefinite
+                        {% elseif i.expire_time <= now %}
+                            This item is expired!<br />
+                            It should be removed by the daily cron job at midnight EST.<br />
+                            It expired on {{ i.expire_time|date("r") }}
+                        {% else %}
+                            {{ i.expire_time|relativeTime }} left<br />
+                            {{ i.expire_time|date("r") }}
+                        {% endif %}
+                    </td>
+                    <td>
+                        <b>Charges:</b> <input type="text" name="charges" value="{{ i.charges }}" /><br />
+                        <b>In Use:</b> <input type="text" name="inuse" value="{{ i.in_use }}" /><br />
+                        <b>Note:</b> <input type="text" name="note" value="{{ i.note }}" />
+                    </td>
+                    <td>
+                        <input type="submit" name="submit_save" value="Save" /><br />
+                        <input type="checkbox" name="delete" /> Delete on Save
+                    </td>
+                </tr>
+                </form>
+            {% endfor %}
+        </table>
+        <div>
+            Add An Item To This Account:<br />
+            Items are listed as "ID | Name | Type | Stack Method"<br />
+            <br />
+            <form method="post" action="?id={{ id }}">
+            <select name="item_id">
+            {% for i in 1..(itemInfo|length - 1) %}
+                <option value="{{ i }}">{{ i }} | {{ itemInfo[i][2] }} | {{ itemInfo[i][0] }} | {{ itemInfo[i][1] }}</option>
+            {% endfor %}
+            </select><br />
+            Duration: <input type="text" name="duration" /><br />
+            <input type="submit" name="submit_add" value="Add" />
+            </form><br />
+            Items are added using inventory methods on this user's account.<br />
+            Therefore, all stack methods are followed.  If the stack method is violated, the item may not be added.<br />
+            
+        </div>
+    {% endif %}
+{% endblock %}

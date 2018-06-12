@@ -1,0 +1,374 @@
+{% extends "base.twig" %}
+
+{% macro itemExpire(seconds) %}
+    {% if seconds > 0 %}
+        Expires in {{ seconds|secondsToWords }}.
+    {% elseif seconds == -1 %}
+        Indefinite
+    {% endif %}
+{% endmacro %}
+{% from _self import itemExpire %}
+
+{% block title %}Audifan.net - Happy Box{% endblock %}
+
+{% block endofpage %}
+    <!--<script type="text/javascript" src="{{ GLOBAL.staticUrl }}/js/audifan.happybox-v2.0.js"></script>-->
+    <script>
+        (function($) {
+            $('[data-toggle="tooltip"]').tooltip();
+        })(jQuery);
+    </script>
+{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" type="text/css" href="{{ GLOBAL.staticUrl }}/css/happybox-v2.0.css" />
+    <style>
+        .cooldownbonuswrapper {
+            margin: 15px 0px;
+        }
+
+        .cooldownbonuswrapper:last-child {
+            margin-top: 15px;
+            margin-bottom: 0px;
+        }
+
+        .cooldownbonusname {
+            font-weight: bold;
+        }
+
+        .cooldownbonusamount {
+            
+        }
+
+        .cooldownbonusexpire {
+            font-style: italic;
+        }
+
+        .firework {
+            position: absolute;
+            left: 0px;
+            top: 0px;
+            width: 256px;
+            height: 256px;
+            background-image: url("{{ GLOBAL.staticUrl }}/img/fireworksprite.png");
+            background-position: 0px 0px;
+        }
+        
+        .hastooltip {
+            border-bottom: 1px dashed #FFF;
+        }
+        
+        .winnerpiccontainer {
+            float: left;
+            width: 50px;
+            height: 50px;
+            margin-right: 5px;
+            text-align: center;
+        }
+        
+        img.winnerpic {
+            max-width: 100%;
+            max-height: 50px;
+        }
+
+        #winnercounttable {
+            width: 100%;
+            border: 2px solid #FFF;
+            border-spacing: 0px;
+            border-collapse: collapse;
+            margin: auto;
+        }
+
+        #winnercounttable tr th {
+            border: 1px solid #FFF;
+            padding: 5px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        #winnercounttable tr td {
+            border: 1px solid #FFF;
+            padding: 5px;
+            text-align: center;
+        }
+
+        .recentprizes {
+            margin-top: 5px;
+        }
+
+        .recentprizes > div {
+            margin: 7px;
+        }
+
+        #happyboxjackpot {
+            text-align: center;
+            width: 100%;
+            background-color: #C80D38;
+            border-radius: 5px;
+            border: 1px solid #FFF254;
+            padding: 5px;
+            margin: auto;
+            margin-bottom: 5px;
+        }
+
+        #jackpotamount {
+            font-size: 26px;
+            font-weight: bold;
+        }
+
+        #jackpotlabel {
+            margin-top: 5px;
+        }
+
+        .recent-winner {
+            margin-top: 10px;
+            height: 50px;
+        }
+    </style>
+{% endblock %}
+
+{% block pagetitle %}Happy Box{% endblock %}
+
+{% block body %}
+    {% if GLOBAL.user.isLoggedIn() %}
+        <div class="row">
+            <div class="col-md-6 col-sm-6">
+                <div id="happyboxjackpot">
+                    <div id="jackpotamount">{{ jackpotInfo.happyBoxJackpotAmount|number_format }}</div>
+                    <div id="jackpotlabel">
+                        <div>Current Coin Jackpot</div>
+                        <div>
+                            {% if jackpotInfo.happyBoxJackpotAmount >= 1000 %}
+                                ({{ "%0.2f"|format(jackpotInfo.happyBoxJackpotChance/100) }}% chance to win)
+                            {% else %}
+                                (Can only be won when it contains at least 1,000 coins)
+                            {% endif %}
+                        </div>
+                        {% if lastJackpotWinner %}
+                            <div>Last won with {{ lastJackpotWinner.prize_data1|number_format }} Coins by <a href="/community/profile/{{ lastJackpotWinner.account_id }}/" style="color:#ffff88;">{{ lastJackpotWinner.display_name }}</a></div>
+                        {% endif %}
+                    </div>
+                </div>
+                    
+                <div id="happybox">
+                    <div id="happyboxballspin" class="happyboxballspinstatic"></div>
+
+                    <div id="happyboxnexttext">Next</div>
+                    <div id="happyboxspintext">Spin</div>
+
+                    <div id="happyboxnumberslot1" class="happyboxnumber0"></div>
+                    <div id="happyboxnumberslot2" class="happyboxnumber0"></div>
+                    <div id="happyboxcolon"></div>
+                    <div id="happyboxnumberslot3" class="happyboxnumber0"></div>
+                    <div id="happyboxnumberslot4" class="happyboxnumber0"></div>
+
+                    <div id="happyboxgo" class="happyboxgo{% if timeTilNextSpin > 1 %}un{% endif %}available"></div>
+
+                    <div id="happyboxnextspintime" data-countdown="{{ timeTilNextSpin }}" data-countdown-complete-string="Spin Ready!"></div>
+                    <div id="happyboxtotalcooldown">Cooldown reduced by {{ "%0.1f"|format(cooldownReductionHours) }} hours</div>
+
+                    <audio id="happyboxaudio">
+                        <source src="{{ GLOBAL.staticUrl }}/audio/happy.wav" type="audio/wav">
+                    </audio>
+
+                    <div id="happyboxprizetextcontainer" style="display:none;">
+                        <div id="happyboxprizetextclose">X</div>
+                        <div id="happyboxprizetext"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-sm-6">
+                <div class="text-center" style="margin-bottom:10px;">
+                    <a href="/help/happybox/">How Does the Happy Box Work?</a>
+                </div>
+                
+                {{ sectionStart('My Cooldown Bonuses')|raw }}
+                    {% set hasBonus = false %}
+                    {% if GLOBAL.user.getQP() > 0 %}
+                        <div class="cooldownbonuswrapper">
+                            <div class="cooldownbonusname">{{ GLOBAL.user.getQP()|number_format }} Quest Points</div>
+                            <div class="cooldownbonusamount">
+                                {% if GLOBAL.user.getQP() >= qpThreshold %}
+                                    -50.00% Cooldown
+                                {% else %}
+                                    -{{ "%.2f"|format((GLOBAL.user.getQP()/(qpThreshold*2))*100) }}% Cooldown
+                                {% endif %}
+                            </div>
+                            <div class="cooldownbonusexpire">Indefinite</div>
+                        </div>
+                        {% set hasBonus = true %}
+                    {% endif %}
+
+                    {% if 2 in inventory %}
+                        <div class="cooldownbonuswrapper">
+                            <div class="cooldownbonusname">VIP Status</div>
+                            <div class="cooldownbonusamount">-40.00% Cooldown</div>
+                            <div class="cooldownbonusexpire">{{ itemExpire(itemTimeLeft[2]) }}</div>
+                        </div>
+                        {% set hasBonus = true %}
+                    {% endif %}
+
+                    {% if 3 in inventory %}
+                        <div class="cooldownbonuswrapper">
+                            <div class="cooldownbonusname">-10% Cooldown Item</div>
+                            <div class="cooldownbonusamount">-10.00% Cooldown</div>
+                            <div class="cooldownbonusexpire">{{ itemExpire(itemTimeLeft[3]) }}</div>
+                        </div>
+                        {% set hasBonus = true %}
+                    {% elseif 4 in inventory %}
+                        <div class="cooldownbonuswrapper">
+                            <div class="cooldownbonusname">-25% Cooldown Item</div>
+                            <div class="cooldownbonusamount">-25.00% Cooldown</div>
+                            <div class="cooldownbonusexpire">{{ itemExpire(itemTimeLeft[4]) }}</div>
+                        </div>
+                        {% set hasBonus = true %}
+                    {% elseif 5 in inventory %}
+                        <div class="cooldownbonuswrapper">
+                            <div class="cooldownbonusname">-40% Cooldown Item</div>
+                            <div class="cooldownbonusamount">-40.00% Cooldown</div>
+                            <div class="cooldownbonusexpire">{{ itemExpire(itemTimeLeft[5]) }}</div>
+                        </div>
+                        {% set hasBonus = true %}
+                    {% endif %}
+
+                    {% if 6 in inventory %}
+                        <div class="cooldownbonuswrapper">
+                            <div class="cooldownbonusname">-100% Cooldown Item [ADMIN ITEM]</div>
+                            <div class="cooldownbonusamount">-100.00% Cooldown</div>
+                            <div class="cooldownbonusexpire">{{ itemExpire(itemTimeLeft[6]) }}</div>
+                        </div>
+                        {% set hasBonus = true %}
+                    {% endif %}
+
+                    {% if 7 in inventory %}
+                        <div class="cooldownbonuswrapper">
+                            <div class="cooldownbonusname">Thumbs Up Quest Medal</div>
+                            <div class="cooldownbonusamount">-7 Minutes and 30 Seconds Cooldown</div>
+                            <div class="cooldownbonusexpire">{{ itemExpire(itemTimeLeft[7]) }}</div>
+                        </div>
+                        {% set hasBonus = true %}
+                    {% elseif 8 in inventory %}
+                        <div class="cooldownbonuswrapper">
+                            <div class="cooldownbonusname">Bronze Quest Medal</div>
+                            <div class="cooldownbonusamount">-15 Minutes and 30 Seconds Cooldown</div>
+                            <div class="cooldownbonusexpire">{{ itemExpire(itemTimeLeft[8]) }}</div>
+                        </div>
+                        {% set hasBonus = true %}
+                    {% elseif 9 in inventory %}
+                        <div class="cooldownbonuswrapper">
+                            <div class="cooldownbonusname">Silver Quest Medal</div>
+                            <div class="cooldownbonusamount">-22 Minutes and 30 Seconds Cooldown</div>
+                            <div class="cooldownbonusexpire">{{ itemExpire(itemTimeLeft[9]) }}</div>
+                        </div>
+                        {% set hasBonus = true %}
+                    {% elseif 10 in inventory %}
+                        <div class="cooldownbonuswrapper">
+                            <div class="cooldownbonusname">Gold Quest Medal</div>
+                            <div class="cooldownbonusamount">-30 Minutes Cooldown</div>
+                            <div class="cooldownbonusexpire">{{ itemExpire(itemTimeLeft[10]) }}</div>
+                        </div>
+                        {% set hasBonus = true %}
+                    {% endif %}
+
+                    {% if not hasBonus %}
+                        <div class="_center">
+                            You do not have any cooldown bonuses!<br />
+                            See <a href="/help/happybox/">this help article</a> for more info on how to get one!
+                        </div>
+                    {% endif %}
+                {{ sectionEnd()|raw }}
+                
+                {{ sectionStart('My Recent Prizes')|raw }}
+                    <div class="recentprizes">
+                        {% for p in myPrizes %}
+                            <div>
+                                [{{ p.win_time|date("n/d/y") }}] You won 
+                                {% if p.prize_id == -1 %}
+                                    {{ p.prize_data1 }}{% if p.prize_data2 > 0 %} ({{ (p.prize_data1 - p.prize_data2)|number_format }} + {{ p.prize_data2|number_format }} Bonus) {% endif %} Coins
+                                {% elseif p.prize_id == -2 %}
+                                    the JACKPOT with {{ p.prize_data1|number_format }} Coins
+                                {% else %}
+                                    a <span class="hastooltip" data-toggle="tooltip" data-placement="top" title="{{ itemList[p.prize_id].description }}">{{ itemList[p.prize_id].name|raw }}</span> 
+                                {% endif %}
+                            </div>
+                            {% else %}
+                            <div class="_center">You have not won any prizes in the last 7 days.</div>
+                        {% endfor %}
+                    </div>
+                {{ sectionEnd()|raw }}
+            </div>
+        </div>
+    {% else %}
+        <div class="row">
+            <div class="col-md-12 text-center">
+                Please <a href="/account/?thru=/community/happybox/">log in</a> to spin the Happy Box.
+            </div>
+        </div>
+    {% endif %}
+    
+    <div class="row">
+        <div class="col-md-6 col-sm-6">
+            {{ sectionStart('Recent Winners')|raw }}
+                {% for p in recentWinners %}
+                    <div class="row recent-winner">
+                        <div class="col-md-2 col-sm-2 hidden-xs text-center">
+                            <img class="winnerpic" src="{{ GLOBAL.staticUrl }}/img/profilepictures/{% if p.profile_pic_type %}{{ p.account_id }}.{{ p.profile_pic_type }}{% else %}default.png{% endif %}" />
+                        </div>
+                        
+                        <div class="col-md-10 col-sm-10 col-xs-12">
+                            <div>
+                                <a href="/community/profile/{{ p.account_id }}/">{{ p.display_name }}</a> won 
+
+                                {% if p.prize_id == -1 %}
+                                    {{ p.prize_data1 }}{% if p.prize_data2 > 0 %} ({{ (p.prize_data1 - p.prize_data2)|number_format }} + {{ p.prize_data2|number_format }} Bonus) {% endif %} Coins
+                                {% elseif p.prize_id == -2 %}
+                                    the JACKPOT with {{ p.prize_data1|number_format }} Coins
+                                {% else %}
+                                    a <span class="itemtiphotspot" data-itemtip="{{ itemList[p.prize_id].description }}">{{ itemList[p.prize_id].name|raw }}</span> 
+                                {% endif %}
+                            </div>
+
+                            <div>({{ p.win_time|relativeTime }} ago)</div>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="row">
+                        <div class="col-md-12 text-center">
+                            No prizes have been won in the last 7 days.
+                        </div>
+                    </div>
+                {% endfor %}
+            {{ sectionEnd()|raw }}
+        </div>
+
+        <div class="col-md-6 col-sm-6">
+            {{ sectionStart('Total Prizes Won in the Last 7 Days')|raw }}
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Prize</th>
+                            <th>Drop Rate</th>
+                            <th>Total Won</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr>
+                            <td><img src="{{ GLOBAL.staticUrl }}/img/coins/coin19.png" style="vertical-align:middle; margin-right:5px;" />Coins</td>
+                            <td>Very High</td>
+                            <td>{{ totalCoins|number_format }}</td>
+                        </tr>
+
+                        {% for p in [5,11,12,15,31,32,33,37,34,35,36] %}
+                            <tr>
+                                <td><span class="itemtiphotspot" data-itemtip="{{ itemList[p].description }}">{{ itemList[p].name|raw }}</span></td>
+                                <td>{{ dropRates[p] }}</td>
+                                <td>{{ totalWinners[p]|number_format }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {{ sectionEnd()|raw }}
+        </div>
+    </div>
+{% endblock %}

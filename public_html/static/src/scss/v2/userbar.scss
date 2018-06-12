@@ -1,0 +1,136 @@
+.userbar {
+    margin-bottom: 10px;
+
+    .userbarcontent {
+        margin-top: 10px;
+        
+        // Logged out
+        .login-form {
+            @media (max-width: $bootstrap-xs-max) {
+                display: none;
+            }
+            
+            .login-text-fields {
+                .input-group {
+                    margin-top: 3px;
+                    width: 100%;
+
+                    .input-group-addon {
+                        width: 37px;
+                        background-color: $link-color;
+                        border-color: $link-color;
+                        color: $text-color;
+                    }
+                    
+                    .login-cancel-link {
+                        display: none;
+                    }
+                }
+            }
+            
+            .login-buttons {
+                .checkbox {
+                    margin-top: 6px;
+                }
+                
+                .login-register-link {
+                    margin-left: 3px;
+                }
+                
+                .input-group {
+                    width: 100%;
+                }
+            }
+        }
+        
+        #mobile-login-toggle {
+            display: none;
+        }
+        
+        #mobile-login-register {
+            display: none;
+        }
+        
+        @media (max-width: $bootstrap-xs-max) {
+            #mobile-login-toggle {
+                display: inline-block;
+            }
+
+            #mobile-login-register {
+                display: inline-block;
+            }
+        }
+        
+        &.mobile-login-visible {
+            .login-form {
+                display: block !important;
+            }
+            
+            .login-cancel-link {
+                display: inline-block !important;
+                margin-left: 3px;
+            }
+            
+            #mobile-login-toggle {
+                display: none;
+            }
+            
+            #mobile-login-register {
+                display: none;
+            }
+        }
+        
+        
+        
+        
+        // Logged in.
+        .link-container > span {
+            margin: 0px 5px;
+            font-size: 12px;
+        }
+        
+        .mobile-link-container {
+            font-size: 16px;
+            
+            .mobile-links {
+                display: none;
+            }
+        }
+        
+        .log-out-link-container {
+            font-size: 16px;
+        }
+        
+        .dashboard-bar > span {
+            margin: 0px 7px;
+            font-size: 12px;
+        }
+        
+        .dashboard-bar {
+            .questsection {
+                .userbarquestpending {
+                    color: #ffff00;
+                }
+                
+                .userbarquestcomplete {
+                    color: #00ff00;
+                }
+                
+                .userbarquestrejected {
+                    color: #ff0000;
+                }
+            }
+            
+            .vipsection {
+                .userbarvipsuccess {
+                    color: #ffff00;
+                    font-weight: bold;
+                }
+                
+                .userbarvipmissed {
+                    color: #888888;
+                }
+            }
+        }
+    }
+}

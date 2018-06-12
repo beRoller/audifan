@@ -1,0 +1,38 @@
+{% from "macros/charactericons.twig" import characterIcons %}
+
+{{ sectionStart("My Characters") }}
+
+
+
+<!-- My Characters -->
+{% if editMode %}
+    <div class="text-center" style="margin-bottom:5px;">
+        Edit your characters on your <a href="/community/profile/{{ basicInfo.id }}/characters/">Characters page</a>
+    </div>
+{% endif %}
+{% for c in characterInfo %}
+<div class="characterwrapper">
+    <div>{{ characterIcons(c) }}</div>
+    <div class="characterlevel">
+        <span>{% if c.level == 0 %}Lv. ??{% elseif c.level == 99 %}<img src="{{ GLOBAL.staticUrl }}/img/leveltitles/max.png" />{% else %}Lv. {{ c.level }}{% endif %}</span>
+        <img src="{{ GLOBAL.staticUrl }}/img/leveltitles/{% if c.level == 0 %}hidden{% else %}{{ ((c.level-1) // 5) + 1 }}{% endif %}.png" alt="Level Title" />
+    </div>
+    {% if c.fam != "" %}
+    <div class="characterfam{% if c.fam_member_type == 3 %} characterfammaster{% elseif c.fam_member_type == 2 %} characterfamco{% endif %}">
+        <a title="Click to search for other characters in this FAM." href="/community/search/?query={{ c.fam|url_encode }}&in=fams">&lt;{{ c.fam }}&gt;</a>
+    </div>
+    {% endif %}
+    <div class="characterign">{{ c.ign }}</div>
+    <div class="charactermissions">
+        {% for m in ["n", "b", "r", "o", "h"] %}
+            {% if c["mission_"~m] > 0 %}
+                <span style="margin-right: 7px;"><b>{{ m|upper }}:</b> {{ c["mission_"~m] }}%</span>
+            {% endif %}
+        {% endfor %}
+    </div>
+</div>
+{% else %}
+    <div class="text-center">(None)</div>
+{% endfor %}
+
+{{ sectionEnd() }}

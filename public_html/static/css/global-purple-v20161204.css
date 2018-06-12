@@ -1,0 +1,1222 @@
+/*
+421c52
+732c7b
+9c8aa5
+bdaec6
+ffffff
+*/
+
+body {
+    /*background-image: url("../img/bkg.png");
+    background-repeat: repeat;*/
+    background-color: #311b41;
+    margin: 0px;
+    color: #ffffff;
+    font-family: Tahoma, Geneva, Helvetica, Arial, sans-serif;
+    font-size: .75em;
+}
+
+a, a:visited {
+    color: #bdaec6;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #ffffff;
+}
+
+form {
+    margin: 0px;
+    padding: 0px;
+}
+
+a img {
+    border: 0px;
+}
+
+/* Helpers */
+._center {
+    text-align: center;
+}
+
+._right {
+    text-align: right;
+}
+
+._vmiddle {
+    vertical-align: middle;
+}
+
+/* Theme Inputs */
+input.prettyinputtext, textarea.prettyinputtext {
+    background-color: #9c8aa5;
+    border: 1px solid #bdaec6;
+    border-radius: 2px;
+    padding: 2px;
+    color: #421c52;
+    outline: none;
+    font-family: Tahoma, Geneva, Helvetica, Arial, sans-serif;
+}
+
+input.prettyinputbutton {
+    background-color: #9c8aa5;
+    border: 1px solid #bdaec6;
+    box-shadow: 0px 0px 2px 2px #9c8aa5;
+    border-radius: 2px;
+    padding: 2px 4px;
+    color: #421c52;
+    outline: none;
+    font-family: Tahoma, Geneva, Helvetica, Arial, sans-serif;
+}
+
+input.prettyinputbutton:disabled {
+    box-shadow: none;
+    color: #444400;
+}
+
+input.prettyinputbutton:active {
+    box-shadow: 0px 0px 0px 0px #9c8aa5;
+}
+
+select.prettyinputselect {
+    background-color: #9c8aa5;
+    border: 1px solid #bdaec6;
+    border-radius: 2px;
+    padding: 2px;
+    color: #421c52;
+    outline: none;
+    font-family: Tahoma, Geneva, Helvetica, Arial, sans-serif;
+}
+
+/* Main Layout */
+.adwrapper {
+    padding: 5px;
+}
+
+.adcontent {
+    width: 728px;
+    height: 90px;
+    background-color: #000000;
+    margin: auto;
+    text-align: center;
+}
+
+.adcontent2 {
+    width: 120px;
+    height: 600px;
+    background-color: #000000;
+    margin: auto;
+    text-align: center;
+}
+
+#sideadwrapper {
+    margin: auto;
+    width: 1135px;
+    margin-top: 10px;
+}
+
+#sideadcontent {
+    padding-right: 15px;
+    float: left;
+}
+
+#modulewrapper {
+    width: 1000px;
+    float: left;
+}
+
+#mainwrapper {
+    background-color: #732c7b;
+    box-shadow: 0px 0px 5px 5px #421c52;
+    padding-bottom: 5px;
+}
+
+#maincontent {
+    padding: 2px;
+    min-height: 450px;
+}
+
+#footer {
+    margin-top: 15px;
+}
+
+#footer span {
+    margin-right: 7px;
+    margin-left: 7px;
+}
+
+/* Top Jump Link for long pages */
+#topjumpwrapper {
+    position: fixed;
+    right: 25px;
+    bottom: 25px;
+    opacity: .75;
+}
+
+#topjumpwrapper a {
+    padding: 5px;
+    background-color: #732c7b;
+    border-radius: 5px;
+    color: #bdaec6;
+    font-size: 1.25em;
+    opacity: 0;
+}
+
+#topjumpwrapper a:hover {
+    color: #ffffff;
+}
+
+/* Header & Menu */
+#headerwrapper {
+    padding-top: 5px;
+    text-align: center;
+}
+
+#logo a {
+    border: 0px;
+}
+
+#logo img {
+    border: 0px;
+}
+
+#menuwrapper {
+    background-color: #9c8aa5;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    box-shadow: 0px 0px 1px 1px #9c8aa5;
+}
+
+#menutoggle {
+    float: left;
+    width: 40px;
+    height: 30px;
+    text-align: center;
+    cursor: pointer;
+}
+
+#menutoggle img {
+    border: 0px;
+    border-radius: 3px;
+}
+
+#menuitemwrapper {
+    float: left;
+    width: 960px;
+}
+
+.menuitem {
+    float: left;
+    width: 192px;
+    height: 25px;
+    text-align: center;
+    font-size: 1.25em;
+    font-weight: bold;
+    padding-top: 5px;
+}
+
+.menuitem > a, .menuitem > a:visited {
+    text-decoration: none;
+    color: #421c52;
+}
+
+.menuitem > a:hover {
+    color: #732c7b;
+}
+
+#submenuwrapper {
+    clear: both;
+    background-color: #9c8aa5;
+    width: 960px;
+    position: absolute;
+    left: inherit;
+    top: inherit;
+    margin-top: 30px;
+    box-shadow: -1px 3px 1px 1px #9c8aa5;
+    padding-top: 3px;
+    padding-bottom: 5px;
+    z-index: 4;
+}
+
+.submenusection {
+    float: left;
+    width: 192px;
+    text-align: center;
+}
+
+.submenusubsection {
+    border: 1px solid #421c52;
+    border-radius: 5px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+}
+
+.submenusubsection a, .submenusubsection a:visited {
+    color: #421c52;
+    text-decoration: none;
+}
+
+.submenusubsection a:hover {
+    color: #732c7b;
+}
+
+a.submenuitem, a.submenuitem:visited {
+    text-align: center;
+    display: block;
+    text-decoration: none;
+    font-weight: bold;
+    color: #421c52;
+    margin-bottom: 3px;
+}
+
+a.submenuitem:hover {
+    color: #732c7b;
+}
+
+a.hbflash1, a.hbflash1:visited {
+    color: #FFF254;
+}
+
+a.hbflash2, a.hbflash2:visited {
+    color: #EA0F5A;
+}
+
+/* Scroller */
+#scrollerwrapper {
+    text-align: center;
+    position: relative;
+    left: 0px;
+    top: 0px;
+    margin-bottom: 15px;
+    visibility: hidden;
+}
+
+#scrollermessage {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    white-space: nowrap;
+}
+
+
+/* Userbar */
+#userbarwrapper {
+    padding: 5px;
+    background-color: #421c52;
+}
+
+#userbarnologinwrapper {
+    text-align: center;
+    white-space: nowrap;
+    margin-left: 135px;
+}
+
+.userbarnologinsection {
+    margin-right: 25px;
+    vertical-align: middle;
+}
+
+.userbarnologinsection img {
+    vertical-align: middle;
+}
+
+#userbarloginwrapper {
+    width: 1135px;
+    margin: auto;
+}
+
+#userbarloginlinkwrapper {
+    text-align: center;
+    margin-left: 135px;
+}
+
+#userbarloginlinkwrapper > span {
+    margin: 0px 7px;
+    vertical-align: middle;
+}
+
+#userbarloginlinkwrapper > span a img {
+    vertical-align: text-top;
+    margin-right: 3px;
+}
+
+#userbarstatusbar {
+    text-align: center;
+    margin-top: 3px;
+    margin-left: 135px;
+}
+
+#userbarstatusbar > span {
+    margin: 0px 10px;
+}
+
+#userbarmoreinfowrapper {
+    position: absolute;
+    left: inherit;
+    top: inherit;
+    background-color: #421c52;
+    width: 1000px;
+    z-index: 6;
+    padding-top: 7px;
+    opacity: .95;
+    box-shadow: 0px 2px 2px 2px #421c52;
+    margin-left: 135px;
+}
+
+#userbarmoreinfosectionwrapper > div.float {
+    float: left;
+    width: 250px;
+}
+
+.userbarmoreinfosectiontitle {
+    font-size: 1.2em;
+    font-weight: bold;
+    text-align: center;
+}
+
+#userbarmoreinfotitle {
+    height: 25px;
+    opacity: 1;
+    text-align: center;
+    font-size: 1.25em;
+}
+
+#userbarmoreinfoclose {
+    text-align: center;
+    margin-top: 20px;
+}
+
+#userbarmoreinfohb {
+    background-position: left center;
+    background-repeat: no-repeat;
+    padding-left: 59px;
+    height: 71px;
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+}
+
+#userbarmoreinfovipwrapper {
+    margin-top: 5px;
+    padding-left: 75px;
+}
+
+.userbarmoreinfovipday {
+    margin-top: 3px;
+    margin-bottom: 3px;
+    font-size: 1.25em;
+    vertical-align: middle;
+}
+
+.userbarmoreinfovipday > span, .userbarmoreinfovipday > img {
+    vertical-align: middle;
+}
+
+.userbarvipsuccess {
+    color: #ffff00;
+    font-weight: bold;
+}
+
+.userbarvipmissed {
+    color: #888888;
+}
+
+#userbarmoreinfogardenwrapper {
+}
+
+.minitimersectionwrapper {
+    float: left;
+    width: 125px;
+}
+
+.minitimersection {
+    padding-top: 5px;
+    padding-left: 60px;
+    background-repeat: no-repeat;
+    background-position: left center;
+    height: 25px;
+    margin: 5px 0px;
+    font-size: 1.25em;
+    text-shadow: 1px 1px #004400;
+}
+
+.minitimersectionwater {
+    padding-left: 36px;
+}
+
+.userbarquestcomplete {
+    color: #00ff00;
+}
+
+.userbarquestpending {
+    color: #ffff00;
+}
+
+.userbarquestrejected {
+    color: #ff0000;
+}
+
+
+
+/* Notifications */
+#notificationwrapper {
+    position: relative;
+    left: 0px;
+    top: 0px;
+}
+
+#notificationbutton {
+    width: 150px;
+    height: 15px;
+    background-color: #732c7b;
+    box-shadow: -1px -3px 2px 1px #421c52;
+    text-align: center;
+    padding: 3px;
+    font-weight: bold;
+    cursor: pointer;
+    color: #bdaec6;
+}
+
+#notificationlistwrapper {
+    width: 300px;
+    background-color: #732c7b;
+    position: absolute;
+    left: 0px;
+    top: 21px;
+    box-shadow: 2px 2px 1px 1px #421c52;
+    opacity: .95;
+    z-index: 5;
+}
+
+#notificationlist {
+    padding: 3px;
+    min-height: 80px;
+}
+
+#notificationclose {
+    text-align: center;
+    background-color: #9c8aa5;
+    margin-top: 5px;
+    padding: 3px;
+    font-size: .9em;
+    font-weight: bold;
+    letter-spacing: 2px;
+    cursor: pointer;
+}
+
+.notification {
+    margin-bottom: 10px;
+    font-size: .9em;
+    text-align: center;
+}
+
+.notificationtime {
+    text-align: right;
+    font-size: .8em;
+    font-style: italic;
+}
+
+.notification:last-child {
+    margin-bottom: 0px;
+}
+
+
+
+#errormessagewrapper {
+    text-align: center;
+    color: #ffaaaa;
+    margin: 5px;
+}
+
+.errormessagecontent {
+    margin-bottom: 3px;
+}
+
+#successmessagewrapper {
+    text-align: center;
+    color: #aaffaa;
+    margin: 5px;
+}
+
+.successmessagecontent {
+    margin-bottom: 3px;
+}
+
+
+
+/* Content Wrappers */
+.contentwrapper2col > div.float {
+    float: left;
+    width: 490px;
+    margin-left: 5px;
+}
+
+.contentwrapperhalf > div {
+    width: 500px;
+    margin: auto;
+}
+
+.contentwrapperfull {
+    width: 990px;
+    padding: 5px;
+}
+
+.sectionwrapper {
+    box-shadow: 1px 1px 1px 1px #421c52;
+    padding: 5px;
+    margin-bottom: 10px;
+}
+
+.sectionheading {
+    font-size: 1.35em;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 5px;
+}
+
+.pagetitle {
+    font-size: 1.75em;
+    text-align: center;
+    margin-bottom: 5px;
+}
+
+
+
+/* Alert Box */
+
+#alertwrapper {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    padding-top: 100px;
+    cursor: default;
+    z-index: 50;
+}
+
+#alerttable {
+    margin: auto;
+    border-collapse: collapse;
+    border-spacing: 0px;
+    border: 0px;
+}
+
+#alerttable tr td {
+    margin: 0px;
+    padding: 0px;
+}
+
+.alerttl {
+    background-position: top left;
+    background-repeat: no-repeat;
+    width: 32px;
+    height: 16px;
+}
+
+.alerttm {
+    background-position: top center;
+    background-repeat: repeat-x;
+    height: 16px;
+}
+
+.alerttr {
+    background-position: top right;
+    background-repeat: no-repeat;
+    width: 32px;
+    height: 16px;
+}
+
+.alertml {
+    background-position: top left;
+    background-repeat: repeat-y;
+    width: 32px;
+}
+
+.alertmm {
+    background-position: top center;
+    background-repeat: repeat;
+    text-align: center;
+    vertical-align: middle;
+    padding: 5px;
+}
+
+.alertmr {
+    background-position: top right;
+    background-repeat: repeat-y;
+    width: 32px;
+}
+
+.alertbl {
+    background-position: bottom left;
+    background-repeat: no-repeat;
+    width: 32px;
+    height: 16px;
+}
+
+.alertbm {
+    background-position: bottom center;
+    background-repeat: repeat-x;
+    height: 16px;
+}
+
+.alertbr {
+    background-position: bottom right;
+    background-repeat: no-repeat;
+    width: 32px;
+    height: 16px;
+}
+
+#alertbuttons {
+    margin-top: 7px;
+    text-align: right;
+}
+
+
+
+/* Badge Styling (used in multiple places) */
+.badgecontainer {
+    margin-top: 5px;
+    min-height: 32px;
+}
+
+.badge {
+    margin-right: 3px;
+    vertical-align: middle;
+}
+
+.badge a {
+    color: #ffffff;
+}
+
+.vipbadge {
+    background-color: #444400;
+    border-radius: 3px;
+    padding: 3px;
+}
+
+.questbadge {
+    background-color: #004400;
+    border-radius: 3px;
+    padding: 3px;
+}
+
+
+
+
+
+/* Megaphone Update */
+#megaphonewrapper {
+    text-align: left;
+    padding-left: 250px;
+    margin-bottom: 5px;
+}
+
+#megaphonedisplay {
+    background-image: url("/static/img/megaphone.png");
+    background-position: left center;
+    background-repeat: no-repeat;
+    padding-left: 42px;
+    height: 38px;
+}
+
+#megaphonelabel {
+    letter-spacing: 1px;
+    font-weight: bold;
+    font-size: 12pt;
+}
+
+
+
+
+
+
+
+
+/* User Cards */
+.usercardcontainer {
+    width: 100%;
+    position: relative;
+    left: 0px;
+    top: 0px;
+    transition: background-color 0.3s ease;
+}
+
+.usercardcontainer.active {
+    background-color: #3c3c3c;
+}
+
+.usercardpicturecontainer {
+    float: left;
+    width: 50px;
+    height: 50px;
+    margin-right: 10px;
+    text-align: center;
+    padding: 3px;
+}
+
+.usercardpicture {
+    max-width: 50px;
+    max-height: 50px;
+}
+
+.usercardexpand {
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    padding: 0px 10px;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.usercardcontainer.active .usercardexpand {
+    padding-top: 9px;
+}
+
+.usercardmoreinfo {
+    width: 100%;
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+    display: none;
+}
+
+.usercardnamecontainer {
+    float: left;
+}
+
+.usercardname {
+    font-size: 18px;
+}
+
+.usercardbadges {
+    height: 32px;
+}
+
+.usercardstatscontainer {
+    clear: both;
+    padding-left: 10px;
+}
+
+.usercardstatssection {
+    width: 50%;
+    float: left;
+}
+
+.usercardstatsfield {
+    margin-bottom: 5px;
+}
+
+.usercardstatsfield b {
+    margin-right: 5px;
+}
+
+.usercardcharlevel {
+    font-size: 11px;
+    text-align: center;
+}
+
+.usercardcharlevel img {
+    vertical-align: middle;
+    margin-left: 15px;
+}
+
+.usercardcharfam {
+    text-align: center;
+    margin-top: 3px;
+}
+
+.usercardcharfam a {
+    text-decoration: none;
+}
+
+.usercardcharfammaster a {
+    color: #ffaaaa;
+}
+
+.usercardcharfamco a {
+    color: #aaaaff;
+}
+
+.usercardcharfammember a {
+    color: #aaffaa;
+}
+
+.usercardcharign {
+    text-align: center;
+    margin-top: 3px;
+    font-size: 16px;
+}
+
+
+
+
+
+/* Icon Animations */
+.ciconcontainer {
+    height: 32px;
+    padding-left: 25%;
+}
+
+.ciconcontainer::after {
+    clear: both;
+}
+
+.cicon {
+    float: left;
+    background-image: url('/static/img/charactericonsprite.png');
+    background-repeat: no-repeat;
+    background-position: 0px 0px;
+    width: 32px;
+    height: 32px;
+    margin-left: -5px;
+}
+
+.cicon-text {
+    float: left;
+    line-height: 32px;
+    margin-right: 6px;
+    min-width: 65px;
+    text-align: right;
+}
+
+
+
+/* Team Titles */
+.cicon-team-1 {
+    background-position: -352px -192px;
+}
+
+.cicon-team-2 {
+    background-position: -384px -192px;
+}
+
+.cicon-team-3 {
+    background-position: -416px -192px;
+}
+
+.cicon-team-4 {
+    background-position: -448px -192px;
+}
+
+
+
+/* Story Medals */
+.cicon-e1-1 {
+    background-position: 0px 0px;
+}
+
+.cicon-e1-2 {
+    background-position: -32px 0px;
+}
+
+.cicon-e1-3 {
+    background-position: 0px -32px;
+    animation: cicon-e1-3 .8s steps(4) infinite;
+}
+@keyframes cicon-e1-3 {
+    from {background-position: 0px -32px;}
+    to {background-position: -128px -32px;}
+}
+
+.cicon-e1-4 {
+    background-position: -64px 0px;
+    animation: cicon-e1-4 1s steps(7) infinite;
+}
+@keyframes cicon-e1-4 {
+    from {background-position: -64px 0px;}
+    to {background-position: -288px 0px;}
+}
+
+.cicon-e1-5 {
+    background-position: -288px 0px;
+    animation: cicon-e1-5 1.4s steps(11) infinite;
+}
+@keyframes cicon-e1-5 {
+    from {background-position: -288px 0px;}
+    to {background-position: -640px 0px;}
+}
+
+.cicon-e2-1 {
+    background-position: -128px -32px;
+}
+
+.cicon-e2-2 {
+    background-position: -160px -32px;
+}
+
+.cicon-e2-3 {
+    background-position: -192px -32px;
+    animation: cicon-e2-3 .8s steps(4) infinite;
+}
+@keyframes cicon-e2-3 {
+    from {background-position: -192px -32px;}
+    to {background-position: -320px -32px;}
+}
+
+.cicon-e2-4 {
+    background-position: -192px -32px;
+    animation: cicon-e2-4 1s steps(7) infinite;
+}
+@keyframes cicon-e2-4 {
+    from {background-position: -320px -32px;}
+    to {background-position: -544px -32px;}
+}
+
+.cicon-e2-5 {
+    background-position: 0px -64px;
+    animation: cicon-e2-5 1.4s steps(11) infinite;
+}
+@keyframes cicon-e2-5 {
+    from {background-position: 0px -64px;}
+    to {background-position: -352px -64px;}
+}
+
+
+
+
+/* Rings */
+.cicon-ring-1 {
+    background-position: -544px -32px;
+}
+
+.cicon-ring-2 {
+    background-position: -576px -32px;
+}
+
+.cicon-ring-3 {
+    background-position: -609px -32px;
+}
+
+.cicon-ring-4 {
+    background-position: -352px -64px;
+}
+
+.cicon-ring-5 {
+    background-position: -384px -64px;
+}
+
+.cicon-ring-6 {
+    background-position: -416px -64px;
+}
+
+.cicon-ring-7 {
+    background-position: -448px -64px;
+}
+
+.cicon-ring-8 {
+    background-position: -480px -64px;
+    animation: cicon-ring-8 .8s steps(4) infinite;
+}
+@keyframes cicon-ring-8 {
+    from {background-position: -480px -64px;}
+    to {background-position: -608px -64px;}
+}
+
+.cicon-ring-9 {
+    background-position: 0px -96px;
+    animation: cicon-ring-9 1.1s steps(7) infinite;
+}
+@keyframes cicon-ring-9 {
+    from {background-position: 0px -96px;}
+    to {background-position: -224px -96px;}
+}
+
+.cicon-ring-10 {
+    background-position: -224px -96px;
+    animation: cicon-ring-10 1.4s steps(11) infinite;
+}
+@keyframes cicon-ring-10 {
+    from {background-position: -224px -96px;}
+    to {background-position: -576px -96px;}
+}
+
+.cicon-ring-11 {
+    background-position: 0px -128px;
+    animation: cicon-ring-11 1.4s steps(11) infinite;
+}
+@keyframes cicon-ring-11 {
+    from {background-position: 0px -128px;}
+    to {background-position: -352px -128px;}
+}
+
+.cicon-ring-12 {
+    background-position: 0px -160px;
+    animation: cicon-ring-12 1.4s steps(11) infinite;
+}
+@keyframes cicon-ring-12 {
+    from {background-position: 0px -160px;}
+    to {background-position: -352px -160px;}
+}
+
+.cicon-ring-13 {
+    background-position: 0px -192px;
+    animation: cicon-ring-13 1.4s steps(11) infinite;
+}
+@keyframes cicon-ring-13 {
+    from {background-position: 0px -192px;}
+    to {background-position: -352px -192px;}
+}
+
+.cicon-ring-14 {
+    background-position: -608px -64px;
+}
+
+.cicon-ring-15 {
+    background-position: -576px -160px;
+}
+
+.cicon-ring-16 {
+    background-position: -608px -160px;
+}
+
+.cicon-ring-17 {
+    background-position: -480px -192px;
+}
+
+.cicon-ring-18 {
+    background-position: -512px -192px;
+}
+
+.cicon-ring-19 {
+    background-position: -544px -192px;
+}
+
+.cicon-ring-20 {
+    background-position: -576px -96px;
+}
+
+.cicon-ring-21 {
+    background-position: -608px -96px;
+}
+
+.cicon-ring-22 {
+    background-position: -352px -128px;
+}
+
+.cicon-ring-23 {
+    background-position: -384px -128px;
+}
+
+.cicon-ring-24 {
+    background-position: -416px -128px;
+}
+
+.cicon-ring-25 {
+    background-position: -448px -128px;
+}
+
+.cicon-ring-26 {
+    background-position: -480px -128px;
+}
+
+.cicon-ring-27 {
+    background-position: -512px -128px;
+}
+
+.cicon-ring-28 {
+    background-position: -544px -128px;
+}
+
+.cicon-ring-29 {
+    background-position: -576px -128px;
+}
+
+.cicon-ring-30 {
+    background-position: -608px -128px;
+}
+
+.cicon-ring-31 {
+    background-position: -352px -160px;
+}
+
+.cicon-ring-32 {
+    background-position: -384px -160px;
+}
+
+.cicon-ring-33 {
+    background-position: -416px -160px;
+}
+
+.cicon-ring-34 {
+    background-position: -448px -160px;
+}
+
+.cicon-ring-35 {
+    background-position: -480px -160px;
+}
+
+.cicon-ring-36 {
+    background-position: -512px -160px;
+}
+
+.cicon-ring-37 {
+    background-position: -544px -160px;
+}
+
+.cicon-ring-38 {
+    background-position: -288px -256px;
+}
+
+.cicon-ring-39 {
+    background-position: -320px -256px;
+}
+
+.cicon-ring-40 {
+    background-position: -352px -256px;
+}
+
+
+
+
+/* Tournament Medals */
+.cicon-expert {
+    background-position: 0px -224px;
+    animation: cicon-expert 1.3s steps(14) infinite;
+}
+@keyframes cicon-expert {
+    from {background-position: 0px -224px;}
+    to {background-position: -448px -224px;}
+}
+
+.cicon-br {
+    background-position: -544px -224px;
+}
+
+.cicon-team {
+    background-position: -576px -224px;
+}
+
+.cicon-couple {
+    background-position: -512px -224px;
+}
+
+.cicon-bu {
+    background-position: -608px -192px;
+}
+
+.cicon-ballroom-m {
+    background-position: -448px -224px;
+}
+
+.cicon-ballroom-f {
+    background-position: -480px -224px;
+}
+
+.cicon-guitar {
+    background-position: -608px -224px;
+}
+
+
+
+
+/* Misc */
+.cicon-diary {
+    background-position: -224px -256px;
+    animation: cicon-diary .1s steps(2) infinite;
+}
+@keyframes cicon-diary {
+    from {background-position: -224px -256px;}
+    to {background-position: -288px -256px;}
+}
